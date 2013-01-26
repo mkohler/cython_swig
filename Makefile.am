@@ -1,2 +1,2 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = libadder
+SUBDIRS = libadder c

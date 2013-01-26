@@ -1,7 +1,13 @@
+*.Po
+*.la
+*.lo
+*.o
+.libs/
 Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
+c/adder_example
 config.guess
 config.h
 config.h.in
@@ -16,7 +22,6 @@ libadder/.libs/
 libadder/Makefile
 libadder/Makefile.in
 libadder/adder.lo
-libadder/adder.o
 libadder/libadder.la
 libtool
 ltmain.sh
