@@ -21,16 +21,24 @@ TESTS = c_adder
 #
 # Create a Python extension using SWIG.
 #
-python_PYTHON = adder.py
+dist_python_PYTHON = adder.py
 pyexec_LTLIBRARIES = _adder.la
 CLEANFILES = adder_wrap.c adder.py
 BUILT_SOURCES = adder_wrap.c adder.py
-_adder_la_SOURCES = adder_wrap.c swig/adder.i
+_adder_la_SOURCES = adder_wrap.c adder.py swig/adder.i
 _adder_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) -I$(srcdir)/libadder
 _adder_la_LIBADD = libadder.la
 # -module allows one to use non-standard library names,
 #  e.g. _foo.la instead of libfoo.la.
 _adder_la_LDFLAGS = -module
 
-adder_wrap.c: $(srcdir)/swig/adder.i
+adder_wrap.c adder.py: $(srcdir)/swig/adder.i
 	$(SWIG) $(AX_SWIG_PYTHON_OPT) -o $@ $<
+
+
+dist_noinst_SCRIPTS = $(srcdir)/swig/test_adder.py
+TESTS += test_adder.py
+TESTS_ENVIRONMENT = PYTHONPATH=.libs;
+test_adder.py: $(srcdir)/swig/test_adder.py
+	cp $< $@
+	chmod +x $@
