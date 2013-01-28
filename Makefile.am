@@ -23,7 +23,8 @@ TESTS = c_adder
 #
 python_PYTHON = adder.py
 pyexec_LTLIBRARIES = _adder.la
-BUILT_SOURCES = adder_wrap.c
+CLEANFILES = adder_wrap.c adder.py
+BUILT_SOURCES = adder_wrap.c adder.py
 _adder_la_SOURCES = adder_wrap.c swig/adder.i
 _adder_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) -I$(srcdir)/libadder
 _adder_la_LIBADD = libadder.la
