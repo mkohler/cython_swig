@@ -11,10 +11,10 @@ libadder_la_SOURCES = libadder/adder.c libadder/adder.h
 #
 # Build a C program that uses the shared library.
 #
-bin_PROGRAMS = adder_example
-adder_example_SOURCES = c/main.c
-adder_example_CPPFLAGS = -I$(srcdir)/libadder
-adder_example_LDADD = libadder.la
+bin_PROGRAMS = c_adder
+c_adder_SOURCES = c/c_adder.c
+c_adder_CPPFLAGS = -I$(srcdir)/libadder
+c_adder_LDADD = libadder.la
 
 
 #
