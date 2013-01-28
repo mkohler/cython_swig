@@ -15,6 +15,7 @@ bin_PROGRAMS = c_adder
 c_adder_SOURCES = c/c_adder.c
 c_adder_CPPFLAGS = -I$(srcdir)/libadder
 c_adder_LDADD = libadder.la
+TESTS = c_adder
 
 
 #
@@ -26,8 +27,8 @@ BUILT_SOURCES = adder_wrap.c
 _adder_la_SOURCES = adder_wrap.c swig/adder.i
 _adder_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) -I$(srcdir)/libadder
 _adder_la_LIBADD = libadder.la
-# -module allows one to use non-standard library names, e.g. _foo.la instead of
-#  libfoo.la.
+# -module allows one to use non-standard library names,
+#  e.g. _foo.la instead of libfoo.la.
 _adder_la_LDFLAGS = -module
 
 adder_wrap.c: $(srcdir)/swig/adder.i

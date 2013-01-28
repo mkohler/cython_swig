@@ -3,6 +3,8 @@
 
 int
 main(void) {
-    printf("add(2, 3) = %d\n", add(2, 3));
-    return 0;
+    if (add(2, 3) == 5) {
+        return 0;
+    }
+    return 1;
 }
