@@ -20,6 +20,7 @@ TESTS = c_adder
 
 #
 # Create a Python extension using SWIG.
+#
 EXTRA_DIST = swig/adder.i
 python_PYTHON = $(srcdir)/swig/adder.py
 pyexec_LTLIBRARIES = _adder.la
@@ -34,9 +35,12 @@ $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py: $(srcdir)/swig/adder.i
 	$(SWIG) $(AX_SWIG_PYTHON_OPT) $<
 
 MAINTAINERCLEANFILES = $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py
-DISTCLEANFILES = test_adder.py
 
+#
+# Test that the SWIG'd extension works.
+#
 dist_noinst_SCRIPTS = $(srcdir)/swig/test_adder.py
+DISTCLEANFILES = test_adder.py
 TESTS += test_adder.py
 TESTS_ENVIRONMENT = PYTHONPATH=.libs:$(srcdir)/swig;
 test_adder.py: $(srcdir)/swig/test_adder.py
