@@ -1,4 +1,8 @@
 #!/usr/bin/python
+import os
+import sys
+print "working directory", os.getcwd()
+print "sys.path:", sys.path
 import adder
 from nose.tools import eq_
 

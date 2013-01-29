@@ -20,25 +20,25 @@ TESTS = c_adder
 
 #
 # Create a Python extension using SWIG.
-#
-dist_python_PYTHON = adder.py
+EXTRA_DIST = swig/adder.i
+python_PYTHON = $(srcdir)/swig/adder.py
 pyexec_LTLIBRARIES = _adder.la
-CLEANFILES = adder_wrap.c adder.py
-BUILT_SOURCES = adder_wrap.c adder.py
-_adder_la_SOURCES = adder_wrap.c adder.py swig/adder.i
+_adder_la_SOURCES = swig/adder_wrap.c
 _adder_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) -I$(srcdir)/libadder
 _adder_la_LIBADD = libadder.la
 # -module allows one to use non-standard library names,
 #  e.g. _foo.la instead of libfoo.la.
 _adder_la_LDFLAGS = -module
 
-adder_wrap.c adder.py: $(srcdir)/swig/adder.i
-	$(SWIG) $(AX_SWIG_PYTHON_OPT) -o $@ $<
+$(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py: $(srcdir)/swig/adder.i
+	$(SWIG) $(AX_SWIG_PYTHON_OPT) $<
 
+MAINTAINERCLEANFILES = $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py
+DISTCLEANFILES = test_adder.py
 
 dist_noinst_SCRIPTS = $(srcdir)/swig/test_adder.py
 TESTS += test_adder.py
-TESTS_ENVIRONMENT = PYTHONPATH=.libs;
+TESTS_ENVIRONMENT = PYTHONPATH=.libs:$(srcdir)/swig;
 test_adder.py: $(srcdir)/swig/test_adder.py
 	cp $< $@
 	chmod +x $@
