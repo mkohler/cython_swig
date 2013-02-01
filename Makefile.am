@@ -24,8 +24,15 @@ TESTS = c_adder
 EXTRA_DIST = swig/adder.i
 python_PYTHON = $(srcdir)/swig/adder.py
 pyexec_LTLIBRARIES = _adder.la
+# distutils parses python's Makefile to capture the flags used to compile
+# python itself. I'm not going to do that, so I watched distutils compile an
+# extension and copied these flags.
+PY_CFLAGS = -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 \
+	-Wall -Wstrict-prototypes -fPIC
 _adder_la_SOURCES = swig/adder_wrap.c
-_adder_la_CPPFLAGS = $(AX_SWIG_PYTHON_CPPFLAGS) -I$(srcdir)/libadder
+_adder_la_CPPFLAGS = $(PY_CFLAGS) \
+					 $(AX_SWIG_PYTHON_CPPFLAGS) \
+					 -I$(srcdir)/libadder
 _adder_la_LIBADD = libadder.la
 # -module allows one to use non-standard library names,
 #  e.g. _foo.la instead of libfoo.la.
