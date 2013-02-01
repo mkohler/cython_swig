@@ -17,6 +17,7 @@ config.log
 config.status
 config.sub
 configure
+cython/cy_adder.c
 depcomp
 install
 install-sh
