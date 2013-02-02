@@ -4,7 +4,7 @@ AC_INIT([adder], [0.1], [mark.kohler@gmail.com])
 # Initialize automake.
 # 'foreign' indicates this is not a GNU project.
 # 'subdir-objects' puts the objects in a directory tree like the source tree.
-AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign silent-rules subdir-objects])
 
 # Initialize libtool
 LT_INIT
