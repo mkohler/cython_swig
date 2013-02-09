@@ -6,6 +6,7 @@ ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libadder.la
 include_HEADERS = $(srcdir)/libadder/adder.h
 libadder_la_SOURCES = libadder/adder.c libadder/adder.h
+libadder_la_CPPFLAGS = -Wall -Werror
 
 
 #
@@ -13,7 +14,7 @@ libadder_la_SOURCES = libadder/adder.c libadder/adder.h
 #
 bin_PROGRAMS = c_adder
 c_adder_SOURCES = c/c_adder.c
-c_adder_CPPFLAGS = -I$(srcdir)/libadder
+c_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder
 c_adder_LDADD = libadder.la
 TESTS = c_adder
 
@@ -39,7 +40,7 @@ _adder_la_LIBADD = libadder.la
 _adder_la_LDFLAGS = -module
 
 $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py: $(srcdir)/swig/adder.i
-	$(SWIG) $(AX_SWIG_PYTHON_OPT) $<
+	$(SWIG) $(AX_SWIG_PYTHON_OPT) -I$(srcdir)/libadder $<
 
 MAINTAINERCLEANFILES = $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py
 
