@@ -3,4 +3,4 @@
 #include "adder.h"
 %}
 
-int add(int x, int y);
+%include "adder.h"
