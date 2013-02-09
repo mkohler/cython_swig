@@ -11,6 +11,17 @@ Not that long ago, I was given several C libraries,
 
 What are the rules of this fight?
 
+Fears
+=====
+- My concern is that I would choose a tool, and get 90% of the way there, and
+  then find a routine that I couldn't properly wrap, and I would be stuck.
+
+- I would have trouble incorporating it into the build.
+
+- Once incorporated, the tool would be too hard to understand or debug.
+
+- The tool would take too long to get started.
+
 
 What is SWIG? (2 minutes)
 =========================
@@ -94,6 +105,18 @@ SWIG interface file
 
 int add(int x, int y);
 
+Return Values
+~~~~~~~~~~~~~
+
+Error
+
+SWIG and Strings
+----------------
+
+By default, i.e. without typemaps, strings passed from scripting language to
+SWIG must be read-only.
+
+
 
 SWIG Code Walkthrough (5 minutes)
 =================================
@@ -143,6 +166,7 @@ Cython Code Walkthrough (5 minutes)
 SWIG Advantages and Disadvantages(1 minute)
 ===========================================
 
+
 Create Extensions for Other Languages
 -------------------------------------
 
@@ -184,3 +208,29 @@ Alternatives to Cython and SWIG (2 minutes)
     writing extensions with the Python C/API
 
     ctypes
+
+
+Extra bonus: distutils vs autotools, fight!
+===========================================
+
+
+
+
+Unincorporated Content
+======================
+- Performance comparison
+
+- String manipulation, C strings
+
+- DRY and maintainability. How much of the header do you have copy?
+
+"SWIG is not in the business of enforcing morality."
+    - SWIG documentation, Section 8.3 C String Handling
+
+- Safety comparison
+
+- UTF strings, don't ask
+    To a first approximation, ANSI C doesn't do Unicode...so
+
+- Show what happens when you do the wrong thing.
+    i.e. send the wrong kind of parameters into a C function
