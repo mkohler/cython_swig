@@ -14,8 +14,8 @@ libadder_la_CPPFLAGS = -Wall -Werror
 #
 bin_PROGRAMS = c_adder
 c_adder_SOURCES = c/c_adder.c
-c_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder
-c_adder_LDADD = libadder.la
+c_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder -I$(srcdir)/minunit
+c_adder_LDADD = libadder.la -lrt
 TESTS = c_adder
 
 

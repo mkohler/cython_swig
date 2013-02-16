@@ -1,6 +1,9 @@
 Cython vs. SWIG, Fight!
 
-Cython and SWIG are excellent, and yet very different, tools for using C libraries from Python. The goal of this talk is to introduce both tools, discuss their strengths, their weaknesses, and the situations that clearly favor one tool over the other.
+Cython and SWIG are excellent, and yet very different, tools for using C
+libraries from Python. The goal of this talk is to introduce both tools,
+discuss their strengths, their weaknesses, and the situations that clearly
+favor one tool over the other.
 
 
 
@@ -109,6 +112,12 @@ Return Values
 ~~~~~~~~~~~~~
 
 Error
+
+Status returns vs exception handling
+
+adder_sr
+
+SR stands for "status returns" or "second revision"
 
 SWIG and Strings
 ----------------
@@ -234,3 +243,14 @@ Unincorporated Content
 
 - Show what happens when you do the wrong thing.
     i.e. send the wrong kind of parameters into a C function
+
+
+In SWIG, if you get to a C function that doesn't "fit", that SWIG can't wrap, you can go a few ways
+    1. If you're lucky, there is always a typemap macro to help you.
+    2. If not, you use typemaps to massage things. And finally, if that doesn't work
+
+    3. Write another C library, to wrap the first, and use SWIG to wrap that.
+
+
+SWIG isn't magic. You have to SWIG each target language separately.
+    

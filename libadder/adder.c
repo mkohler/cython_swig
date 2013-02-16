@@ -2,19 +2,20 @@
 #include <string.h>
 #include "adder.h"
 
+#define MAX_STR_LEN 20
+
 int
 add(int x, int y) {
     return x + y;
 }
 
 
+
 char *
 get_version(void) {
-    return "v1.0";
+    return ADDER_VERSION;
 }
 
-
-#define MAX_STR_LEN 20
 
 char *
 make_greeting(char *name) {
@@ -25,25 +26,35 @@ make_greeting(char *name) {
 }
 
 
-
-
-/*
 int
-add_rv_is_status(int x, int y, int * sum) {
+add_sr(int x, int y, int *sum) {
+    if ((x < 0) || (y < 0)) {
+        *sum = 0;
+        return 1;
+    }
     *sum = x + y;
+    return 0;
 }
 
 
 int
-get_version_2(char *) {
+get_version_sr(char * output, int buflen) {
+    if (buflen <= strlen(ADDER_VERSION) + 1) {
+        return 1;
+    }
 
+    strcpy(output, ADDER_VERSION);
+    return 0;
 }
 
 
+#define GREETING "Hello, "
 int
-put_a_string_in_my_buffer(char *str) {
-
-
+make_greeting_sr(char * name, char * output, int buflen) {
+    if (buflen < (strlen(GREETING) + strlen(name) + 1)) {
+        return 1;
+    }
+    strcat(output, GREETING);
+    strcat(output, name);
+    return 0;
 }
-
-*/
