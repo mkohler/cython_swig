@@ -16,8 +16,6 @@ bin_PROGRAMS = c_adder
 c_adder_SOURCES = c/c_adder.c
 c_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder -I$(srcdir)/minunit
 c_adder_LDADD = libadder.la -lrt
-TESTS = c_adder
-
 
 #
 # Create a Python extension using SWIG.
@@ -49,8 +47,9 @@ MAINTAINERCLEANFILES = $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py
 #
 dist_noinst_SCRIPTS = $(srcdir)/swig/test_adder.py
 DISTCLEANFILES = test_adder.py
-TESTS += test_adder.py
 TESTS_ENVIRONMENT = PYTHONPATH=.libs:$(srcdir)/swig;
 test_adder.py: $(srcdir)/swig/test_adder.py
 	cp $< $@
 	chmod +x $@
+
+TESTS = c_adder test_adder.py
