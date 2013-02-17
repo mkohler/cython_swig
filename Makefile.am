@@ -45,11 +45,11 @@ MAINTAINERCLEANFILES = $(srcdir)/swig/adder_wrap.c $(srcdir)/swig/adder.py
 #
 # Test that the SWIG'd extension works.
 #
-dist_noinst_SCRIPTS = $(srcdir)/swig/test_adder.py
-DISTCLEANFILES = test_adder.py
+dist_noinst_SCRIPTS = $(srcdir)/swig/test_swig_adder.py
+DISTCLEANFILES = test_swig_adder.py
 TESTS_ENVIRONMENT = PYTHONPATH=.libs:$(srcdir)/swig;
-test_adder.py: $(srcdir)/swig/test_adder.py
+test_swig_adder.py: $(srcdir)/swig/test_swig_adder.py
 	cp $< $@
 	chmod +x $@
 
-TESTS = c_adder test_adder.py
+TESTS = c_adder test_swig_adder.py
