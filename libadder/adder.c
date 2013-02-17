@@ -54,7 +54,7 @@ make_greeting_sr(char * name, char * output, int buflen) {
     if (buflen < (strlen(GREETING) + strlen(name) + 1)) {
         return 1;
     }
-    strcat(output, GREETING);
+    strcpy(output, GREETING);
     strcat(output, name);
     return 0;
 }
