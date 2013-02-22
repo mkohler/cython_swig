@@ -1,0 +1,2 @@
+LD_LIBRARY_PATH=$PWD/build/.libs:$LD_LIBRARY_PATH
+PYTHONPATH=$PWD/build:$PWD/build/.libs:$PYTHONPATH
