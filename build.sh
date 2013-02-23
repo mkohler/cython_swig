@@ -5,12 +5,9 @@ set -x
 
 # Build and test the C library.
 autoreconf -i
-mkdir -p build install
-(cd build &&
-    ../configure &&
-    make &&
-    make check &&
-    make DESTDIR=$PWD/../install install)
+./configure
+mkdir -p install
+make DESTDIR=$PWD/install check install
 
 # Build and test the SWIG extension.
 (cd swig &&
@@ -21,5 +18,3 @@ mkdir -p build install
 (cd cython &&
     python setup.py build_ext --inplace &&
     python setup.py nosetests)
-
-
