@@ -14,6 +14,11 @@ Not that long ago, I was given several C libraries,
 
 What are the rules of this fight?
 
+Audience
+========
+
+You know C and Python, but you haven't mixed them.
+
 Fears
 =====
 - My concern is that I would choose a tool, and get 90% of the way there, and
@@ -144,8 +149,8 @@ What is Cython? (2 minutes)
 
 What goes in?
     
-    PXD file    
-    PYX file
+    PXD file: C declarations, in Cython
+    PYX file: Cython source
 
 What comes out?
 
