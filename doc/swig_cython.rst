@@ -19,8 +19,21 @@ Audience
 
 You know C and Python, but you haven't mixed them.
 
+
+Magic
+-----
+
+Show generated code from SWIG and Cython. 
+
+When you look under the covers, it is *still* magic.
+
+Which brings me to fear.
+
 Fears
 =====
+
+- If you don't understand a tool, it is easy to be scared.
+
 - My concern is that I would choose a tool, and get 90% of the way there, and
   then find a routine that I couldn't properly wrap, and I would be stuck.
 
@@ -29,6 +42,29 @@ Fears
 - Once incorporated, the tool would be too hard to understand or debug.
 
 - The tool would take too long to get started.
+
+
+What They Are
+------------
+
+SWIG is...
+
+    Wrapper C libraries for Python and Ruby and Perl and PHP and Scheme and ...
+    ...and noticing that there is a lot in common and maybe that can be wrapped
+    up and automated.
+
+    If I take something like a header file, with a few hints, I could
+    automatically create these wrappers.
+
+
+Cython is...
+
+    If I take something like a header, I can, line-by-line, reference objects
+    as C or Python objects, and convert between them.
+
+    Sort of like in-line assembly.
+
+
 
 
 What is SWIG? (2 minutes)
