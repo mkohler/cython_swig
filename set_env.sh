@@ -1,2 +1,2 @@
-LD_LIBRARY_PATH=$PWD/build/.libs:$LD_LIBRARY_PATH
-PYTHONPATH=$PWD/build:$PWD/build/.libs:$PYTHONPATH
+export PYTHONPATH=$PWD/install/usr/local/lib/python2.7/dist-packages
+export LD_LIBRARY_PATH=$PWD/install/usr/local/lib/
