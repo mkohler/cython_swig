@@ -40,6 +40,7 @@ add_sr(int x, int y, int *sum) {
 int
 get_version_sr(char * output, int buflen) {
     if (buflen <= strlen(ADDER_VERSION) + 1) {
+        output[0] = 0;
         return 1;
     }
 
@@ -52,6 +53,7 @@ get_version_sr(char * output, int buflen) {
 int
 make_greeting_sr(char * name, char * output, int buflen) {
     if (buflen < (strlen(GREETING) + strlen(name) + 1)) {
+        output[0] = 0;
         return 1;
     }
     strcpy(output, GREETING);

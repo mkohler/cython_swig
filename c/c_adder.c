@@ -37,6 +37,7 @@ MU_TEST(test_get_version_sr) {
     memset(output_s, 'x', STR_BUF_LEN);
     rv = get_version_sr(output_s, 2);
     mu_check(rv != 0);
+    mu_check_str_eq(output_s, "");
 
     memset(output_s, 'x', STR_BUF_LEN);
     rv = get_version_sr(output_s, STR_BUF_LEN);
@@ -51,6 +52,7 @@ MU_TEST(test_make_greeting_sr) {
     memset(output_s, 'x', STR_BUF_LEN);
     rv = make_greeting_sr("Python", output_s, 5);
     mu_check(rv != 0);
+    mu_check_str_eq(output_s, "");
 
     memset(output_s, 'x', STR_BUF_LEN);
     rv = make_greeting_sr("Python", output_s, STR_BUF_LEN);
