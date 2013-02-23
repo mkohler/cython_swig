@@ -76,4 +76,3 @@ main(void) {
     MU_REPORT();
     return 0;
 }
-
