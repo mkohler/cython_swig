@@ -8,7 +8,7 @@ adder_module = Extension('cy_adder', ['cy_adder.pyx'],
                          libraries=['adder'],
                          library_dirs=['../install/usr/local/lib'])
 
-setup(name='cy_adder',
+setup(name='cython_adder',
       version='0.1',
       cmdclass={'build_ext': build_ext},
       ext_modules=[adder_module])
