@@ -12,10 +12,10 @@ libadder_la_CPPFLAGS = -Wall -Werror
 #
 # Build a C program that uses the shared library.
 #
-bin_PROGRAMS = c_adder
-c_adder_SOURCES = c/c_adder.c
-c_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder -I$(srcdir)/minunit
-c_adder_LDADD = libadder.la -lrt
+bin_PROGRAMS = test_adder
+test_adder_SOURCES = c/test_adder.c
+test_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder -I$(srcdir)/minunit
+test_adder_LDADD = libadder.la -lrt
 
 #
 # Create a Python extension using SWIG.
@@ -52,4 +52,4 @@ test_swig_adder.py: $(srcdir)/swig/test_swig_adder.py
 	cp $< $@
 	chmod +x $@
 
-TESTS = c_adder test_swig_adder.py
+TESTS = test_adder test_swig_adder.py
