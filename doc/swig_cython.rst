@@ -161,6 +161,12 @@ Cython, the Language (2 minutes)
 
     Python, with optional C datatypes.
 
+    Big difference
+
+    You can use Cython *instead* of Python.
+
+    Here, we assume that you want to use Python, and Cython is the bridge.
+
 
 Cython: How is that possible? (2 minutes)
 =========================================
@@ -169,10 +175,31 @@ build process
 -------------
 
 Cython compiles .pyx file to .c file.
+
+
 Compile C file into shared object library.
 
 
 toolchain diagram
+
+Cython Workflow
+---------------
+
+Take your C header file and (manually) create a .pxd file::
+    Copy the file
+    Remove semi-colons.
+    Convert #defines to variables.
+    ints to bints
+
+Create a .pyx file.
+    This is where you are really using the Cython language.
+    It can be repetitive, but you also have tons of flexibility in making a
+    Pythonic interface.
+
+Build a Python extension from the .pyx file. (Create a .so)
+
+Import the .so from plain python.
+
 
 Cython Code Walkthrough (5 minutes)
 ===================================
