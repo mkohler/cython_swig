@@ -1,4 +1,5 @@
 *.Po
+*.dirstamp
 *.egg-info
 *.in
 *.la
@@ -37,3 +38,4 @@ py-compile
 stamp-h1
 swig/adder.py
 swig/adder_wrap.c
+test_adder

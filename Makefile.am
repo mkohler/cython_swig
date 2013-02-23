@@ -10,7 +10,7 @@ libadder_la_CPPFLAGS = -Wall -Werror
 
 
 #
-# Build a C program that uses the shared library.
+# Build a C test program that uses the shared library.
 #
 bin_PROGRAMS = test_adder
 test_adder_SOURCES = c/test_adder.c
