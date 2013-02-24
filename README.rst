@@ -168,8 +168,12 @@ SWIG must be read-only.
 
 
 
+
 SWIG Code Walkthrough (5 minutes)
 =================================
+
+Should I make slides of the directory tree, and with yellow highlights over the
+page I'm doing now.
 
 Examples of standard libraries using SWIG?
 Examples of standard libraries using Cython?
@@ -185,7 +189,7 @@ What is Cython? (2 minutes)
 
 What goes in?
     
-    PXD file: C declarations, in Cython
+    PXD file: C declarations, in Cython (D stands for declarations)
     PYX file: Cython source
 
 What comes out?
