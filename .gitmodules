@@ -1,0 +1,3 @@
+[submodule "minunit"]
+	path = minunit
+	url = git@github.com:mkohler/minunit.git
