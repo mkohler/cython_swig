@@ -45,7 +45,7 @@ Fears
 
 
 What They Are
-------------
+-------------
 
 SWIG is...
 
