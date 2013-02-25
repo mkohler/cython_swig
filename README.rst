@@ -294,6 +294,9 @@ Alternatives to Cython and SWIG (2 minutes)
 Extra bonus: distutils vs autotools, fight!
 ===========================================
 
+distutils is much easier for compiling SWIG or Cython extensions.
+It is possible with autotools, but ...
+(show slide of all the stuff in the Makefile from 90e325):w
 
 
 

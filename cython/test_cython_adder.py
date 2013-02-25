@@ -18,6 +18,7 @@ def test_add_str():
 
 
 # Test add_sr
+
 def test_add_sr():
     eq_(cy_adder.add_sr(2, 3), 5)
 
@@ -26,9 +27,14 @@ def test_add_negative_number():
     cy_adder.add_sr(2, -2)
 
 
+# Test get_version
 
 def test_get_version():
     eq_(cy_adder.get_version(), cy_adder.ADDER_VERSION)
+
+
+
+
 
 def test_make_greeting():
     eq_(cy_adder.make_greeting("Python"),
