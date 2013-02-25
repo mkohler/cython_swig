@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from nose.tools import eq_, ok_, raises
 
 import cy_adder
@@ -32,13 +31,31 @@ def test_add_negative_number():
 def test_get_version():
     eq_(cy_adder.get_version(), cy_adder.ADDER_VERSION)
 
+@raises(TypeError)
+def test_get_version_extra_arg():
+    cy_adder.get_version(1)
+
+# Test get_version_sr
+
+def test_get_version_sr():
+    eq_(cy_adder.get_version(), cy_adder.ADDER_VERSION)
 
 
-
-
+# Test make_greeting
 def test_make_greeting():
     eq_(cy_adder.make_greeting("Python"),
         "Hello, Python")
+
+
+# Test make_greeting_sr
+
+def test_make_greeting_sr():
+    eq_(cy_adder.make_greeting_sr("Python"),
+        "Hello, Python")
+
+@raises(MemoryError)
+def test_make_greeting_sr_long_name():
+    cy_adder.make_greeting_sr( "Python Programming Language")
 
 if __name__ == '__main__':
     import nose

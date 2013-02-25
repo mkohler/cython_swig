@@ -19,12 +19,21 @@ def get_version():
 def get_version_sr():
     DEF BUF_LEN = 32
     cdef char version_str[BUF_LEN]
-    sr = c_adder.get_version_sr(version_str, BUF_LEN)
-    # TODO
+    # We know it can't fail, so we ignore the return value.
+    c_adder.get_version_sr(version_str, BUF_LEN)
+    return version_str
 
 
 def make_greeting(name):
     return c_adder.make_greeting(name)
 
+def make_greeting_sr(name):
+    DEF BUF_LEN = 16
+    cdef char out_str[BUF_LEN]
+    if len(name) + 10 > BUF_LEN:
+        raise MemoryError
+    c_adder.make_greeting_sr(name, out_str, BUF_LEN)
+    return out_str
 
-#def get_version_sr
+
+
