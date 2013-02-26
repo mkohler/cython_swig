@@ -12,6 +12,8 @@ Code first,
 Introduction (2 minutes)
 ========================
 
+The goal of this talk 
+
 SWIG and Cython 
 
 The Rules of this Fight
@@ -24,7 +26,8 @@ The rules are:
 An Aside: Anatomy of C Libraries (3 minutes)
 ============================================
 
-..  This is a Python conference. Why am I talking about C?
+C source + C header ---> shared library (binary)
+
 
 ..  C is the language *Python* is written in. Many of the standard
     libraries are written in C, or are available in C and Python versions.
@@ -39,7 +42,6 @@ you how to access it from Cython and SWIG.
 
 Build diagram
 
-C source + C header ---> shared library
 
 C header + SWIG interface ---> shared library + python glue module
 
@@ -339,3 +341,5 @@ SWIG isn't magic. You have to SWIG each target language separately.
 What are the rules of this fight?
 
 Not that long ago, I was given several C libraries...
+
+..  This is a Python conference. Why am I talking about C?
