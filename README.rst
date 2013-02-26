@@ -1,4 +1,22 @@
+.. include:: <s5defs.txt>
+
+=======================
 Cython vs. SWIG, Fight!
+=======================
+
+:Author: Mark Kohler
+:Date: 2013-03-15
+
+Need to use a C library from Python?
+
+"Should I use SWIG or Cython?"
+
+
+
+.. class:: handout
+
+  Everything that is in this block will only be in the notes.
+  You can put these on each slide.
 
 Introduction (2 minutes)
 ========================

@@ -21,4 +21,4 @@ test_adder_LDADD = libadder.la -lrt
 TESTS = test_adder
 
 slides:
-	$(MAKE) -C docs slides
+	rst2odp README.rst slides.odp
