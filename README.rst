@@ -1,17 +1,14 @@
 Cython vs. SWIG, Fight!
 
+Introduction (2 minutes)
+========================
+
 Cython and SWIG are excellent, and yet very different, tools for using C
 libraries from Python. The goal of this talk is to introduce both tools,
 discuss their strengths, their weaknesses, and the situations that clearly
 favor one tool over the other.
 
 Code first, 
-
-
-
-Introduction (2 minutes)
-========================
-
 The goal of this talk 
 
 SWIG and Cython 
@@ -41,6 +38,7 @@ you how to access it from Cython and SWIG.
 (Quickly list examples, 1 per slide)
 
 Build diagram
+=============
 
 
 C header + SWIG interface ---> shared library + python glue module
@@ -149,7 +147,7 @@ Is SWIG a language?
     header file to do some common conversions.
 
 SWIG interface file
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 %module adder
 %{
@@ -159,7 +157,7 @@ SWIG interface file
 int add(int x, int y);
 
 Return Values
-~~~~~~~~~~~~~
+-------------
 
 Error
 
@@ -342,4 +340,4 @@ What are the rules of this fight?
 
 Not that long ago, I was given several C libraries...
 
-..  This is a Python conference. Why am I talking about C?
+This is a Python conference. Why am I talking about C?
