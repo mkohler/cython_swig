@@ -5,14 +5,74 @@ libraries from Python. The goal of this talk is to introduce both tools,
 discuss their strengths, their weaknesses, and the situations that clearly
 favor one tool over the other.
 
+Code first, 
+
 
 
 Introduction (2 minutes)
 ========================
 
-Not that long ago, I was given several C libraries, 
+SWIG and Cython 
 
-What are the rules of this fight?
+The Rules of this Fight
+=======================
+
+The rules are:
+
+    Code first, and then gross generalizations
+
+An Aside: Anatomy of C Libraries (3 minutes)
+============================================
+
+..  This is a Python conference. Why am I talking about C?
+
+..  C is the language *Python* is written in. Many of the standard
+    libraries are written in C, or are available in C and Python versions.
+
+So, let's assume there are C libraries worth using from Python.
+(libxml, sockets, libpng, libusb, ...)
+
+I'm going to show you the smallest C library ever. And then I'll show
+you how to access it from Cython and SWIG.
+
+(Quickly list examples, 1 per slide)
+
+Build diagram
+
+C source + C header ---> shared library
+
+C header + SWIG interface ---> shared library + python glue module
+
+
+Smallest C Library
+------------------
+
+C Source File
+~~~~~~~~~~~~~
+
+This is a C function which adds to two integers, and returns the
+result::
+
+    int
+    add(int x, int y) {
+        return x + y;
+    }
+
+Header File
+~~~~~~~~~~~
+
+
+In C, the interface to a function is typically declared in a separate file, a
+*header* file. Here is the header file for our libadder::
+
+    int add(int, int);
+
+Three parts:
+    the *name* of the function
+    the *types* of the parameters
+    the *type* of the return value
+
+The header also can include the names of the parameters, but these are ignored.
 
 Audience
 ========
@@ -85,59 +145,6 @@ What comes out?
 Is SWIG a language?
     Not really. The SWIG interface file is a way of marking up a C
     header file to do some common conversions.
-
-An Aside: Anatomy of C Libraries (3 minutes)
-============================================
-
-This is a Python conference. Why am I talking about C?
-
-C is the language *Python* is written in. Many of the standard libraries
-are written in C, or are available in C and Python versions.
-
-So, let's assume there are C libraries worth using from Python.
-(libxml, sockets, libpng, libusb, ...)
-
-I'm going to show you the smallest C library ever. And then I'll show
-you how to access it from Cython and SWIG.
-
-(Quickly list examples, 1 per slide)
-
-Build diagram
-
-C source + C header ---> shared library
-
-C header + SWIG interface ---> shared library + python glue module
-
-
-Smallest C Library
-------------------
-
-C Source File
-~~~~~~~~~~~~~
-
-This is a C function which adds to two integers, and returns the
-result::
-
-    int
-    add(int x, int y) {
-        return x + y;
-    }
-
-Header File
-~~~~~~~~~~~
-
-
-In C, the interface to a function is typically declared in a separate file, a
-*header* file. Here is the header file for our libadder::
-
-    int add(int, int);
-
-Three parts:
-    the *name* of the function
-    the *types* of the parameters
-    the *type* of the return value
-
-The header also can include the names of the parameters, but these are ignored.
 
 SWIG interface file
 ~~~~~~~~~~~~~~~~~~~
@@ -329,3 +336,6 @@ In SWIG, if you get to a C function that doesn't "fit", that SWIG can't wrap, yo
 
 SWIG isn't magic. You have to SWIG each target language separately.
     
+What are the rules of this fight?
+
+Not that long ago, I was given several C libraries...
