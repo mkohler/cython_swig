@@ -7,7 +7,7 @@ set -x
 autoreconf -i
 ./configure
 mkdir -p install
-make DESTDIR=$PWD/install check install
+make DESTDIR=$PWD/install check install slides
 
 # Build and test the SWIG extension.
 (cd swig &&
@@ -18,3 +18,5 @@ make DESTDIR=$PWD/install check install
 (cd cython &&
     python setup.py build_ext --inplace &&
     python setup.py nosetests)
+
+
