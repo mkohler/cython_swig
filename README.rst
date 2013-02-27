@@ -11,32 +11,32 @@ Need to use a C library from Python?
 
 "Should I use SWIG or Cython?"
 
-
-
-.. class:: handout
-
-  Everything that is in this block will only be in the notes.
-  You can put these on each slide.
-
-Introduction (2 minutes)
-========================
-
-Cython and SWIG are excellent, and yet very different, tools for using C
-libraries from Python. The goal of this talk is to introduce both tools,
-discuss their strengths, their weaknesses, and the situations that clearly
-favor one tool over the other.
-
-Code first, 
-The goal of this talk 
-
-SWIG and Cython 
-
 The Rules of this Fight
 =======================
 
-The rules are:
 
-    Code first, and then gross generalizations
+Topics
+======
+
+"Code first
+
+- C libraries
+- SWIG example
+- Cython example
+- Fear and Magic
+
+.. class:: handout
+    
+    Cython and SWIG are excellent, and yet very different, tools for using C
+    libraries from Python. The goal of this talk is to introduce both tools,
+    discuss their strengths, their weaknesses, and the situations that clearly
+    favor one tool over the other.
+
+    In other words, I want to show you the code before we move on to gross
+    generalizations.
+
+
+
 
 An Aside: Anatomy of C Libraries (3 minutes)
 ============================================
@@ -44,7 +44,8 @@ An Aside: Anatomy of C Libraries (3 minutes)
 C source + C header ---> shared library (binary)
 
 
-..  C is the language *Python* is written in. Many of the standard
+.. class:: handout
+    C is the language *Python* is written in. Many of the standard
     libraries are written in C, or are available in C and Python versions.
 
 So, let's assume there are C libraries worth using from Python.
@@ -152,27 +153,31 @@ SWIG
     Simplified Wrapper and Interface Generator
 
 What goes in?
+.. class:: handout
     The SWIG user creates a SWIG inteface file, with a .i extension. The
     SWIG interface file references the C header files for the library
     that 
 
 What comes out?
+.. class:: handout
     A C source file to be compiled into a Python extension.
     A Python file to be imported by the Python interpreter.
 
 Is SWIG a language?
+.. class:: handout
     Not really. The SWIG interface file is a way of marking up a C
     header file to do some common conversions.
 
 SWIG interface file
 -------------------
 
-%module adder
-%{
-#include "adder.h"
-%}
+.. code-block:: c
+    %module adder
+    %{
+    #include "adder.h"
+    %}
 
-int add(int x, int y);
+    int add(int x, int y);
 
 Return Values
 -------------
