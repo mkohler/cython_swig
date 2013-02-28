@@ -41,8 +41,9 @@ Topics
 An Aside: Anatomy of C Libraries (3 minutes)
 ============================================
 
-C source + C header ---> shared library (binary)
-
+C source + C header ---------> shared library (binary)
+                     compiler,
+                     linker
 
 .. class:: handout
     C is the language *Python* is written in. Many of the standard
@@ -69,13 +70,14 @@ Smallest C Library
 C Source File
 ~~~~~~~~~~~~~
 
-This is a C function which adds to two integers, and returns the
-result::
-
     int
     add(int x, int y) {
         return x + y;
     }
+
+.. class:: handout
+    This is a C function which adds to two integers, and returns the
+    result::
 
 Header File
 ~~~~~~~~~~~
