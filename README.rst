@@ -7,36 +7,42 @@ Cython vs. SWIG, Fight!
 :Author: Mark Kohler
 :Date: 2013-03-15
 
-Need to use a C library from Python?
+Using C libraries in Python
 
-"Should I use SWIG or Cython?"
+Why?
+====
 
-The Rules of this Fight
-=======================
+Not everything is in the standard library
+TODO: Look up stdlibraries that use swig.
+So, let's assume there are C libraries worth using from Python.
+(libxml, sockets, libpng, libusb, ...)
 
+I'm going to show you the smallest C library ever. And then I'll show
+you how to access it from Cython and SWIG.
 
-Topics
-======
+(Quickly list examples, 1 per slide)
 
-"Code first
+The Rules of the Fight
+======================
 
-- C libraries
-- SWIG example
-- Cython example
+- a short review of a tiny C library
+- a SWIG example
+- a Cython example
 - Fear and Magic
 
 .. class:: handout
+
+    This talk is for people who know C and Python, but haven't mixed them.
     
     Cython and SWIG are excellent, and yet very different, tools for using C
     libraries from Python. The goal of this talk is to introduce both tools,
     discuss their strengths, their weaknesses, and the situations that clearly
     favor one tool over the other.
 
+    "Code first and ask questions later."
+
     In other words, I want to show you the code before we move on to gross
     generalizations.
-
-
-
 
 An Aside: Anatomy of C Libraries (3 minutes)
 ============================================
@@ -46,29 +52,23 @@ C source + C header ---------> shared library (binary)
                      linker
 
 .. class:: handout
+    If you're not familiar with C...
+
     C is the language *Python* is written in. Many of the standard
     libraries are written in C, or are available in C and Python versions.
 
-So, let's assume there are C libraries worth using from Python.
-(libxml, sockets, libpng, libusb, ...)
+    CPython vs Python
 
-I'm going to show you the smallest C library ever. And then I'll show
-you how to access it from Cython and SWIG.
+        
 
-(Quickly list examples, 1 per slide)
-
-Build diagram
-=============
-
-
-C header + SWIG interface ---> shared library + python glue module
 
 
 Smallest C Library
-------------------
+==================
 
-C Source File
-~~~~~~~~~~~~~
+adder.c
+
+.. code-block:: c
 
     int
     add(int x, int y) {
@@ -76,74 +76,39 @@ C Source File
     }
 
 .. class:: handout
+
     This is a C function which adds to two integers, and returns the
-    result::
-
-Header File
-~~~~~~~~~~~
+    result...
 
 
-In C, the interface to a function is typically declared in a separate file, a
-*header* file. Here is the header file for our libadder::
+Smallest C Library - Header File
+================================
+
+adder.h
+
+.. code-block:: c
 
     int add(int, int);
 
-Three parts:
-    the *name* of the function
-    the *types* of the parameters
-    the *type* of the return value
+.. class:: handout
 
-The header also can include the names of the parameters, but these are ignored.
+    In C, the interface to a function is typically declared in a separate file,
+    a *header* file. Here is the header file for our libadder.
 
-Audience
-========
+    Three parts:
+        the *name* of the function
+        the *types* of the parameters
+        the *type* of the return value
 
-You know C and Python, but you haven't mixed them.
-
-
-Magic
------
-
-Show generated code from SWIG and Cython. 
-
-When you look under the covers, it is *still* magic.
-
-Which brings me to fear.
-
-Fears
-=====
-
-- If you don't understand a tool, it is easy to be scared.
-
-- My concern is that I would choose a tool, and get 90% of the way there, and
-  then find a routine that I couldn't properly wrap, and I would be stuck.
-
-- I would have trouble incorporating it into the build.
-
-- Once incorporated, the tool would be too hard to understand or debug.
-
-- The tool would take too long to get started.
+    The header also can include the names of the parameters, but these are ignored.
 
 
-What They Are
--------------
+Build diagram
+=============
 
-SWIG is...
-
-    Wrapper C libraries for Python and Ruby and Perl and PHP and Scheme and ...
-    ...and noticing that there is a lot in common and maybe that can be wrapped
-    up and automated.
-
-    If I take something like a header file, with a few hints, I could
-    automatically create these wrappers.
+C header + SWIG interface ---> shared library + python glue module
 
 
-Cython is...
-
-    If I take something like a header, I can, line-by-line, reference objects
-    as C or Python objects, and convert between them.
-
-    Sort of like in-line assembly.
 
 
 
@@ -155,25 +120,29 @@ SWIG
     Simplified Wrapper and Interface Generator
 
 What goes in?
+
 .. class:: handout
     The SWIG user creates a SWIG inteface file, with a .i extension. The
     SWIG interface file references the C header files for the library
     that 
 
 What comes out?
+
 .. class:: handout
     A C source file to be compiled into a Python extension.
     A Python file to be imported by the Python interpreter.
 
 Is SWIG a language?
+
 .. class:: handout
     Not really. The SWIG interface file is a way of marking up a C
     header file to do some common conversions.
 
 SWIG interface file
--------------------
+===================
 
 .. code-block:: c
+
     %module adder
     %{
     #include "adder.h"
@@ -181,8 +150,8 @@ SWIG interface file
 
     int add(int x, int y);
 
-Return Values
--------------
+SWIG and Return Values
+======================
 
 Error
 
@@ -193,7 +162,7 @@ adder_sr
 SR stands for "status returns" or "second revision"
 
 SWIG and Strings
-----------------
+================
 
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
@@ -210,11 +179,11 @@ page I'm doing now.
 Examples of standard libraries using SWIG?
 Examples of standard libraries using Cython?
 
-Adding structs, arrays and pointers
------------------------------------
+SWIG: structs, arrays and pointers
+==================================
 
-Typemaps (2 minutes)
-====================
+SWIG: Typemaps (2 minutes)
+==========================
 
 What is Cython? (2 minutes)
 ===========================
@@ -243,8 +212,9 @@ Cython, the Language (2 minutes)
 Cython: How is that possible? (2 minutes)
 =========================================
 
-build process
--------------
+Cygin: build process
+====================
+
 
 Cython compiles .pyx file to .c file.
 
@@ -255,7 +225,7 @@ Compile C file into shared object library.
 toolchain diagram
 
 Cython Workflow
----------------
+===============
 
 Take your C header file and (manually) create a .pxd file::
     Copy the file
@@ -276,12 +246,36 @@ Import the .so from plain python.
 Cython Code Walkthrough (5 minutes)
 ===================================
 
+What They Are
+=============
+
+SWIG is...
+
+    Wrapper C libraries for Python and Ruby and Perl and PHP and Scheme and ...
+    ...and noticing that there is a lot in common and maybe that can be wrapped
+    up and automated.
+
+    If I take something like a header file, with a few hints, I could
+    automatically create these wrappers.
+
+
+Cython is...
+
+    If I take something like a header, I can, line-by-line, reference objects
+    as C or Python objects, and convert between them.
+
+    Sort of like in-line assembly.
+
+
+
+
+
 SWIG Advantages and Disadvantages(1 minute)
 ===========================================
 
 
 Create Extensions for Other Languages
--------------------------------------
+=====================================
 
 If you write C library code, and you want to provide bindings (wrappers)
 for Python, Java, and Ruby, SWIG can do that.
@@ -314,6 +308,31 @@ you're going to invest your time in, there's a concern that you will
 pick a tool that gets you 90% of the way there.
 
 Neither of these tools will do that, I think?
+
+
+Magic
+=====
+
+Show generated code from SWIG and Cython. 
+
+When you look under the covers, it is *still* magic.
+
+Which brings me to fear.
+
+Fear
+====
+
+- If you don't understand a tool, it is easy to be scared.
+
+- My concern is that I would choose a tool, and get 90% of the way there, and
+  then find a routine that I couldn't properly wrap, and I would be stuck.
+
+- I would have trouble incorporating it into the build.
+
+- Once incorporated, the tool would be too hard to understand or debug.
+
+- The tool would take too long to get started.
+
 
 Alternatives to Cython and SWIG (2 minutes)
 ===========================================
