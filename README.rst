@@ -13,14 +13,17 @@ Using C libraries in Python
 
     Hello, Welcome to Cython vs SWIG, Fight!.
     
-    Today I'm going to talk about two tools using C libraries in Python.
+    Today I'm going to talk about using C libraries in Python.
    
+    What is this fight about?
     Wrapping C libraries 
-    Not everything is in the standard library. 
-    W
+    
+    Well, not everything is in the standard library. 
+    In fact, there may even be things you want that you can't get from
+    the cheese shop.
 
-    Even the cheese shop doesn't have 
-
+    Cython and SWIG are two excellent tools for wrapping C libraries
+    that don't already have Python bindings.
     cutting-edge algorithms
 
     Cython and SWIG are excellent, and yet very different, tools for using C
@@ -33,6 +36,7 @@ Pre-Fight
 =========
 
 - CPython
+
 
 - C extensions
 
@@ -48,6 +52,14 @@ http://docs.python.org/2/extending/
 
     You may need to use a C library
 
+.. class:: handout
+
+    If you haven't seen the term "CPython" before, it refers to the most
+    popular Python implementation, the one hosted on python.org, and the
+    one 
+
+    CPython is the 
+
 
 Why?
 ====
@@ -60,12 +72,33 @@ you how to access it from Cython and SWIG.
 The Rules of the Fight
 ======================
 
-- a short review of a tiny C library
-- a SWIG example
-- a Cython example
-- Fear and Magic
+- C libraries
+- a *very* small library
+- fear and magic
 
 .. class:: handout
+
+    - review C library anatomy
+    - show a tiny C library
+    - show SWIG
+    - show Cython
+    - Grow the library, and the SWIG and Cython interfaces.
+    - Fear and Magic
+
+    How am I going to present this?
+
+    I'm going to quickly review the structure of C lib
+
+    I'm going to show you a *very* small C library.
+    
+    Then I will show you how to use SWIG to access the library. 
+    Then I will show you how to use Cython to access the library. 
+
+    And then I 
+
+    And then I will talk about fear and magic.
+
+    Finally, I will make some gross generalizations.
 
     This talk is for people who know C and Python, but haven't mixed them.
     
@@ -75,14 +108,27 @@ The Rules of the Fight
     In other words, I want to show you the code before we move on to gross
     generalizations.
 
-An Aside: Anatomy of C Libraries (3 minutes)
-============================================
+
+Anatomy of C Libraries
+======================
 
 C source + C header ---------> shared library (binary)
                      compiler,
                      linker
 
+
+
 .. class:: handout
+    TODO: Indicate on the slide which files are human-generated
+    and which are computer-generated.
+    Let's talk about C libraries.
+
+    C libraries consists of:
+
+        the C source code
+        a header file, which describe the library interface,
+        ...what goes in, and what comes out.
+
     If you're not familiar with C...
 
     C is the language *Python* is written in. Many of the standard
@@ -90,12 +136,9 @@ C source + C header ---------> shared library (binary)
 
     CPython vs Python
 
-        
 
-
-
-Smallest C Library
-==================
+adder.c
+=======
 
 adder.c
 
@@ -112,8 +155,15 @@ adder.c
     result...
 
 
-Smallest C Library - Header File
-================================
+    For this discussion, we're going to assume the library is already
+    written. Maybe you wrote it, or maybe it's a third-party library,
+    and all you have is a header file and a binary, but either way,
+    we're going to assume we don't want to change the library's interface.
+
+
+
+adder.h
+=======
 
 adder.h
 
@@ -133,6 +183,7 @@ adder.h
 
     The header also can include the names of the parameters, but these are ignored.
 
+    And you can see, it repeats a lot of the information that was in adder.c
 
 Build diagram
 =============
@@ -180,6 +231,71 @@ SWIG interface file
     %}
 
     int add(int x, int y);
+
+Cython: Big Picture
+===================
+
+Given: header + shared object
+
+You create:
+    Cython interface file (.pxd)
+    Cython source file (.pyx)
+
+Cython will build:
+    a Python extension
+
+
+.. class:: handout 
+
+.pxd
+    - the interface file
+    - references a C header
+
+.pyx
+    - Cython source code
+    - reference .pxd file
+
+    Take those two, plus a shared library, and you 
+        Now let's look at Cython. Here's the 
+
+
+Cython:  Interface File
+=======================
+
+.. code-block:: c
+
+    cdef extern from "adder.h":
+
+        int add(int x, int y)
+        char * get_version()
+        char * make_greeting(char * name)
+
+.. class:: handout
+
+
+Cython Source File
+==================
+
+.. code-block:: python
+
+    cimport c_adder
+
+    def add(x, y):
+        return c_adder.add(x, y)
+
+Cython Source File, 2
+=====================
+
+.. code-block:: python
+
+    ADDER_VERSION = c_adder.ADDER_VERSION
+    def get_version():
+        return c_adder.get_version()
+
+    def make_greeting(name):
+        return c_adder.make_greeting(name)
+
+
 
 SWIG and Return Values
 ======================
@@ -275,69 +391,6 @@ Create a .pyx file.
 Build a Python extension from the .pyx file. (Create a .so)
 
 Import the .so from plain python.
-
-Cython: Big Picture
-===================
-
-Given: header + shared object
-
-You create:
-    Cython interface file (.pxd)
-    Cython source file (.pyx)
-
-Cython will build:
-    a Python extension
-
-
-.. class:: handout 
-
-.pxd
-    - the interface file
-    - references a C header
-
-.pyx
-    - Cython source code
-    - reference .pxd file
-
-    Take those two, plus a shared library, and you 
-        Now let's look at Cython. Here's the 
-
-
-Cython:  Interface File
-=======================
-
-.. code-block:: c
-
-    cdef extern from "adder.h":
-
-        int add(int x, int y)
-        char * get_version()
-        char * make_greeting(char * name)
-
-.. class:: handout
-
-
-Cython Source File
-==================
-
-.. code-block:: python
-
-    cimport c_adder
-
-    def add(x, y):
-        return c_adder.add(x, y)
-
-Cython Source File, 2
-=====================
-
-.. code-block:: python
-
-    ADDER_VERSION = c_adder.ADDER_VERSION
-    def get_version():
-        return c_adder.get_version()
-
-    def make_greeting(name):
-        return c_adder.make_greeting(name)
 
 Cython and C strings
 ====================
