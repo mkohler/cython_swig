@@ -5,17 +5,52 @@ Cython vs. SWIG, Fight!
 =======================
 
 :Author: Mark Kohler
-:Date: 2013-03-15
+:Date: 2013-03-16
 
 Using C libraries in Python
 
+.. class:: handout
+
+    Hello, Welcome to Cython vs SWIG, Fight!.
+    
+    Today I'm going to talk about two tools using C libraries in Python.
+   
+    Wrapping C libraries 
+    Not everything is in the standard library. 
+    W
+
+    Even the cheese shop doesn't have 
+
+    cutting-edge algorithms
+
+    Cython and SWIG are excellent, and yet very different, tools for using C
+    libraries from Python. The goal of this talk is to introduce both tools,
+    discuss their strengths, their weaknesses, and the situations that clearly
+    favor one tool over the other.
+    
+
+Pre-Fight
+=========
+
+- CPython
+
+- C extensions
+
+http://docs.python.org/2/extending/
+.. class:: handout
+
+    What is this fight about?
+
+
+    At some point, 
+
+    You may have 
+
+    You may need to use a C library
+
+
 Why?
 ====
-
-Not everything is in the standard library
-TODO: Look up stdlibraries that use swig.
-So, let's assume there are C libraries worth using from Python.
-(libxml, sockets, libpng, libusb, ...)
 
 I'm going to show you the smallest C library ever. And then I'll show
 you how to access it from Cython and SWIG.
@@ -34,10 +69,6 @@ The Rules of the Fight
 
     This talk is for people who know C and Python, but haven't mixed them.
     
-    Cython and SWIG are excellent, and yet very different, tools for using C
-    libraries from Python. The goal of this talk is to introduce both tools,
-    discuss their strengths, their weaknesses, and the situations that clearly
-    favor one tool over the other.
 
     "Code first and ask questions later."
 
@@ -164,6 +195,9 @@ SR stands for "status returns" or "second revision"
 SWIG and Strings
 ================
 
+"SWIG is not in the business of enforcing morality."
+    - SWIG documentation, Section 8.3 C String Handling
+
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
 
@@ -242,33 +276,35 @@ Build a Python extension from the .pyx file. (Create a .so)
 
 Import the .so from plain python.
 
+Cython: Big Picture
+===================
 
-Cython Code Walkthrough (5 minutes)
-===================================
+Given: header + shared object
 
-What They Are
-=============
+You create:
+    Cython interface file (.pxd)
+    Cython source file (.pyx)
 
-SWIG is...
-
-    Wrapper C libraries for Python and Ruby and Perl and PHP and Scheme and ...
-    ...and noticing that there is a lot in common and maybe that can be wrapped
-    up and automated.
-
-    If I take something like a header file, with a few hints, I could
-    automatically create these wrappers.
+Cython will build:
+    a Python extension
 
 
-Cython is...
+.. class:: handout 
 
-    If I take something like a header, I can, line-by-line, reference objects
-    as C or Python objects, and convert between them.
+.pxd
+    - the interface file
+    - references a C header
 
-    Sort of like in-line assembly.
+.pyx
+    - Cython source code
+    - reference .pxd file
+
+    Take those two, plus a shared library, and you 
+        Now let's look at Cython. Here's the 
 
 
-Cython Interface File
-=====================
+Cython:  Interface File
+=======================
 
 .. code-block:: c
 
@@ -277,6 +313,8 @@ Cython Interface File
         int add(int x, int y)
         char * get_version()
         char * make_greeting(char * name)
+
+.. class:: handout
 
 
 Cython Source File
@@ -300,6 +338,29 @@ Cython Source File, 2
 
     def make_greeting(name):
         return c_adder.make_greeting(name)
+
+Cython and C strings
+====================
+
+What They Are
+=============
+
+SWIG is...
+
+    Wrapper C libraries for Python and Ruby and Perl and PHP and Scheme and ...
+    ...and noticing that there is a lot in common and maybe that can be wrapped
+    up and automated.
+
+    If I take something like a header file, with a few hints, I could
+    automatically create these wrappers.
+
+
+Cython is...
+
+    If I take something like a header, I can, line-by-line, reference objects
+    as C or Python objects, and convert between them.
+
+    Sort of like in-line assembly.
 
 
 SWIG Advantages and Disadvantages(1 minute)
@@ -345,6 +406,19 @@ Neither of these tools will do that, I think?
 Magic
 =====
 
+.. class:: handout
+
+    I've been a C programmer for a long time, and when I first saw how easy it
+    was to play with the sockets library, to play with, interactively, from the
+    Python prompt, I was amazed. 
+    
+    It was so different from the world I lived in, and compiling, and linking
+    and just plain (pause) waiting for the build to finish.
+    
+    The python way seemed like magic to me.
+
+    Then later, when I saw 
+
 Show generated code from SWIG and Cython. 
 
 When you look under the covers, it is *still* magic.
@@ -378,8 +452,24 @@ Extra bonus: distutils vs autotools, fight!
 ===========================================
 
 distutils is much easier for compiling SWIG or Cython extensions.
+
+
 It is possible with autotools, but ...
 (show slide of all the stuff in the Makefile from 90e325):w
+
+.. class:: handout
+
+    (pause). 
+    distutils wins. distutils includes 
+
+    Did anyone knows that distutils includes code to parse Makefiles?
+    It's in sysconfig.py, and it actually parses the Makefile that builds the
+    Python interpreter. There's nothing like that in the autotools.
+
+    For the code in this presentation, I started out with autotools, but
+    switched to distutils because I thought it was just too ugly to watch
+    what distutils did, and copy that.
+    CFLAGS from a 
 
 
 
@@ -387,12 +477,7 @@ Unincorporated Content
 ======================
 - Performance comparison
 
-- String manipulation, C strings
-
 - DRY and maintainability. How much of the header do you have copy?
-
-"SWIG is not in the business of enforcing morality."
-    - SWIG documentation, Section 8.3 C String Handling
 
 - Safety comparison
 
@@ -403,13 +488,6 @@ Unincorporated Content
     i.e. send the wrong kind of parameters into a C function
 
 
-In SWIG, if you get to a C function that doesn't "fit", that SWIG can't wrap, you can go a few ways
-    1. If you're lucky, there is always a typemap macro to help you.
-    2. If not, you use typemaps to massage things. And finally, if that doesn't work
-
-    3. Write another C library, to wrap the first, and use SWIG to wrap that.
-
-
 SWIG isn't magic. You have to SWIG each target language separately.
     
 What are the rules of this fight?
@@ -417,3 +495,20 @@ What are the rules of this fight?
 Not that long ago, I was given several C libraries...
 
 This is a Python conference. Why am I talking about C?
+
+SWIG: Can You Get Stuck?
+========================
+
+.. class:: handout
+
+    In SWIG, if you get to a C function that doesn't "fit", that SWIG can't
+    wrap, you can go a few ways:
+
+        1. If you're lucky, there is always a typemap macro to help you.
+        2. If not, you use typemaps to massage things. And finally, if that
+           doesn't work
+        3. Write another C library, to wrap the first, and use SWIG to wrap
+           that.
+
+
+Cython
