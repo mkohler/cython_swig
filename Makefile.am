@@ -18,7 +18,7 @@ test_adder_CPPFLAGS = -Wall -Werror -I$(srcdir)/libadder -I$(srcdir)/minunit
 test_adder_LDADD = libadder.la -lrt
 
 
-TESTS = test_adder
+TESTS = test_adder test_extensions.sh
 
 slides:
 	rst2odp README.rst slides.odp
