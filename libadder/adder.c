@@ -18,7 +18,7 @@ get_version(void) {
 
 
 char *
-make_greeting(char *name) {
+greeting(char *name) {
     char * out_s = (char *)calloc(MAX_STR_LEN, 1);
     strcat(out_s, "Hello, ");
     strcat(out_s, name);
@@ -51,7 +51,7 @@ get_version_sr(char * output, int buflen) {
 
 #define GREETING "Hello, "
 int
-make_greeting_sr(char * name, char * output, int buflen) {
+greeting_sr(char * name, char * output, int buflen) {
     if (buflen < (strlen(GREETING) + strlen(name) + 1)) {
         output[0] = 0;
         return 1;

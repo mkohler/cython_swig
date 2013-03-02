@@ -46,17 +46,17 @@ def test_get_version_sr():
     eq_(adder.get_version_sr(64), [0, adder.ADDER_VERSION])
 
 
-# Test adder.make_greeting
+# Test adder.greeting
 
-def test_make_greeting():
-    eq_(adder.make_greeting("Python"), "Hello, Python")
+def test_greeting():
+    eq_(adder.greeting("Python"), "Hello, Python")
 
 
-def test_make_greeting_sr_small_buf():
-    eq_(adder.make_greeting_sr("Python", 5), [1, ''])
+def test_greeting_sr_small_buf():
+    eq_(adder.greeting_sr("Python", 5), [1, ''])
 
-def test_make_greeting_sr():
-    eq_(adder.make_greeting_sr("Python", 64), [0, "Hello, Python"])
+def test_greeting_sr():
+    eq_(adder.greeting_sr("Python", 64), [0, "Hello, Python"])
 
 
 if __name__ == '__main__':

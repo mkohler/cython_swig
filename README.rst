@@ -267,7 +267,39 @@ Cython is...
     Sort of like in-line assembly.
 
 
+Cython Interface File
+=====================
 
+.. code-block:: c
+
+    cdef extern from "adder.h":
+
+        int add(int x, int y)
+        char * get_version()
+        char * make_greeting(char * name)
+
+
+Cython Source File
+==================
+
+.. code-block:: python
+
+    cimport c_adder
+
+    def add(x, y):
+        return c_adder.add(x, y)
+
+Cython Source File, 2
+=====================
+
+.. code-block:: python
+
+    ADDER_VERSION = c_adder.ADDER_VERSION
+    def get_version():
+        return c_adder.get_version()
+
+    def make_greeting(name):
+        return c_adder.make_greeting(name)
 
 
 SWIG Advantages and Disadvantages(1 minute)

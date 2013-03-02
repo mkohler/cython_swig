@@ -41,21 +41,21 @@ def test_get_version_sr():
     eq_(cy_adder.get_version(), cy_adder.ADDER_VERSION)
 
 
-# Test make_greeting
-def test_make_greeting():
-    eq_(cy_adder.make_greeting("Python"),
+# Test greeting
+def test_greeting():
+    eq_(cy_adder.greeting("Python"),
         "Hello, Python")
 
 
-# Test make_greeting_sr
+# Test greeting_sr
 
-def test_make_greeting_sr():
-    eq_(cy_adder.make_greeting_sr("Python"),
+def test_greeting_sr():
+    eq_(cy_adder.greeting_sr("Python"),
         "Hello, Python")
 
 @raises(MemoryError)
-def test_make_greeting_sr_long_name():
-    cy_adder.make_greeting_sr( "Python Programming Language")
+def test_greeting_sr_long_name():
+    cy_adder.greeting_sr( "Python Programming Language")
 
 if __name__ == '__main__':
     import nose
