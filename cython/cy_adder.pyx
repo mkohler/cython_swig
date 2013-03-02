@@ -24,15 +24,15 @@ def get_version_sr():
     return version_str
 
 
-def make_greeting(name):
-    return c_adder.make_greeting(name)
+def greeting(name):
+    return c_adder.greeting(name)
 
-def make_greeting_sr(name):
+def greeting_sr(name):
     DEF BUF_LEN = 16
     cdef char out_str[BUF_LEN]
     if len(name) + 10 > BUF_LEN:
         raise MemoryError
-    c_adder.make_greeting_sr(name, out_str, BUF_LEN)
+    c_adder.greeting_sr(name, out_str, BUF_LEN)
     return out_str
 
 
