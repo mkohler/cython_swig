@@ -47,6 +47,7 @@ See libraries
 .. class:: incremental
 
     - **C source** + **C header** --> .obj file
+
     - .obj files --> shared library
 
 .. class:: handout
@@ -69,9 +70,64 @@ See libraries
 import this
 ===========
 
-import socket
+>>> import socket
+
+>>> import datetime
+
+>>> import time
 
 .. class:: handout
+
+    There's one more bit everyone should understand before we continue.
+
+    What's the difference between these three import statements?
+
+    There's no trick here, but the issue is a bit subtle, and varies
+    between platforms.
+
+import socket
+=============
+
+.. code-block:: python
+
+    >>> socket.__file__
+    '/usr/lib/python2.7/socket.pyc'
+    >>>
+
+import time
+===========
+
+.. code-block:: python
+
+    >>> time.__file__
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    AttributeError: 'module' object has no attribute '__file__'
+    >>>
+
+.. class:: handout
+
+    The time module is built and linked to the python interpreter, and
+    thus doesn't have a file attribute.
+
+import datetime
+===============
+
+.. code-block:: python
+
+    >>> time.__file__
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    AttributeError: 'module' object has no attribute '__file__'
+    >>>
+
+.. class:: handout
+
+
+
+   
+    
+    The issue is that _socket is not a Python file. It is a 
 
     What happens when you execute this line? Is socket a Python file?
 
@@ -152,7 +208,6 @@ C header + SWIG interface ---> shared library + python glue module
        C source that wraps your C functions, (~4000)
        Python file that calls the C extension you *will build* from the
        C source. (100 lines)
-
 
 What is SWIG? (2 minutes)
 =========================
