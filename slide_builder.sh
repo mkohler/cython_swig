@@ -1,5 +1,5 @@
 #!/bin/sh
 while :; do
-    inotifywait -qq README.rst
+    inotifywait -e modify -qq README.rst
     make slides
 done
