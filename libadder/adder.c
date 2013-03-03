@@ -61,3 +61,8 @@ greeting_sr(char * name, char * output, int buflen) {
     strcat(output, name);
     return 0;
 }
+
+int
+pair_add(PPAIR ppair) {
+    return ppair->x + ppair->y;
+}

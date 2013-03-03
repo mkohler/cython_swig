@@ -61,6 +61,11 @@ MU_TEST(test_greeting_sr) {
     mu_check_str_eq(output_s, "Hello, Python");
 }
 
+MU_TEST(test_add_struct) {
+    PAIR pair = {3, 4};
+    mu_check(pair_add(&pair) == 7);
+}
+
 MU_TEST_SUITE(test_suite) {
     MU_RUN_TEST(test_add);
     MU_RUN_TEST(test_get_version);
@@ -69,6 +74,7 @@ MU_TEST_SUITE(test_suite) {
     MU_RUN_TEST(test_add_sr);
     MU_RUN_TEST(test_get_version_sr);
     MU_RUN_TEST(test_greeting_sr);
+    MU_RUN_TEST(test_add_struct);
 }
 
 int
