@@ -34,4 +34,8 @@ def greeting_sr(name):
     return out_str
 
 
-
+def pair_add(x, y):
+    cdef c_adder.PAIR pair
+    pair.x = x
+    pair.y = y
+    return c_adder.pair_add(&pair)
