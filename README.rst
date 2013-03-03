@@ -11,28 +11,15 @@ Using C libraries in Python
 
 .. class:: handout
 
-    Hello, Welcome to Cython vs SWIG, Fight!.
-    
-    Today I'm going to talk about using C libraries in Python.
-   
-    What is this fight about?
-    Wrapping C libraries 
-    
-    Well, not everything is in the standard library. 
-    In fact, there may even be things you want that you can't get from
-    the cheese shop.
+    Hello, welcome to Cython vs SWIG, Fight!.
 
-    You may have 
-
-    Cython and SWIG are two excellent tools for wrapping C libraries
-    that don't already have Python bindings.
-    cutting-edge algorithms
-
-    Cython and SWIG are excellent, and yet very different, tools for using C
-    libraries from Python. The goal of this talk is to introduce both tools,
-    discuss their strengths, their weaknesses, and the situations that clearly
-    favor one tool over the other.
+    This talk is about what happens when you realize that *not* everything
+    is in the standard library. In fact, there may be things you want
+    that you can't even get from the *cheese shop*.
     
+    If those things are C libraries that you want for Python,
+    you're in luck, because there are excellent tools available for
+    wrapping C libraries for Python.
 
 Pre-Fight
 =========
@@ -44,6 +31,11 @@ Pre-Fight
 
 http://docs.python.org/2/extending/
 .. class:: handout
+
+    Cython and SWIG are excellent tools for wrapping C libraries
+    that don't already have Python bindings.
+
+    What is this fight about?
 
     What is this fight about?
 
@@ -108,6 +100,9 @@ The Rules of the Fight
 
     In other words, I want to show you the code before we move on to gross
     generalizations.
+
+    And then at the end, if we have time, I'll make some gross
+    generalizations about these tools, and take some questions.
 
 
 Anatomy of C Libraries
@@ -350,45 +345,138 @@ Cython, the language
     Finally, we have some Cython source code.
 
 
-Cython Source File, 2
+pair_add: C interface
+======================
+
+.. code-block:: c
+
+    typedef struct _PAIR {
+        int x;
+        int y;
+    } PAIR;
+
+    int pair_add(PAIR * ppair);
+
+pair_add: C implementation
+==========================
+
+.. code-block:: c
+
+    int
+    pair_add(PPAIR ppair) {
+        return ppair->x + ppair->y;
+    }
+
+pair_add: SWIG interface
+========================
+
+.. code-block:: c
+
+    typedef struct _PAIR {
+        int x;
+        int y;
+    } PAIR, \*PPAIR;
+
+    int pair_add(PPAIR);
+
+
+pair_add: Cython interface
+==========================
+
+.. code-block:: c
+
+    ctypedef struct PAIR:
+        int x
+        int y
+
+    int pair_add(PAIR * ppair)
+
+
+pair_add: Cython implementation
+===============================
+
+.. code-block:: cython
+
+    def pair_add(x, y):
+        cdef c_adder.PAIR pair
+        pair.x = x
+        pair.y = y
+        return c_adder.pair_add(&pair)
+
+.. class:: handout
+
+    Takes a Python object and returns a Python object.
+
+
+pair_add: SWIG client
 =====================
 
 .. code-block:: python
 
-    ADDER_VERSION = c_adder.ADDER_VERSION
-    def get_version():
-        return c_adder.get_version()
+    def test_pair():
+        pair = adder.PAIR()
+        pair.x = 3
+        pair.y = 4
+        eq_(adder.pair_add(pair), 7)
 
-    def make_greeting(name):
-        return c_adder.make_greeting(name)
+.. class:: handout
 
+    eq_ is an assert from nose unit-testing framework.
 
-adder.c: get_version
-====================
+pair_add: Cython client
+=======================
+
+.. code-block:: python
+
+    def test_pair_add():
+        eq_(cy_adder.pair_add(3, 4), 7)
+
+get_version: C implementation
+=============================
 
 .. code-block:: c
 
+    static char version[] = "v1.0";
+
     char *
     get_version(void) {
-        return "v1.0";
+        return version;
     }
 
+adder.i: get_version (Cython)
+=============================
 
-Strings: Cython
-===============
+.. code-block:: c
+
+    char * get_version(void);
+
+adder.pxd: (SWIG)
+=================
+
+.. code-block:: c
+
+    char * get_version()
+
+Using SWIG's get_version
+========================
+
+.. code-block:: python
+
+    print adder.get_version()
+
+Using Cython's get_version
+==========================
+
+.. code-block:: python
+
+    print cy_adder.get_version()
+
+C Strings
+=========
 
 
 
-SWIG and Return Values
-======================
 
-Error
-
-Status returns vs exception handling
-
-adder_sr
-
-SR stands for "status returns" or "second revision"
 
 SWIG and Strings
 ================
@@ -399,17 +487,6 @@ SWIG and Strings
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
 
-
-
-
-SWIG Code Walkthrough (5 minutes)
-=================================
-
-Should I make slides of the directory tree, and with yellow highlights over the
-page I'm doing now.
-
-Examples of standard libraries using SWIG?
-Examples of standard libraries using Cython?
 
 SWIG: structs, arrays and pointers
 ==================================
@@ -466,10 +543,7 @@ Cython, the Language (2 minutes)
     Here, we assume that you want to use Python, and Cython is the bridge.
 
 
-Cython: How is that possible? (2 minutes)
-=========================================
-
-Cygin: build process
+Cython: build process
 ====================
 
 
@@ -526,25 +600,22 @@ SWIG is...
 
 Cython is...
 
+
     If I take something like a header, I can, line-by-line, reference objects
     as C or Python objects, and convert between them.
 
     Sort of like in-line assembly.
 
 
-SWIG Advantages and Disadvantages(1 minute)
-===========================================
-
-
-Create Extensions for Other Languages
-=====================================
+SWIG, good stuff
+================
 
 If you write C library code, and you want to provide bindings (wrappers)
 for Python, Java, and Ruby, SWIG can do that.
 
-autotools support, sort of
-+ SWIG doesn't pull the gcc flags from the Python Makefile like distutils
-        
+SWIG, bad
+=========
+
 learning curve of typemaps
 
 Cython Advantages and Disadvantages (1 minute)
@@ -554,18 +625,6 @@ Cython Advantages and Disadvantages (1 minute)
     Do performance optimizations "just in time"
     Cython headers
 
-Chart of Use Cases and Tool Recommendation (1 minute)
-=====================================================
-
-There are a lot of details in doing this kind of work.
-
-Can you paint yourself into a corner?
-
-Fear: At the beginning of a project, when you're deciding what tools
-you're going to invest your time in, there's a concern that you will
-pick a tool that gets you 90% of the way there.
-
-Neither of these tools will do that, I think?
 
 
 Magic
@@ -603,6 +662,19 @@ Fear
 - Once incorporated, the tool would be too hard to understand or debug.
 
 - The tool would take too long to get started.
+  
+.. class:: handout
+
+    There are a lot of details in doing this kind of work.
+
+    Can you paint yourself into a corner?
+
+    Fear: At the beginning of a project, when you're deciding what tools
+    you're going to invest your time in, there's a concern that you will
+    pick a tool that gets you 90% of the way there.
+
+    Neither of these tools will do that, I think?
+
 
 
 Alternatives to Cython and SWIG (2 minutes)
@@ -713,3 +785,6 @@ SWIG typemaps
 
 shared libraries
     Writing Shared Libraries by Ulrich Drepper
+
+Both SWIG and Cython have modes 
+There are modes in which the
