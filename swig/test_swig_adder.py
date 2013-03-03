@@ -61,6 +61,15 @@ def test_greeting_sr():
     eq_(adder.greeting_sr("Python", 64), [0, "Hello, Python"])
 
 
+# Test PAIR struct.
+
+def test_pair():
+    pair = adder.PAIR()
+    pair.x = 3
+    pair.y = 4
+    eq_(adder.pair_add(pair), 7)
+
+
 if __name__ == '__main__':
     import nose
     nose.runmodule()
