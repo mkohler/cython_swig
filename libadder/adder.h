@@ -1,5 +1,3 @@
-#define ADDER_VERSION "v1.0"
-
 int add(int, int);
 char * get_version(void);
 char * greeting(char *name);

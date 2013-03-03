@@ -4,6 +4,8 @@ import sys
 import adder
 from nose.tools import eq_, raises
 
+ADDER_VERSION = "v1.0"
+
 # Test adder.add
 
 def test_add():
@@ -30,7 +32,7 @@ def test_add_sr_negative_number():
 # Test adder.get_version
 
 def test_get_version():
-    eq_(adder.get_version(), adder.ADDER_VERSION)
+    eq_(adder.get_version(), ADDER_VERSION)
 
 @raises(TypeError)
 def test_get_version_extra_arg():
@@ -43,7 +45,7 @@ def test_get_version_sr_small_buf():
     eq_(adder.get_version_sr(2), [1, ''])
 
 def test_get_version_sr():
-    eq_(adder.get_version_sr(64), [0, adder.ADDER_VERSION])
+    eq_(adder.get_version_sr(64), [0, ADDER_VERSION])
 
 
 # Test adder.greeting

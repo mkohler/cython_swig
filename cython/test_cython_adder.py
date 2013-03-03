@@ -2,6 +2,8 @@ from nose.tools import eq_, ok_, raises
 
 import cy_adder
 
+ADDER_VERSION = "v1.0"
+
 # Test add
 
 def test_add():
@@ -29,7 +31,7 @@ def test_add_negative_number():
 # Test get_version
 
 def test_get_version():
-    eq_(cy_adder.get_version(), cy_adder.ADDER_VERSION)
+    eq_(cy_adder.get_version(), ADDER_VERSION)
 
 @raises(TypeError)
 def test_get_version_extra_arg():
@@ -38,7 +40,7 @@ def test_get_version_extra_arg():
 # Test get_version_sr
 
 def test_get_version_sr():
-    eq_(cy_adder.get_version(), cy_adder.ADDER_VERSION)
+    eq_(cy_adder.get_version(), ADDER_VERSION)
 
 
 # Test greeting

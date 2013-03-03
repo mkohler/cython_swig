@@ -4,6 +4,7 @@
 #include "adder.h"
 #include "minunit.h"
 
+#define ADDER_VERSION "v1.0"
 #define STR_BUF_LEN 32
 
 MU_TEST(test_add) {

@@ -1,6 +1,4 @@
 cdef extern from "adder.h":
-
-    char * ADDER_VERSION = "v1.0"
     int add(int x, int y)
     char * get_version()
     char * greeting(char * name)
