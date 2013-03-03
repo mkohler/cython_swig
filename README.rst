@@ -22,6 +22,8 @@ Using C libraries in Python
     In fact, there may even be things you want that you can't get from
     the cheese shop.
 
+    You may have 
+
     Cython and SWIG are two excellent tools for wrapping C libraries
     that don't already have Python bindings.
     cutting-edge algorithms
@@ -91,10 +93,9 @@ The Rules of the Fight
 
     I'm going to show you a *very* small C library.
     
-    Then I will show you how to use SWIG to access the library. 
-    Then I will show you how to use Cython to access the library. 
-
-    And then I 
+    Then I will show you how to access it, using SWIG first, and then using
+    Cython. And then we will grow the library, a function at a time, and
+    see how SWIG and Cython handle more complicated interfaces.
 
     And then I will talk about fear and magic.
 
@@ -126,8 +127,11 @@ C source + C header ---------> shared library (binary)
     C libraries consists of:
 
         the C source code
+
         a header file, which describe the library interface,
         ...what goes in, and what comes out.
+
+        a binary, known as a shared libary or shared object
 
     If you're not familiar with C...
 
@@ -136,9 +140,23 @@ C source + C header ---------> shared library (binary)
 
     CPython vs Python
 
+import this
+===========
 
-adder.c
-=======
+import socket
+
+.. class:: handout
+
+    What happens when you execute this line? Is socket a Python file?
+
+    No. socket is a Python extension. That is, it is compiled machine code.
+
+    So, in case you didn't know this. Python can import both "pure python"
+    \*.py" files, as well as shared objects, as long as they were built
+    with the python interface.
+
+adder.c: add
+============
 
 adder.c
 
@@ -154,16 +172,13 @@ adder.c
     This is a C function which adds to two integers, and returns the
     result...
 
-
     For this discussion, we're going to assume the library is already
     written. Maybe you wrote it, or maybe it's a third-party library,
     and all you have is a header file and a binary, but either way,
     we're going to assume we don't want to change the library's interface.
 
-
-
-adder.h
-=======
+adder.h: add
+============
 
 adder.h
 
@@ -185,14 +200,32 @@ adder.h
 
     And you can see, it repeats a lot of the information that was in adder.c
 
+    We will see this again in the SWIG and Cython interface files, which repeat
+    a lot of information which is the C header file, which is C's *interface*
+    file. 
+
+    This is something to watch for, because as our projects gets larger, this
+    represents more work...and more source for problems.
+
 Build diagram
 =============
 
 C header + SWIG interface ---> shared library + python glue module
 
+.. class:: handout
 
+    With SWIG, you look at the C header file, and you write a C interface file,
+    which, has pretty much the same information as the C header file, but it 
+    is in the *SWIG* format.
 
+    Then the SWIG tool, and remember, this IS THE ENTIRE POINT OF SWIG, it
 
+    takes the C header file,
+    and the SWIG interface file, and it generates two files:
+
+       C source that wraps your C functions, (~4000)
+       Python file that calls the C extension you *will build* from the
+       C source. (100 lines)
 
 
 What is SWIG? (2 minutes)
@@ -220,8 +253,8 @@ Is SWIG a language?
     Not really. The SWIG interface file is a way of marking up a C
     header file to do some common conversions.
 
-SWIG interface file
-===================
+adder.i (SWIG interface file)
+=============================
 
 .. code-block:: c
 
@@ -231,6 +264,11 @@ SWIG interface file
     %}
 
     int add(int x, int y);
+
+.. class:: handout
+
+    If you look at this a bit, you may think, "Hey, I've seen this before" and
+    yes, it's pretty similar to the C header file.
 
 Cython: Big Picture
 ===================
@@ -258,23 +296,22 @@ Cython will build:
     Take those two, plus a shared library, and you 
         Now let's look at Cython. Here's the 
 
-
-Cython:  Interface File
-=======================
+Cython: cy_adder.pxd
+====================
 
 .. code-block:: c
 
     cdef extern from "adder.h":
-
         int add(int x, int y)
-        char * get_version()
-        char * make_greeting(char * name)
 
 .. class:: handout
 
+    Hmm...it sure looks a lot like the SWIG interface file. It has some other
+    magic words, but it references a C header file, and it contains
+    information that is very similar to the C header file.
 
-Cython Source File
-==================
+Cython: cy_adder.pyx
+====================
 
 .. code-block:: python
 
@@ -282,6 +319,36 @@ Cython Source File
 
     def add(x, y):
         return c_adder.add(x, y)
+
+.. class:: handout
+
+    Now, this is new. This file does not have an analog in the SWIG
+    workflow.
+    
+    This is a Cython source file. This is the red pill.
+
+
+Cython, the language
+====================
+
+- almost 100% compatible with Python
+
+- optional static types
+
+- can use C libraries, with the cimport statement
+    
+.. class:: handout
+
+    Now, the Cython source file, a PYX file. You need to write some
+    Cython code that will get transformed into C code, which gets
+    compiled, and that is your Python extension, which the Python
+    interpreter can import.
+
+    Line-by-line...the cimport line is referencing the "Cython*
+    interface file.
+
+    Finally, we have some Cython source code.
+
 
 Cython Source File, 2
 =====================
@@ -294,6 +361,21 @@ Cython Source File, 2
 
     def make_greeting(name):
         return c_adder.make_greeting(name)
+
+
+adder.c: get_version
+====================
+
+.. code-block:: c
+
+    char *
+    get_version(void) {
+        return "v1.0";
+    }
+
+
+Strings: Cython
+===============
 
 
 
@@ -332,8 +414,25 @@ Examples of standard libraries using Cython?
 SWIG: structs, arrays and pointers
 ==================================
 
-SWIG: Typemaps (2 minutes)
-==========================
+.. class:: handout
+
+    This gets to the crux of one of the limits of SWIG. What can it do and more
+    importantly, what *can't* it do.
+
+    And what it can't do is de-reference a pointer.
+
+    It can pass pointers around. And that's pretty powerful. You can have your
+    Python object essentially holding a C pointer, but you can't de-reference
+    it.
+
+    Anything you get out of SWIG needs to be in the form that it can convert
+    from a C object to a python object.
+
+    It can convert numbers, ints and floats, at least, automatically.
+
+    It can convert strings, with your help. (As long as strings means ASCII.)
+
+    TODO: structs?
 
 What is Cython? (2 minutes)
 ===========================
@@ -346,6 +445,14 @@ What goes in?
 What comes out?
 
     A C file to be compiled as a Python extension
+
+.. class:: handout
+
+    So, Cython, let's review where we are. Again, like SWIG, 
+    you start with your C header file, and compiled object.
+
+    Then *you* write a PXD file, which is *Cython's* interface file format.
+
 
 Cython, the Language (2 minutes)
 ================================
@@ -391,6 +498,15 @@ Create a .pyx file.
 Build a Python extension from the .pyx file. (Create a .so)
 
 Import the .so from plain python.
+
+.. class:: handout
+
+    Cython inteface file
+    write your Cython 
+    mash those up.
+
+Strings
+=======
 
 Cython and C strings
 ====================
@@ -441,11 +557,7 @@ Cython Advantages and Disadvantages (1 minute)
 Chart of Use Cases and Tool Recommendation (1 minute)
 =====================================================
 
-
-
-
 There are a lot of details in doing this kind of work.
-
 
 Can you paint yourself into a corner?
 
@@ -525,6 +637,23 @@ It is possible with autotools, but ...
     CFLAGS from a 
 
 
+Resources
+=========
+
+code and slides:
+    https://github.com/mkohler/swig_cython
+
+rst2odp:
+    https://github.com/mattharrison/rst2odp.git
+
+.. class:: handout
+
+    Let me thank Matt Harrison for his restructed-text-to-libreoffice-impress
+    tool. I am loving restructuredText, and rst2odp let me create this
+    presentation in restructuredText and convert it to libreOffice Impress.
+
+End
+===
 
 Unincorporated Content
 ======================
@@ -563,5 +692,24 @@ SWIG: Can You Get Stuck?
         3. Write another C library, to wrap the first, and use SWIG to wrap
            that.
 
+TODO
+====
 
-Cython
+Have to include a C struct example.
+
+
+SWIG: Other Uses
+================
+
+SWIG will create C wrappers 
+
+
+SWIG: Other Use Cases
+
+Complicated Bits I Did Not Mention
+==================================
+
+SWIG typemaps
+
+shared libraries
+    Writing Shared Libraries by Ulrich Drepper
