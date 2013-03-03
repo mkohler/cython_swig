@@ -16,7 +16,7 @@ Using C libraries in Python
     This talk is about what happens when you realize that *not* everything
     is in the standard library. In fact, there may be things you want
     that you can't even get from the *cheese shop*.
-    
+
     If those things are C libraries that you want for Python,
     you're in luck, because there are excellent tools available for
     wrapping C libraries for Python.
@@ -94,6 +94,40 @@ import socket
     '/usr/lib/python2.7/socket.pyc'
     >>>
 
+.. class:: handout
+
+    This is the most straight-forward case. The import statement brought
+    in a Python source file from the filesystem.
+
+import datetime
+===============
+
+.. code-block:: python
+
+    >>> datetime.__file__
+    '/usr/lib/python2.7/lib-dynload/datetime.so'
+    >>>
+
+    $ file /usr/lib/python2.7/lib-dynload/datetime.so
+    ELF 64-bit LSB shared object, x86-64, dynamically linked
+    $
+
+.. class:: handout
+
+    Is datetime a Python file? No. No. datetime is a Python extension.
+    The ".so" stands for Shared Object, and it is architecture-specific
+    machine code. In this example, the module uses the x86-64
+    instruction set . Nevertheless, when you import it, it looks and
+    feels like Python code.
+
+    That's pretty great. Applications can be using either interpreted
+    Python code, or compiled machine code, and the interface is exactly
+    the same.
+
+    And that's what we'll be doing with SWIG and Cython, taking compiled
+    code, that doesn't know anything about Python, and making it work
+    just like pure Python code.
+
 import time
 ===========
 
@@ -107,31 +141,11 @@ import time
 
 .. class:: handout
 
-    The time module is built and linked to the python interpreter, and
-    thus doesn't have a file attribute.
+    This last one is the trickiest.
 
-import datetime
-===============
-
-.. code-block:: python
-
-    >>> time.__file__
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    AttributeError: 'module' object has no attribute '__file__'
-    >>>
-
-.. class:: handout
-
-
-
-   
-    
-    The issue is that _socket is not a Python file. It is a 
-
-    What happens when you execute this line? Is socket a Python file?
-
-    No. socket is a Python extension. That is, it is compiled machine code.
+    The time module is also compiled machine code, but it was built and
+    linked to the python interpreter, and thus doesn't have a file
+    attribute. I just wanted to
 
     So, in case you didn't know this. Python can import both "pure python"
     \*.py" files, as well as shared objects, as long as they were built
@@ -184,13 +198,13 @@ adder.h
 
     We will see this again in the SWIG and Cython interface files, which repeat
     a lot of information which is the C header file, which is C's *interface*
-    file. 
+    file.
 
     This is something to watch for, because as our projects gets larger, this
     represents more work...and more source for problems.
 
-Build diagram
-=============
+SWIG build diagram
+==================
 
 C header + SWIG interface ---> shared library + python glue module
 
@@ -220,7 +234,7 @@ What goes in?
 .. class:: handout
     The SWIG user creates a SWIG inteface file, with a .i extension. The
     SWIG interface file references the C header files for the library
-    that 
+    that
 
 What comes out?
 
@@ -264,7 +278,7 @@ Cython will build:
     a Python extension
 
 
-.. class:: handout 
+.. class:: handout
 
 .pxd
     - the interface file
@@ -305,7 +319,7 @@ Cython: cy_adder.pyx
 
     Now, this is new. This file does not have an analog in the SWIG
     workflow.
-    
+
     This is a Cython source file. This is the red pill.
 
 
@@ -317,7 +331,7 @@ Cython, the language
 - optional static types
 
 - can use C libraries, with the cimport statement
-    
+
 .. class:: handout
 
     Now, the Cython source file, a PYX file. You need to write some
@@ -501,7 +515,7 @@ What is Cython? (2 minutes)
 ===========================
 
 What goes in?
-    
+
     PXD file: C declarations, in Cython (D stands for declarations)
     PYX file: Cython source
 
@@ -511,7 +525,7 @@ What comes out?
 
 .. class:: handout
 
-    So, Cython, let's review where we are. Again, like SWIG, 
+    So, Cython, let's review where we are. Again, like SWIG,
     you start with your C header file, and compiled object.
 
     Then *you* write a PXD file, which is *Cython's* interface file format.
@@ -562,7 +576,7 @@ Import the .so from plain python.
 .. class:: handout
 
     Cython inteface file
-    write your Cython 
+    write your Cython
     mash those up.
 
 Strings
@@ -620,16 +634,16 @@ Magic
 
     I've been a C programmer for a long time, and when I first saw how easy it
     was to play with the sockets library, to play with, interactively, from the
-    Python prompt, I was amazed. 
-    
+    Python prompt, I was amazed.
+
     It was so different from the world I lived in, and compiling, and linking
     and just plain (pause) waiting for the build to finish.
-    
+
     The python way seemed like magic to me.
 
-    Then later, when I saw 
+    Then later, when I saw
 
-Show generated code from SWIG and Cython. 
+Show generated code from SWIG and Cython.
 
 When you look under the covers, it is *still* magic.
 
@@ -648,7 +662,7 @@ Fear
 - Once incorporated, the tool would be too hard to understand or debug.
 
 - The tool would take too long to get started.
-  
+
 .. class:: handout
 
     There are a lot of details in doing this kind of work.
@@ -685,8 +699,8 @@ It is possible with autotools, but ...
 
 .. class:: handout
 
-    (pause). 
-    distutils wins. distutils includes 
+    (pause).
+    distutils wins. distutils includes
 
     Did anyone knows that distutils includes code to parse Makefiles?
     It's in sysconfig.py, and it actually parses the Makefile that builds the
@@ -695,7 +709,7 @@ It is possible with autotools, but ...
     For the code in this presentation, I started out with autotools, but
     switched to distutils because I thought it was just too ugly to watch
     what distutils did, and copy that.
-    CFLAGS from a 
+    CFLAGS from a
 
 
 Resources
