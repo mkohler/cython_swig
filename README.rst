@@ -557,16 +557,6 @@ SWIG and C Strings, part 2
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
 
-Cython, the Language (2 minutes)
-================================
-
-    Python, with optional C datatypes.
-
-    Big difference
-
-    You can use Cython *instead* of Python.
-
-    Here, we assume that you want to use Python, and Cython is the bridge.
 
 Cython Workflow
 ===============
@@ -585,6 +575,41 @@ Create a .pyx file.
 Build a Python extension from the .pyx file. (Create a .so)
 
 Import the .so from plain python.
+
+adder.c: greeting_sr()
+======================
+
+
+.. code-block:: c
+
+    #define GREETING "Hello, "
+    int
+    greeting_sr(char * name, char * out, int len) {
+        if (len < (strlen(GREETING) + strlen(name) + 1)) {
+            out[0] = 0;
+            return 1;
+        }
+        strcpy(out, GREETING);
+        strcat(out, name);
+        return 0;
+    }
+
+adder.h: greeting_sr()
+======================
+
+adder.i: greeting_sr()
+======================
+
+cy_adder.pxd: greeting_sr()
+===========================
+
+cy_adder.pyx: greeting_sr()
+===========================
+
+TODO: It looks like in too much of greeting_sr is re-implemented
+in Cython.
+
+
 
 Gross Generalization, SWIG
 ==========================
