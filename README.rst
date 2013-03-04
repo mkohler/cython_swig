@@ -226,6 +226,26 @@ adder.h
     Now that we have covered the C build process, let's look at the SWIG
     build process.
 
+adder.i (SWIG interface file)
+=============================
+
+.. code-block:: c
+
+    %module adder
+    %{
+    #include "adder.h"
+    %}
+
+    int add(int x, int y);
+
+.. class:: handout
+
+    This is adder.i, the SWIG interface file. This is the bit you have
+    to write.
+
+    If you look at this a bit, you may think, "Hey, I've seen this before" and
+    yes, it's pretty similar to the C header file.
+
 SWIG build diagram
 ==================
 
@@ -257,81 +277,19 @@ SWIG build diagram
        Python file that calls the C extension you *will build* from the
        C source. (100 lines)
 
-What is SWIG? (2 minutes)
-=========================
+    What goes in?
 
+        The SWIG user creates a SWIG inteface file, with a .i extension. The
+        SWIG interface file references the C header files for the library
+        that
 
-What goes in?
+    What comes out?
 
-.. class:: handout
-    The SWIG user creates a SWIG inteface file, with a .i extension. The
-    SWIG interface file references the C header files for the library
-    that
+        A C source file to be compiled into a Python extension.
+        A Python file to be imported by the Python interpreter.
 
-What comes out?
-
-.. class:: handout
-    A C source file to be compiled into a Python extension.
-    A Python file to be imported by the Python interpreter.
-
-
-adder.i (SWIG interface file)
-=============================
-
-.. code-block:: c
-
-    %module adder
-    %{
-    #include "adder.h"
-    %}
-
-    int add(int x, int y);
-
-.. class:: handout
-
-    If you look at this a bit, you may think, "Hey, I've seen this before" and
-    yes, it's pretty similar to the C header file.
-
-Cython: Big Picture
+cy_adder.pxd: add()
 ===================
-
-1. Cython
-
-    **adder.h + cy_adder.pxd + cy_adder.pyx** --> cy_adder.c
-
-2. Compile
-
-   **adder.h** + cy_adder.c --> cy_adder.o
-
-3. Link
-
-   cy_adder.o --> cy_adder.so
-
-Given: header + shared object
-
-You create:
-    Cython interface file (.pxd)
-    Cython source file (.pyx)
-
-Cython will build:
-    a Python extension
-
-
-.. class:: handout
-
-.pxd
-    - the interface file
-    - references a C header
-
-.pyx
-    - Cython source code
-    - reference .pxd file
-
-    Take those two, plus a shared library, and you 
-        Now let's look at Cython. Here's the 
-
-Cython: cy_adder.pxd
-====================
 
 .. code-block:: cython
 
@@ -344,8 +302,8 @@ Cython: cy_adder.pxd
     magic words, but it references a C header file, and it contains
     information that is very similar to the C header file.
 
-Cython: cy_adder.pyx
-====================
+cy_adder.pyx: add()
+===================
 
 .. code-block:: cython
 
@@ -360,7 +318,6 @@ Cython: cy_adder.pyx
     workflow.
 
     This is a Cython source file. This is the red pill.
-
 
 Cython, the language
 ====================
@@ -383,9 +340,51 @@ Cython, the language
 
     Finally, we have some Cython source code.
 
+Cython build diagram
+====================
 
-pair_add: C interface
-======================
+1. Cython
+
+    **adder.h + cy_adder.pxd + cy_adder.pyx** --> cy_adder.c
+
+2. Compile
+
+   **adder.h** + cy_adder.c --> cy_adder.o
+
+3. Link
+
+   cy_adder.o --> cy_adder.so
+
+.. class:: handout
+
+    So, Cython, let's review where we are. Again, like SWIG,
+    you start with your C header file, and compiled object.
+
+    Then *you* write a PXD file, which is *Cython's* interface file format.
+
+
+    Given: header + shared object
+
+    You create:
+        Cython interface file (.pxd)
+        Cython source file (.pyx)
+
+    Cython will build:
+        a Python extension
+
+    .pxd
+        - the interface file
+        - references a C header
+
+    .pyx
+        - Cython source code
+        - reference .pxd file
+
+        Take those two, plus a shared library, and you 
+            Now let's look at Cython. Here's the 
+
+adder.h: pair_add()
+===================
 
 .. code-block:: c
 
@@ -396,8 +395,8 @@ pair_add: C interface
 
     int pair_add(PAIR * ppair);
 
-pair_add: C implementation
-==========================
+adder.c: pair_add()
+===================
 
 .. code-block:: c
 
@@ -406,8 +405,8 @@ pair_add: C implementation
         return ppair->x + ppair->y;
     }
 
-pair_add: SWIG interface
-========================
+adder.i: pair_add()
+===================
 
 .. code-block:: c
 
@@ -419,8 +418,8 @@ pair_add: SWIG interface
     int pair_add(PPAIR);
 
 
-pair_add: Cython interface
-==========================
+adder.pxd: pair_add()
+=====================
 
 .. code-block:: cython
 
@@ -431,8 +430,8 @@ pair_add: Cython interface
     int pair_add(PAIR * ppair)
 
 
-pair_add: Cython implementation
-===============================
+adder.pyx: pair_add()
+=====================
 
 .. code-block:: cython
 
@@ -447,8 +446,8 @@ pair_add: Cython implementation
     Takes a Python object and returns a Python object.
 
 
-pair_add: SWIG client
-=====================
+test_swig.py: pair_add
+========================
 
 .. code-block:: python
 
@@ -462,16 +461,23 @@ pair_add: SWIG client
 
     eq\_ is an assert from nose unit-testing framework.
 
-pair_add: Cython client
-=======================
+test_cython.py: pair_add
+========================
 
-.. code-block:: python
+.. code-block:: cython
 
     def test_pair_add():
         eq_(cy_adder.pair_add(3, 4), 7)
 
-get_version: C implementation
-=============================
+adder.h: get_version
+====================
+
+.. code-block:: c
+
+    char * get_version(void);
+
+adder.c: get_version()
+======================
 
 .. code-block:: c
 
@@ -482,15 +488,15 @@ get_version: C implementation
         return version;
     }
 
-adder.i: get_version (Cython)
+adder.i: get_version()
 =============================
 
 .. code-block:: c
 
     char * get_version(void);
 
-adder.pxd: (SWIG)
-=================
+adder.pxd: get_version()
+========================
 
 .. code-block:: c
 
@@ -510,64 +516,48 @@ Using Cython's get_version
 
     print cy_adder.get_version()
 
-C Strings
-=========
+Cython and C Strings
+====================
 
+"In many use cases, C strings (a.k.a. character pointers) are slow and
+cumbersome. [...] Generally speaking: unless you know what you are doing,
+avoid using C strings where possible and use Python string objects
+instead."
 
+    - Cython documentation, General Notes about C strings
 
+.. class:: handout
 
+    C Strings, the source of all good buffer overflows. Let's see what
+    the Cython documentation says about C strings.
 
-SWIG and Strings
-================
+SWIG and C Strings
+==================
 
-"SWIG is not in the business of enforcing morality."
+"The problems (and perils) of using char * are well-known. However, SWIG
+is not in the business of enforcing morality."
+
     - SWIG documentation, Section 8.3 C String Handling
+
+.. class:: handout
+
+    Speaking as a C programmer *and* a Python programmer, C strings are a
+    nightmare. Really, it's not fair to strings to call them strings. They
+    are fixed-size, mutable, arrays of bytes.
+
+
+
+
+
 
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
 
 
-SWIG: structs, arrays and pointers
-==================================
-
-.. class:: handout
-
-    This gets to the crux of one of the limits of SWIG. What can it do and more
-    importantly, what *can't* it do.
-
-    And what it can't do is de-reference a pointer.
-
-    It can pass pointers around. And that's pretty powerful. You can have your
-    Python object essentially holding a C pointer, but you can't de-reference
-    it.
-
-    Anything you get out of SWIG needs to be in the form that it can convert
-    from a C object to a python object.
-
-    It can convert numbers, ints and floats, at least, automatically.
-
-    It can convert strings, with your help. (As long as strings means ASCII.)
-
-    TODO: structs?
 
 What is Cython? (2 minutes)
 ===========================
 
-What goes in?
-
-    PXD file: C declarations, in Cython (D stands for declarations)
-    PYX file: Cython source
-
-What comes out?
-
-    A C file to be compiled as a Python extension
-
-.. class:: handout
-
-    So, Cython, let's review where we are. Again, like SWIG,
-    you start with your C header file, and compiled object.
-
-    Then *you* write a PXD file, which is *Cython's* interface file format.
 
 
 Cython, the Language (2 minutes)
@@ -818,3 +808,24 @@ Is SWIG a language?
 
     Not really. The SWIG interface file is a way of marking up a C
     header file to do some common conversions.
+
+Limits of SWIG
+==============
+
+.. class:: handout
+
+    This gets to the crux of one of the limits of SWIG. What can it do and more
+    importantly, what *can't* it do.
+
+    And what it can't do is de-reference a pointer.
+
+    It can pass pointers around. And that's pretty powerful. You can have your
+    Python object essentially holding a C pointer, but you can't de-reference
+    it.
+
+    Anything you get out of SWIG needs to be in the form that it can convert
+    from a C object to a python object.
+
+    It can convert numbers, ints and floats, at least, automatically.
+
+    It can convert strings, with your help. (As long as strings means ASCII.)
