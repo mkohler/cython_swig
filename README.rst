@@ -368,7 +368,6 @@ Cython build diagram
 
     Then *you* write a PXD file, which is *Cython's* interface file format.
 
-
     Given: header + shared object
 
     You create:
@@ -388,6 +387,21 @@ Cython build diagram
 
         Take those two, plus a shared library, and you 
             Now let's look at Cython. Here's the 
+
+    Take your C header file and (manually) create a .pxd file::
+        Copy the file
+        Remove semi-colons.
+        Convert #defines to variables.
+        ints to bints
+
+    Create a .pyx file.
+        This is where you are really using the Cython language.
+        It can be repetitive, but you also have tons of flexibility in making a
+        Pythonic interface.
+
+    Build a Python extension from the .pyx file. (Create a .so)
+
+    Import the .so from plain python.
 
 adder.h: pair_add()
 ===================
@@ -548,7 +562,7 @@ is not in the business of enforcing morality."
 .. class:: handout
 
     Speaking as a C programmer *and* a Python programmer, C strings are a
-    nightmare. Really, it's not fair to strings to call them strings. They
+    nightmare. Really, it's not fair to to even call them strings. They
     are fixed-size, mutable, arrays of bytes.
 
 SWIG and C Strings, part 2
@@ -556,25 +570,6 @@ SWIG and C Strings, part 2
 
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
-
-
-Cython Workflow
-===============
-
-Take your C header file and (manually) create a .pxd file::
-    Copy the file
-    Remove semi-colons.
-    Convert #defines to variables.
-    ints to bints
-
-Create a .pyx file.
-    This is where you are really using the Cython language.
-    It can be repetitive, but you also have tons of flexibility in making a
-    Pythonic interface.
-
-Build a Python extension from the .pyx file. (Create a .so)
-
-Import the .so from plain python.
 
 adder.c: greeting_sr()
 ======================
