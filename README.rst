@@ -144,29 +144,38 @@ import time
 See libraries
 =============
 
-**C source** + **C header** --> .obj file
+1. Compile
 
-.obj files --> shared library
+    **adder.c + adder.h** --> adder.o
+
+2. Link
+
+    adder.o --> libadder.so
 
 .. class:: handout
 
+    Let's talk about C libraries.
 
-    C libraries consists of:
+    The library we're going to talk about is called adder, because it
+    adds two numbers, and because snake references are easier to make
+    than Monty Python references.
 
-        the C source code
+    The slide shows the build process for libadder. The names in bold
+    are human-generated files. The others are machine-generated. (pause)
 
-        a header file, which describe the library interface,
-        ...what goes in, and what comes out.
+    If you're not familiar with C:
 
-        a binary, known as a shared libary or shared object
+    adder.c is the source code. We will look at it next.
 
-    Let's talk about C libraries. This diagram shows the build process
-    for C libraries.
-    The names in bold are human-generated files.
-    The others are machine-generated.
+    adder.h describes the interface to the library.
 
-adder.c: add
-============
+    and libadder.so is the final shared object, ready to be linked with
+    programs and other shared libraries.
+
+    Now let's look at some code.
+
+adder.c: add()
+==============
 
 adder.c
 
@@ -180,15 +189,15 @@ adder.c
 .. class:: handout
 
     This is a C function which adds to two integers, and returns the
-    result...
+    result.
 
     For this discussion, we're going to assume the library is already
     written. Maybe you wrote it, or maybe it's a third-party library,
     and all you have is a header file and a binary, but either way,
     we're going to assume we don't want to change the library's interface.
 
-adder.h: add
-============
+adder.h: add()
+==============
 
 adder.h
 
@@ -201,26 +210,37 @@ adder.h
     In C, the interface to a function is typically declared in a separate file,
     a *header* file. Here is the header file for our libadder.
 
-    Three parts:
+    It has three parts:
         the *name* of the function
         the *types* of the parameters
         the *type* of the return value
 
-    The header also can include the names of the parameters, but these are ignored.
+    As you may notice, it consists entirely of information that was
+    already in adder.c.
 
-    And you can see, it repeats a lot of the information that was in adder.c
+    This kind of repetition is something to watch out for, because
+    keeping the same information in two places makes for troublesome
+    code maintenance...and we're going to see a lot more repetition in
+    the SWIG and Cython workflow.
 
-    We will see this again in the SWIG and Cython interface files, which repeat
-    a lot of information which is the C header file, which is C's *interface*
-    file.
-
-    This is something to watch for, because as our projects gets larger, this
-    represents more work...and more source for problems.
+    Now that we have covered the C build process, let's look at the SWIG
+    build process.
 
 SWIG build diagram
 ==================
 
-C header + SWIG interface ---> shared library + python glue module
+1. SWIG
+
+    **adder.h + adder.i** --> adder_wrap.c + adder.py
+
+2. Compile
+
+    **adder.h** + adder-wrap.c --> adder_wrap.o
+
+3. Link
+
+    adder_wrap.o + libadder.so --> _adder.so
+
 
 .. class:: handout
 
@@ -240,8 +260,6 @@ C header + SWIG interface ---> shared library + python glue module
 What is SWIG? (2 minutes)
 =========================
 
-SWIG
-    Simplified Wrapper and Interface Generator
 
 What goes in?
 
@@ -256,11 +274,6 @@ What comes out?
     A C source file to be compiled into a Python extension.
     A Python file to be imported by the Python interpreter.
 
-Is SWIG a language?
-
-.. class:: handout
-    Not really. The SWIG interface file is a way of marking up a C
-    header file to do some common conversions.
 
 adder.i (SWIG interface file)
 =============================
@@ -281,6 +294,18 @@ adder.i (SWIG interface file)
 
 Cython: Big Picture
 ===================
+
+1. Cython
+
+    **adder.h + cy_adder.pxd + cy_adder.pyx** --> cy_adder.c
+
+2. Compile
+
+   **adder.h** + cy_adder.c --> cy_adder.o
+
+3. Link
+
+   cy_adder.o --> cy_adder.so
 
 Given: header + shared object
 
@@ -620,7 +645,6 @@ Cython is...
 
     Sort of like in-line assembly.
 
-
 SWIG, good stuff
 ================
 
@@ -630,6 +654,7 @@ for Python, Java, and Ruby, SWIG can do that.
 SWIG, bad
 =========
 
+not DRY
 learning curve of typemaps
 
 Cython Advantages and Disadvantages (1 minute)
@@ -689,18 +714,14 @@ Fear
 
     Neither of these tools will do that, I think?
 
-
-
 Alternatives to Cython and SWIG (2 minutes)
 ===========================================
 
-    writing extensions with the Python C/API
+writing extensions with the Python C/API
 
-        http://docs.python.org/2/extending/
+    http://docs.python.org/2/extending/
 
-    ctypes
-
-
+ctypes
 
 Extra bonus: distutils vs autotools, fight!
 ===========================================
@@ -765,16 +786,21 @@ SWIG: Can You Get Stuck?
 Other Bits I Did Not Mention
 ============================
 
+SWIG stands for Simplified Wrapper and Interface Generator
+
 Neither Cython nor SWIG require source code. A binary libary and a
 header file are sufficient.
 
-Python 3 - SWIG and Cython support Python 3.
+SWIG and Cython support Python 3.
 
 SWIG is not just for Python. It will create C wrappers for a dozen languages.
 
-SWIG typemaps
+Cython has preliminary support for PyPy's C extension API. SWIG does not.
 
-shared libraries
+Topics to Considerg Adding
+==========================
+
+SWIG typemaps
 
 DRY and maintainability. How much of the header do you have copy?
 
@@ -782,11 +808,13 @@ Performance comparison
 
 Safety comparison
 
-UTF strings, don't ask
+UTF strings
     To a first approximation, ANSI C doesn't do Unicode...so
 
 Show what happens when you do the wrong thing.
     i.e. send the wrong kind of parameters into a C function
 
-PyPy
-    Cython has preliminary support for PyPy's C extension API. SWIG does not.
+Is SWIG a language?
+
+    Not really. The SWIG interface file is a way of marking up a C
+    header file to do some common conversions.
