@@ -63,6 +63,6 @@ greeting_sr(char * name, char * output, int buflen) {
 }
 
 int
-pair_add(PPAIR ppair) {
+pair_add(PAIR * ppair) {
     return ppair->x + ppair->y;
 }

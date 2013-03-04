@@ -26,17 +26,22 @@ Pre-Fight
 
 "Code first and ask questions later."
 
+- import statement
+- C libraries
+- growing a library with SWIG and Cython
+
 .. class:: handout
 
-    As this is a *Python* conference, I'm going to to quickly review the
-    structure of *C* libraries, and then we're going to
+    To start this talk, I'm going to to quickly discuss
+    the Python import statement and what it hides.
 
-    start with a very small C library,
+    Then, I'll review the structure of *C* libraries. That is, libraries
+    written in C.
 
-    create Python inteferfaces for it using both SWIG and Cython,
-
-    and then grow the library, adding new features and Python interfaces
-    for those features.
+    From there, I'll show you a very small C library, we'll create
+    Python intefaces for it using both SWIG and Cython, and then we'll
+    grow the library, adding new features and Python interfaces for
+    those features.
 
     At the end, I'll talk about fear and magic, make some gross
     generalizations, and take questions.
@@ -294,7 +299,7 @@ Cython will build:
 Cython: cy_adder.pxd
 ====================
 
-.. code-block:: c
+.. code-block:: cython
 
     cdef extern from "adder.h":
         int add(int x, int y)
@@ -308,7 +313,7 @@ Cython: cy_adder.pxd
 Cython: cy_adder.pyx
 ====================
 
-.. code-block:: python
+.. code-block:: cython
 
     cimport c_adder
 
@@ -375,7 +380,7 @@ pair_add: SWIG interface
     typedef struct _PAIR {
         int x;
         int y;
-    } PAIR, \*PPAIR;
+    } PAIR;
 
     int pair_add(PPAIR);
 
@@ -383,7 +388,7 @@ pair_add: SWIG interface
 pair_add: Cython interface
 ==========================
 
-.. code-block:: c
+.. code-block:: cython
 
     ctypedef struct PAIR:
         int x
@@ -693,7 +698,6 @@ Extra bonus: distutils vs autotools, fight!
 
 distutils is much easier for compiling SWIG or Cython extensions.
 
-
 It is possible with autotools, but ...
 (show slide of all the stuff in the Makefile from 90e325):w
 
@@ -715,17 +719,22 @@ It is possible with autotools, but ...
 Resources
 =========
 
-code and slides:
+code and slides
     https://github.com/mkohler/swig_cython
 
-rst2odp:
+restructedText to LibreOffice Impress
     https://github.com/mattharrison/rst2odp.git
+
+Writing Shared Libraries by Ulrich Drepper
 
 .. class:: handout
 
-    Let me thank Matt Harrison for his restructed-text-to-libreoffice-impress
-    tool. I am loving restructuredText, and rst2odp let me create this
-    presentation in restructuredText and convert it to libreOffice Impress.
+    The code and slides are available on github.
+
+    Let me thank Matt Harrison for his
+    restructed-text-to-libreoffice-impress tool. I am loving
+    restructuredText, and his tool let me create this presentation with
+    restructuredText and the comfort of my favorite editor.
 
 End
 ===
@@ -757,7 +766,6 @@ SWIG is not just for Python. It will create C wrappers for a dozen languages.
 SWIG typemaps
 
 shared libraries
-    Writing Shared Libraries by Ulrich Drepper
 
 DRY and maintainability. How much of the header do you have copy?
 

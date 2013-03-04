@@ -6,7 +6,7 @@
 typedef struct _PAIR {
     int x;
     int y;
-} PAIR, *PPAIR;
+} PAIR;
 
 int add(int, int);
 char * get_version(void);
@@ -22,4 +22,4 @@ int get_version_sr(char * out_str, int buflen);
 
 int greeting_sr(char * name, char * out_str, int buflen);
 
-int pair_add(PPAIR);
+int pair_add(PAIR *);
