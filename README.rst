@@ -223,8 +223,7 @@ adder.h
     code maintenance...and we're going to see a lot more repetition in
     the SWIG and Cython workflow.
 
-    Now that we have covered the C build process, let's look at the SWIG
-    build process.
+    Now that we have covered the C build process, let's look at SWIG.
 
 adder.i (SWIG interface file)
 =============================
@@ -240,11 +239,19 @@ adder.i (SWIG interface file)
 
 .. class:: handout
 
-    This is adder.i, the SWIG interface file. This is the bit you have
-    to write.
+    To use SWIG, you, the programmer, have to create one file, the SWIG
+    interface, or .i file. This is adder.i, the SWIG interface file for
+    libadder.
 
-    If you look at this a bit, you may think, "Hey, I've seen this before" and
-    yes, it's pretty similar to the C header file.
+    If you look at the last line a bit, you may think, "Hey, I've seen
+    this before" and yes, it's identical to the C header file.
+
+    And for SWIG-friendly interfaces, I don't want to say simple
+    interfaces, for SWIG-friendly interfaces, the .i file is a little
+    boilerplate, followed by copy-and-pasting the C header file.
+
+    Now, what do you do with this file? Let's look at the SWIG build
+    diagram.
 
 SWIG build diagram
 ==================
@@ -260,7 +267,6 @@ SWIG build diagram
 3. Link
 
     adder_wrap.o + libadder.so --> _adder.so
-
 
 .. class:: handout
 
@@ -469,8 +475,8 @@ test_cython.py: pair_add
     def test_pair_add():
         eq_(cy_adder.pair_add(3, 4), 7)
 
-adder.h: get_version
-====================
+adder.h: get_version()
+======================
 
 .. code-block:: c
 
@@ -545,20 +551,11 @@ is not in the business of enforcing morality."
     nightmare. Really, it's not fair to strings to call them strings. They
     are fixed-size, mutable, arrays of bytes.
 
-
-
-
-
+SWIG and C Strings, part 2
+==========================
 
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
-
-
-
-What is Cython? (2 minutes)
-===========================
-
-
 
 Cython, the Language (2 minutes)
 ================================
@@ -570,19 +567,6 @@ Cython, the Language (2 minutes)
     You can use Cython *instead* of Python.
 
     Here, we assume that you want to use Python, and Cython is the bridge.
-
-
-Cython: build process
-=====================
-
-
-Cython compiles .pyx file to .c file.
-
-
-Compile C file into shared object library.
-
-
-toolchain diagram
 
 Cython Workflow
 ===============
@@ -602,36 +586,29 @@ Build a Python extension from the .pyx file. (Create a .so)
 
 Import the .so from plain python.
 
+Gross Generalization, SWIG
+==========================
+
 .. class:: handout
 
-    Cython inteface file
-    write your Cython
-    mash those up.
+    SWIG is...
 
-Strings
-=======
-
-Cython and C strings
-====================
-
-What They Are
-=============
-
-SWIG is...
-
-    Wrapper C libraries for Python and Ruby and Perl and PHP and Scheme and ...
-    ...and noticing that there is a lot in common and maybe that can be wrapped
-    up and automated.
+    Wrapping C libraries for Python and Ruby and Perl and PHP and
+    Scheme and ... ...and noticing that there is a lot in common and
+    maybe that can be wrapped up and automated.
 
     If I take something like a header file, with a few hints, I could
     automatically create these wrappers.
 
+Gross Generalization, Cython
+============================
 
-Cython is...
+.. class:: handout
 
+    Cython is...
 
-    If I take something like a header, I can, line-by-line, reference objects
-    as C or Python objects, and convert between them.
+    If I take something like a header, I can, line-by-line, reference
+    objects as C or Python objects, and convert between them.
 
     Sort of like in-line assembly.
 
