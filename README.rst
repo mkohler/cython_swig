@@ -51,18 +51,28 @@ import this
 
 >>> import socket
 
+What is socket.__file__?
+
 >>> import datetime
+
+What is datetime.__file__?
 
 >>> import time
 
+What is time.__file__?
+
 .. class:: handout
 
-    There's one more bit everyone should understand before we continue.
+    First, I have a question. What does import *import*?
 
-    What's the difference between these three import statements?
+    Each of these statements imports a module. What exactly is being
+    imported? Or to put it another way, after the import. what does the
+    module object's dunder file object contain?
 
-    There's no trick here, but the issue is a bit subtle, and varies
-    between platforms.
+    This is a bit of a trick question, because the answer depends on the
+    platform, but I want to make sure everyone understands the 3
+    3 possibilities.
+
 
 import socket
 =============
@@ -75,8 +85,9 @@ import socket
 
 .. class:: handout
 
-    This is the most straight-forward case. The import statement brought
-    in a Python source file from the filesystem.
+    This is the most straight-forward case. The import statement caused
+    the interpreter to load a .pyc file, containing architecture-neutral
+    python byte-code into memory.
 
 import datetime
 ===============
@@ -93,19 +104,20 @@ import datetime
 
 .. class:: handout
 
-    Is datetime a Python file? No. No. datetime is a Python extension.
-    The ".so" stands for Shared Object, and it is architecture-specific
-    machine code. In this example, the module uses the x86-64
-    instruction set . Nevertheless, when you import it, it looks and
-    feels like Python code.
+    This is the case we care about. The import statement caused a Python
+    extension module to be loaded into memory. The ".so" stands for
+    Shared Object, and it is architecture-specific machine code. In this
+    example, the shared object uses the x86-64 instruction set.
+    Nevertheless, when you import it, it looks and feels like Python code.
 
-    That's pretty great. Applications can be using either interpreted
-    Python code, or compiled machine code, and the interface is exactly
-    the same.
+    That's pretty great. Applications can import modules containing
+    either interpreted Python code, or compiled machine code, and the
+    interface is exactly the same.
 
-    And that's what we'll be doing with SWIG and Cython, taking compiled
-    code, that doesn't know anything about Python, and making it work
-    just like pure Python code.
+    And that's why we're here. That's what we'll be doing with SWIG and
+    Cython, taking compiled code, that doesn't know anything about
+    Python, wrapping it up, and turning it into Python extension
+    modules, that work just like pure Python code.
 
 import time
 ===========
@@ -120,15 +132,14 @@ import time
 
 .. class:: handout
 
-    This last one is the trickiest.
+    The last case isn't relevant to SWIG or Cython, but I thought I
+    should mention it anyway, as it confused the hell out of me the
+    first time I went to look for a Python module on disk, and I
+    couldn't find a correponding .py or .pyc or .so file.
 
-    The time module is also compiled machine code, but it was built and
-    linked to the python interpreter, and thus doesn't have a file
-    attribute. I just wanted to
-
-    So, in case you didn't know this. Python can import both "pure python"
-    \*.py" files, as well as shared objects, as long as they were built
-    with the python interface.
+    The answer to this riddle is that some Python extension modules are
+    linked with the Python interpreter when it is built. And those
+    module don't have dunder file attributes.
 
 See libraries
 =============
