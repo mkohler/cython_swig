@@ -17,26 +17,30 @@ Using C libraries in Python
     is in the standard library. In fact, there may be things you want
     that you can't even get from the *cheese shop*.
 
-    If those things are C libraries that you want for Python,
-    you're in luck, because there are excellent tools available for
-    wrapping C libraries for Python.
+    If what you want is to use a C library from Python, then you're in
+    luck, because there are excellent tools available for building
+    Python extension modules by wrapping C libraries.
 
 Pre-Fight
 =========
 
 "Code first and ask questions later."
 
-- import statement
-- C libraries
-- growing a library with SWIG and Cython
+- **import statement**
+- libadder library
+- add() function: passing ints
+- pair_add() function: passing structs
+- get_version(): C strings, part 1
+- greeting_sr(): C strings, part 2
 
 .. class:: handout
 
     To start this talk, I'm going to to quickly discuss
     the Python import statement and what it hides.
 
-    Then, I'll review the structure of *C* libraries. That is, libraries
-    written in *C*, to be used by program written in *C*.
+    Then, I'll review the structure of *C* libraries. When I say "C
+    libraries", I mean  libraries written in *C*, designed to be used by
+    programs written in *C*.
 
     From there, I'll show you a very small C library, we'll create
     Python intefaces for it using both SWIG and Cython, and then we'll
@@ -50,29 +54,23 @@ import this
 ===========
 
 >>> import socket
-
-What is socket.__file__?
-
 >>> import datetime
-
-What is datetime.__file__?
-
 >>> import time
 
-What is time.__file__?
+- What is socket.__file__?
+- What is datetime.__file__?
+- What is time.__file__?
 
 .. class:: handout
 
     First, I have a question. What does import *import*?
 
-    Each of these statements imports a module. What exactly is being
-    imported? Or to put it another way, after the import. what does the
-    module object's dunder file object contain?
+    Each of the import statements on the slide imports a module. But
+    what exactly is being imported? Or to put it another way, after the
+    import, what does the module object's dunder file object contain?
 
     This is a bit of a trick question, because the answer depends on the
-    platform, but I want to make sure everyone understands the 3
-    3 possibilities.
-
+    platform, but I'll give you a hint, there are 3 possibilities.
 
 import socket
 =============
@@ -85,9 +83,9 @@ import socket
 
 .. class:: handout
 
-    This is the most straight-forward case. The import statement caused
-    the interpreter to load a .pyc file, containing architecture-neutral
-    python byte-code into memory.
+    The first case is the most straight-forward. The import statement
+    caused the interpreter to load a .pyc file into memory. PYC files
+    contain architecture-neutral python byte-codes.
 
 import datetime
 ===============
@@ -104,11 +102,12 @@ import datetime
 
 .. class:: handout
 
-    This is the case we care about. The import statement caused a Python
-    extension module to be loaded into memory. The ".so" stands for
-    Shared Object, and it is architecture-specific machine code. In this
-    example, the shared object uses the x86-64 instruction set.
-    Nevertheless, when you import it, it looks and feels like Python code.
+    And this is the case we care about. The import statement caused a
+    Python extension module to be loaded into memory. The ".so" stands
+    for Shared Object, and it is architecture-specific machine code. In
+    this example, the shared object uses the x86-64 instruction set.
+    Nevertheless, when you import it, it looks and feels like Python
+    code.
 
     That's pretty great. Applications can import modules containing
     either interpreted Python code, or compiled machine code, and the
@@ -650,8 +649,6 @@ Cython Advantages and Disadvantages (1 minute)
     Evolve the interface.
     Do performance optimizations "just in time"
     Cython headers
-
-
 
 Magic
 =====
