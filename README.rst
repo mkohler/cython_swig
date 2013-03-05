@@ -573,7 +573,6 @@ SWIG must be read-only.
 adder.c: greeting_sr()
 ======================
 
-
 .. code-block:: c
 
     #define GREETING "Hello, "
@@ -662,6 +661,7 @@ Magic
     It was so different from the world I lived in, and compiling, and linking
     and just plain (pause) waiting for the build to finish.
 
+    These tools give me the same feeling.
     The python way seemed like magic to me.
 
     Then later, when I saw
@@ -670,23 +670,25 @@ Show generated code from SWIG and Cython.
 
 When you look under the covers, it is *still* magic.
 
+It's not like I could re-create SWIG or Cython.
+
 Which brings me to fear.
 
 Fear
 ====
 
-- If you don't understand a tool, it is easy to be scared.
-
-- My concern is that I would choose a tool, and get 90% of the way there, and
-  then find a routine that I couldn't properly wrap, and I would be stuck.
-
-- I would have trouble incorporating it into the build.
-
-- Once incorporated, the tool would be too hard to understand or debug.
-
-- The tool would take too long to get started.
-
 .. class:: handout
+
+    If you don't understand a tool, it is easy to be scared of it.
+
+    My concern is that I would choose a tool, and get 90% of the way there, and
+      then find a routine that I couldn't properly wrap, and I would be stuck.
+
+    I would have trouble incorporating it into the build.
+
+    Once incorporated, the tool would be too hard to understand or debug.
+
+    The tool would take too long to get started.
 
     There are a lot of details in doing this kind of work.
 
@@ -697,6 +699,14 @@ Fear
     pick a tool that gets you 90% of the way there.
 
     Neither of these tools will do that, I think?
+
+    With SWIG, if you can't make an interface work, write a C
+    program that uses the interface, and wrap that.
+
+    My point is you don't have to be an 
+
+    You 
+
 
 Alternatives to Cython and SWIG (2 minutes)
 ===========================================
