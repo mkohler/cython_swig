@@ -26,11 +26,11 @@ def greeting(name):
     return c_adder.greeting(name)
 
 def greeting_sr(name):
-    DEF BUF_LEN = 16
-    cdef char out_str[BUF_LEN]
-    if len(name) + 10 > BUF_LEN:
+    buf_len = len(name) + 16
+    cdef char out_str[buf_len]
+    sr = c_adder.greeting_sr(name, out_str, buf_len)
+    if sr == 1:
         raise MemoryError
-    c_adder.greeting_sr(name, out_str, BUF_LEN)
     return out_str
 
 
