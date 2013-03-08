@@ -642,12 +642,26 @@ SWIG, bad
 not DRY
 learning curve of typemaps
 
-Cython Advantages and Disadvantages (1 minute)
-==============================================
+Cython Advantages and Disadvantages
+===================================
 
-    Evolve the interface.
-    Do performance optimizations "just in time"
-    Cython headers
+Advantages
+----------
+
+Evolve an interface.
+
+Do performance optimizations "just in time".
+
+Provides a interface layer where you can smoothely slide between C and Python.
+
+Disadvantages
+-------------
+
+You have to create and maintain Cython .pxd files for your library.
+
+
+.. class:: handout
+
 
 Magic
 =====
@@ -708,14 +722,16 @@ Fear
     You 
 
 
-Alternatives to Cython and SWIG (2 minutes)
-===========================================
+Alternatives to Cython and SWIG
+===============================
 
 writing extensions with the Python C/API
 
     http://docs.python.org/2/extending/
 
 ctypes
+
+.. class:: handout
 
 Extra bonus: distutils vs autotools, fight!
 ===========================================
