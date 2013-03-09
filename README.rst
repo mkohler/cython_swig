@@ -13,20 +13,18 @@ Using C libraries in Python
 
     Hello, welcome to Cython vs SWIG, Fight!.
 
-    This talk is about what happens when you realize that *not* everything
-    is in the standard library. In fact, there may be things you want
-    that you can't even get from the *cheese shop*.
+    This talk is about what happens when you realize that not
+    _everything_ is in the standard library. In fact, there may be
+    things you want that you can't even get from the _cheese_ shop.
 
     If what you want is to use a C library from Python, then you're in
-    luck, because there are excellent tools available for building
+    luck, because _Cython_ and _SWIG_ are excellent tools for building
     Python extension modules by wrapping C libraries.
 
-Pre-Fight
-=========
-
 "Code first and ask questions later."
+=====================================
 
-- **import statement**
+- import statement
 - libadder library
 - add() function: passing ints
 - pair_add() function: passing structs
@@ -42,13 +40,27 @@ Pre-Fight
     libraries", I mean  libraries written in *C*, designed to be used by
     programs written in *C*.
 
-    From there, I'll show you a very small C library, we'll create
-    Python intefaces for it using both SWIG and Cython, and then we'll
-    grow the library, adding new features and Python interfaces for
-    those features.
+    From there, I'll show you a very small C library, the _libadder_
+    library, we'll create Python extension modules for it using both
+    SWIG and Cython, and then we'll grow the library, adding new
+    features and Python interfaces for those features.
 
     At the end, I'll talk about fear and magic, make some gross
     generalizations, and take questions.
+
+Progress Bar
+============
+
+- **import statement**
+- libadder library
+- add() function: passing ints
+- pair_add() function: passing structs
+- get_version(): C strings, part 1
+- greeting_sr(): C strings, part 2
+
+.. class:: handout
+
+    Let's start with the import statement.
 
 import this
 ===========
@@ -84,8 +96,9 @@ import socket
 .. class:: handout
 
     The first case is the most straight-forward. The import statement
-    caused the interpreter to load a .pyc file into memory. PYC files
-    contain architecture-neutral python byte-codes.
+    caused the Python interpreter to load a .pyc file into memory. PYC
+    files contain architecture-neutral python byte-codes. This is _pure_
+    python code.
 
 import datetime
 ===============
@@ -109,7 +122,7 @@ import datetime
     Nevertheless, when you import it, it looks and feels like Python
     code.
 
-    That's pretty great. Applications can import modules containing
+    This is a killer feature! Applications can import modules containing
     either interpreted Python code, or compiled machine code, and the
     interface is exactly the same.
 
@@ -134,11 +147,30 @@ import time
     The last case isn't relevant to SWIG or Cython, but I thought I
     should mention it anyway, as it confused the hell out of me the
     first time I went to look for a Python module on disk, and I
-    couldn't find a correponding .py or .pyc or .so file.
+    couldn't find a corresponding .py or .pyc or .so file.
+
+    So, where did this module come from?
 
     The answer to this riddle is that some Python extension modules are
     linked with the Python interpreter when it is built. And those
     module don't have dunder file attributes.
+
+    You'll have to go find or re-create the build environment for the
+    Python interpreter if you want to find the source for this module.
+
+Progress Bar
+============
+
+- import statement
+- **libadder library**
+- add() function: passing ints
+- pair_add() function: passing structs
+- get_version(): C strings, part 1
+- greeting_sr(): C strings, part 2
+
+.. class:: handout
+
+Now, let's talk about our example C library, libadder.
 
 See libraries
 =============
@@ -157,7 +189,7 @@ See libraries
 
     The library we're going to talk about is called adder, because it
     adds two numbers, and because snake references are easier to make
-    than Monty Python references.
+    than Monty Python references. Thus, __adder__
 
     The slide shows the build process for libadder. The names in bold
     are human-generated files. The others are machine-generated. (pause)
@@ -166,7 +198,7 @@ See libraries
 
     adder.c is the source code. We will look at it next.
 
-    adder.h describes the interface to the library.
+    adder.h describes the interface to _adder.c_
 
     and libadder.so is the final shared object, ready to be linked with
     programs and other shared libraries.
@@ -187,13 +219,8 @@ adder.c
 
 .. class:: handout
 
-    This is a C function which adds to two integers, and returns the
-    result.
-
-    For this discussion, we're going to assume the library is already
-    written. Maybe you wrote it, or maybe it's a third-party library,
-    and all you have is a header file and a binary, but either way,
-    we're going to assume we don't want to change the library's interface.
+    This is a C function which adds to two integers, and returns their
+    sum. Unremarkable.
 
 adder.h: add()
 ==============
@@ -210,9 +237,9 @@ adder.h
     a *header* file. Here is the header file for our libadder.
 
     It has three parts:
-        the *name* of the function
-        the *types* of the parameters
-        the *type* of the return value
+        the *name* of the function,
+        the *types* of the parameters,
+        and the *type* of the return value.
 
     As you may notice, it consists entirely of information that was
     already in adder.c.
@@ -238,16 +265,17 @@ adder.i (SWIG interface file)
 
 .. class:: handout
 
-    To use SWIG, you, the programmer, have to create one file, the SWIG
-    interface, or .i file. This is adder.i, the SWIG interface file for
-    libadder.
+    To use SWIG, you, the programmer, have to create _one_ file, the
+    SWIG interface, or .i file. _This_ is adder.i, the SWIG interface
+    file for libadder.
 
     If you look at the last line a bit, you may think, "Hey, I've seen
     this before" and yes, it's identical to the C header file.
 
     And for SWIG-friendly interfaces, I don't want to say simple
-    interfaces, for SWIG-friendly interfaces, the .i file is a little
-    boilerplate, followed by copy-and-pasting the C header file.
+    interfaces, but for SWIG-friendly interfaces, the .i file is just a
+    little bit of boilerplate, followed by copy-and-pasting the C header
+    file. We'll look at more complicated SWIG interface files later.
 
     Now, what do you do with this file? Let's look at the SWIG build
     diagram.
@@ -849,3 +877,14 @@ Limits of SWIG
     It can convert numbers, ints and floats, at least, automatically.
 
     It can convert strings, with your help. (As long as strings means ASCII.)
+
+
+No source?
+==========
+
+.. class:: handout
+
+    For this discussion, we're going to assume the library is already
+    written. Maybe you wrote it, or maybe it's a third-party library,
+    and all you have is a header file and a binary, but either way,
+    we're going to assume we don't want to change the library's interface.
