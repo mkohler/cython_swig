@@ -48,7 +48,7 @@ Using C libraries in Python
     At the end, I'll talk about fear and magic, make some gross
     generalizations, and take questions.
 
-Progress Bar
+You are Here
 ============
 
 - **import statement**
@@ -158,7 +158,7 @@ import time
     You'll have to go find or re-create the build environment for the
     Python interpreter if you want to find the source for this module.
 
-Progress Bar
+You are Here
 ============
 
 - import statement
@@ -297,29 +297,35 @@ SWIG build diagram
 
 .. class:: handout
 
-    With SWIG, you look at the C header file, and you write a C interface file,
-    which, has pretty much the same information as the C header file, but it 
-    is in the *SWIG* format.
+    To use SWIG, you look at the C header file, and you write a SWIG interface file,
+    which, has pretty much the same information as the C header file, but
+    in the *SWIG* format.
 
-    Then the SWIG tool, and remember, this IS THE ENTIRE POINT OF SWIG, it
-
+    Then the SWIG tool, and this is ALL THAT SWIG DOES:
     takes the C header file,
     and the SWIG interface file, and it generates two files:
 
-       C source that wraps your C functions, (~4000)
-       Python file that calls the C extension you *will build* from the
-       C source. (100 lines)
+       the _wrap.c file, about 4000 lines of C source that wraps your C functions,
 
-    What goes in?
+       and a Python file, about 100 lines, that calls the C extension you *will build* from the
+       C source.
 
-        The SWIG user creates a SWIG inteface file, with a .i extension. The
-        SWIG interface file references the C header files for the library
-        that
+    Then you compile and link, and PRESTO, you have your Python
+    extension module.
 
-    What comes out?
+Using your SWIG'd extension module
+==================================
 
-        A C source file to be compiled into a Python extension.
-        A Python file to be imported by the Python interpreter.
+>>> import adder
+>>> adder.add(2, 3)
+5
+>>> 
+
+.. class:: handout
+
+And here's how it looks when you use it. Utterly boring. You import the
+python file that SWIG generated, and THAT imports the _adder.so object,
+and you now have access to your C library.
 
 cy_adder.pxd: add()
 ===================
@@ -430,6 +436,17 @@ Cython build diagram
 
     Import the .so from plain python.
 
+You are Here
+============
+
+- import statement
+- libadder library
+- add() function: passing ints
+- **pair_add() function: passing structs**
+- get_version(): C strings, part 1
+- greeting_sr(): C strings, part 2
+
+
 adder.h: pair_add()
 ===================
 
@@ -516,6 +533,16 @@ test_cython.py: pair_add
     def test_pair_add():
         eq_(cy_adder.pair_add(3, 4), 7)
 
+You are Here
+============
+
+- import statement
+- libadder library
+- add() function: passing ints
+- pair_add() function: passing structs
+- **get_version(): C strings, part 1**
+- greeting_sr(): C strings, part 2
+
 adder.h: get_version()
 ======================
 
@@ -591,6 +618,16 @@ is not in the business of enforcing morality."
     Speaking as a C programmer *and* a Python programmer, C strings are a
     nightmare. Really, it's not fair to to even call them strings. They
     are fixed-size, mutable, arrays of bytes.
+
+You are Here
+============
+
+- import statement
+- libadder library
+- add() function: passing ints
+- pair_add() function: passing structs
+- get_version(): C strings, part 1
+- **greeting_sr(): C strings, part 2**
 
 SWIG and C Strings, part 2
 ==========================
