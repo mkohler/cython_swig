@@ -49,10 +49,10 @@ Pre-fight
     library, and showing how to make those functions accessible from
     Python. As we do this, you can decide whether you like the SWIG way
     or the Cython way better, and who should win the fight?
-    
+
     At the end, I'll talk about fear and magic, make some gross
     generalizations, and take questions.
-    
+
 Code first and ask questions later
 ==================================
 
@@ -336,23 +336,23 @@ SWIG build diagram
     object you started with, and PRESTO, you have your Python extension
     module.
 
-Using your SWIG'd extension module
-==================================
+demo of SWIG's add()
+====================
 
 .. code-block:: text
 
     >>> import adder
     >>> adder.add(2, 3)
     5
-    >>> 
+    >>>
 
 .. class:: handout
 
-And here's how it looks when you use it. Utterly boring. You import the
-python file that SWIG generated, and THAT imports the _adder.so object,
-and you now have access to your C library.
+    And here's how it looks when you use it. Utterly boring. You import the
+    python file that SWIG generated, and THAT imports the _adder.so object,
+    and you now have access to your C library.
 
-Now let's do the same thing, but with Cython.
+    Now let's do the same thing, but with Cython.
 
 c_adder.pxd: Cython interface file
 ===================================
@@ -387,7 +387,7 @@ cy_adder.pyx:  Cython source file
     Now, this is new. A PYX file. This file does not have an analog in
     the SWIG workflow. Let's squint a little, pretend this is Python,
     and see if we can make any sense of it.
-    
+
     "cimport". That looks kind of Python's import statement. "c_adder".
     And later we see "c_adder.add". So that seems to work like a Python
     import statement.
@@ -396,7 +396,8 @@ cy_adder.pyx:  Cython source file
     "def" and a name, and some argument names without types. And a
     return statement that looks like Python.
 
-    Well that was easy. Let's build our extension module. 
+    Well that wasn't too bad. And we can build a Python extension module
+    from this? Let's do it.
 
 Cython build diagram
 ====================
@@ -415,55 +416,15 @@ Cython build diagram
 
 .. class:: handout
 
-    We take our header, our interface file, and this third file we just
-    learned about, the PYX file, and we use the Cython tool.
+    Cython takes our C header file, our interface file, and this third file we just
+    learned about, the PYX file, and generates a single C file,
+    cy_adder.c in this case.
 
-    And all the Cython tool does is generate a C file, cy_adder.c.
+    Compile and link that, and you get an so. file that you can import
+    at the Python prompt.
 
-    Compile and link that, you get an so. file.
-
-    So, Cython, let's review where we are. Again, like SWIG,
-    you start with your C header file, and compiled object.
-
-    Then *you* write a PXD file, which is *Cython's* interface file format.
-
-    Given: header + shared object
-
-    You create:
-        Cython interface file (.pxd)
-        Cython source file (.pyx)
-
-    Cython will build:
-        a Python extension
-
-    .pxd
-        - the interface file
-        - references a C header
-
-    .pyx
-        - Cython source code
-        - reference .pxd file
-
-        Take those two, plus a shared library, and you 
-            Now let's look at Cython. Here's the 
-
-    Take your C header file and (manually) create a .pxd file::
-        Copy the file
-        Remove semi-colons.
-        Convert #defines to variables.
-        ints to bints
-
-    Create a .pyx file.
-        This is where you are really using the Cython language. It can
-        be repetitive, but you also have tons of flexibility in making a
-        Pythonic interface.
-
-    Build a Python extension from the .pyx file. (Create a .so)
-
-    Import the .so from plain python.
-
-Using your Cython'd extension
-=============================
+demo of Cython's add()
+======================
 
 .. code-block:: text
 
@@ -471,6 +432,39 @@ Using your Cython'd extension
     >>> cy_adder.add(2, 3)
     5
     >>>
+
+.. class:: handout
+
+Import the shared object, and boom, you are running code from the PYX
+file, that is calling C library code.
+
+Cython build review
+====================
+
+1. Cython
+
+    **adder.h + c_adder.pxd + cy_adder.pyx** --> cy_adder.c
+
+2. Compile
+
+   **adder.h** + cy_adder.c --> cy_adder.o
+
+3. Link
+
+   cy_adder.o --> cy_adder.so
+
+.. class:: handout
+
+    Let's review how we did that.
+
+    Like with SWIG, you start with a C header file, and compiled object.
+
+    *You* write a PXD file, which is *Cython's* interface file format.
+    Then you write a PYX file, in some kind of C-Python hybrid.
+
+    From those files, Cython generates a C file. Compile and link
+    Cython's C file, and you have a Python extension module that you can
+    import at the python prompt.
 
 
 You are Here
@@ -484,6 +478,11 @@ You are Here
 - fear and magic
 - generalizations
 
+.. class:: handout
+
+    Now let's learn how to use a C function that requires you to pass it
+    a pointer to a struct.
+
 adder.h: pair_add()
 ===================
 
@@ -496,6 +495,14 @@ adder.h: pair_add()
 
     int pair_add(PAIR * ppair);
 
+.. class:: handout
+
+    We have an interface 
+
+    That's a very C thing to do.
+
+   How does that translate to Python? 
+
 adder.c: pair_add()
 ===================
 
@@ -505,6 +512,10 @@ adder.c: pair_add()
     pair_add(PPAIR ppair) {
         return ppair->x + ppair->y;
     }
+
+.. class:: handout
+
+    So what does we tell SWIG?
 
 adder.i: pair_add()
 ===================
@@ -518,6 +529,38 @@ adder.i: pair_add()
 
     int pair_add(PPAIR);
 
+.. class:: handout
+
+    Again, just like the C header file.
+
+    Now, let's see it in action.
+
+demo of SWIG's pair_add()
+=========================
+
+.. code-block:: text
+
+    >>> import adder
+    >>> my_pair = adder.PAIR()
+    >>> my_pair.x = 3
+    >>> my_pair.y = 4
+    >>> adder.pair_add(my_pair)
+    7
+    >>>
+
+.. class:: handout
+
+    Well, that's interesting. Where did that adder.PAIR() come from?
+
+    If you put a struct in the SWIG interface file, SWIG creates an
+    associated Python class. The field in the Python object correspond
+    to the fields in the struct.
+
+    In this example, we are passing a pointer-to-a-struct to a function,
+    but this same mechanism can be used with functions that return a
+    pointer to a structure.
+
+    Okay, now let's do it with Cython.
 
 adder.pxd: pair_add()
 =====================
@@ -529,6 +572,10 @@ adder.pxd: pair_add()
         int y
 
     int pair_add(PAIR * ppair)
+
+.. class:: handout
+
+    Okay    
 
 
 adder.pyx: pair_add()
@@ -562,8 +609,8 @@ test_swig.py: pair_add
 
     eq\_ is an assert from nose unit-testing framework.
 
-test_cython.py: pair_add
-========================
+demo of Cython's pair_add()
+===========================
 
 .. code-block:: cython
 
@@ -670,8 +717,6 @@ You are Here
 - fear and magic
 - generalizations
 
-
-
 SWIG and Memory Management
 ==========================
 
@@ -708,7 +753,6 @@ adder.c: greeting_sr()
         return 0;
     }
 
-
 adder.i: greeting_sr()
 ======================
 
@@ -720,8 +764,6 @@ cy_adder.pyx: greeting_sr()
 
 TODO: It looks like in too much of greeting_sr is re-implemented
 in Cython.
-
-
 
 Gross Generalization, SWIG
 ==========================
@@ -778,9 +820,7 @@ Disadvantages
 
 You have to create and maintain Cython .pxd files for your library.
 
-
 .. class:: handout
-
 
 Magic
 =====
@@ -836,10 +876,7 @@ Fear
     With SWIG, if you can't make an interface work, write a C
     program that uses the interface, and wrap that.
 
-    My point is you don't have to be an 
-
-    You 
-
+    My point is you don't have to be an
 
 Alternatives to Cython and SWIG
 ===============================
@@ -996,10 +1033,18 @@ Cython, the language
     compiled, and that is your Python extension, which the Python
     interpreter can import.
 
-
-    Finally, we have some Cython source code.
-
     This is the red pill. If you take it, you leave the world where C
     and Python are separate langauges, and enter a world where C code
     and Python code can be mixed, within a file, even line-by-line
     within a function.
+
+    Take your C header file and (manually) create a .pxd file::
+        Copy the file
+        Remove semi-colons.
+        Convert #defines to variables.
+        ints to bints
+
+    Create a .pyx file.
+        This is where you are really using the Cython language. It can
+        be repetitive, but you also have tons of flexibility in making a
+        Pythonic interface.
