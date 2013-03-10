@@ -17,9 +17,9 @@ char * greeting(char *name);
 int add_sr(int x, int y, int *OUTPUT);
 
 %include "cstring.i"
-%cstring_output_maxsize(char * out_str,  int buflen);
-int get_version_sr(char * out_str, int buflen);
+%cstring_output_maxsize(char * outp,  int buflen);
+int get_version_sr(char * outp, int buflen);
 
-int greeting_sr(char * name, char * out_str, int buflen);
+int greeting_sr(char * name, char * outp, int buflen);
 
 int pair_add(PAIR *);
