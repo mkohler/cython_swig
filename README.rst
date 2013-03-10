@@ -65,8 +65,9 @@ Code first and ask questions later
 .. class:: handout
 
     I want to show a lot of code in this talk, and in an attempt to keep
-    you, and especially me, from getting lost, I will the source files
-    for each new feature in the same order.
+    you, and especially me, from getting lost, I will show the source
+    files for each new feature in the same order, and the name of the
+    file I am showing will always be in the title of the slide.
 
     First, I will show you the C code, then the SWIG code, and then an
     example of using the SWIG-built extension module. Next, I will show the
@@ -76,8 +77,6 @@ Code first and ask questions later
     As we add features, I'll repeat the process: C code, SWIG code,
     SWIG demonstration, Cython code, Cython demonstration.
 
-    And the name of the file I am showing will always be in the title of
-    the slide.
 
 You are Here
 ============
@@ -119,6 +118,7 @@ import this
 
 import socket
 =============
+
 
 .. code-block:: python
 
@@ -280,6 +280,23 @@ adder.h: add()
 
     Now that we have covered the C build process, let's look at SWIG.
 
+You are Here
+============
+
+- import statement
+- libadder library
+- **passing ints**
+- passing structs
+- C strings
+- memory management
+- fear and magic
+- generalizations
+
+.. class:: handout
+
+    Now, let's talk about our example C library, libadder.
+
+
 adder.i (SWIG interface file)
 =============================
 
@@ -311,6 +328,8 @@ adder.i (SWIG interface file)
 SWIG build diagram
 ==================
 
+0. Start with: **adder.h**, libadder.so
+
 1. SWIG
 
     **adder.h + adder.i** --> adder_wrap.c + adder.py
@@ -321,13 +340,12 @@ SWIG build diagram
 
 3. Link
 
-    adder_wrap.o + libadder.so --> _adder.so
+    libadder.so + adder_wrap.o --> _adder.so
 
 .. class:: handout
 
-    The SWIG tool, and this is ALL THAT SWIG DOES:
-    takes the C header file,
-    and the SWIG interface file, and it generates two files:
+    The SWIG tool takes the C header file, and the SWIG interface file,
+    and it generates two files:
 
        the _wrap.c file and a Python file. These files work together to
        to convert between Python objects and C interfaces.
@@ -348,14 +366,14 @@ demo of SWIG's add()
 
 .. class:: handout
 
-    And here's how it looks when you use it. Utterly boring. You import the
-    python file that SWIG generated, and THAT imports the _adder.so object,
-    and you now have access to your C library.
+    And here's how it looks when you use it. You import the python file
+    that SWIG generated, and THAT imports the _adder.so object, and you
+    now have access to your C library. Magic!
 
     Now let's do the same thing, but with Cython.
 
 c_adder.pxd: Cython interface file
-===================================
+==================================
 
 .. code-block:: cython
 
@@ -388,13 +406,9 @@ cy_adder.pyx:  Cython source file
     the SWIG workflow. Let's squint a little, pretend this is Python,
     and see if we can make any sense of it.
 
-    "cimport". That looks kind of Python's import statement. "c_adder".
-    And later we see "c_adder.add". So that seems to work like a Python
-    import statement.
-
-    We have something that looks like a Python function definition, with
-    "def" and a name, and some argument names without types. And a
-    return statement that looks like Python.
+    Yes, except for that cimport line, which looks a lot like a regular
+    Python import, this file could be Python code. The big difference is
+    what we do next. Feed it to Cython, to be translated to C.
 
     Well that wasn't too bad. And we can build a Python extension module
     from this? Let's do it.
@@ -412,16 +426,16 @@ Cython build diagram
 
 3. Link
 
-   cy_adder.o --> cy_adder.so
+   lib_adder.so + cy_adder.o --> cy_adder.so
 
 .. class:: handout
 
-    Cython takes our C header file, our interface file, and this third file we just
-    learned about, the PYX file, and generates a single C file,
-    cy_adder.c in this case.
+    Cython takes our C header file, our interface file, and this third
+    file we just learned about, the PYX file, and generates a single C
+    file, cy_adder.c in this case.
 
     Compile and link that, and you get an so. file that you can import
-    at the Python prompt.
+    at the Python prompt. Let's see it.
 
 demo of Cython's add()
 ======================
@@ -435,11 +449,17 @@ demo of Cython's add()
 
 .. class:: handout
 
-Import the shared object, and boom, you are running code from the PYX
-file, that is calling C library code.
+    Import the shared object we just built, and boom, you are running
+    C code from Python. Great!
+
+    How did that happen again?
+
+    Let's review.
 
 Cython build review
 ====================
+
+0. Given: adder.h, libadder.so
 
 1. Cython
 
@@ -451,21 +471,19 @@ Cython build review
 
 3. Link
 
-   cy_adder.o --> cy_adder.so
+   libadder.so + cy_adder.o --> cy_adder.so
 
 .. class:: handout
 
-    Let's review how we did that.
-
-    Like with SWIG, you start with a C header file, and compiled object.
+    Like with SWIG, you start with a C header file, and a shared object.
 
     *You* write a PXD file, which is *Cython's* interface file format.
-    Then you write a PYX file, in some kind of C-Python hybrid.
+    You also need to write a PYX file, in some kind of C-Python hybrid
+    language.
 
     From those files, Cython generates a C file. Compile and link
     Cython's C file, and you have a Python extension module that you can
-    import at the python prompt.
-
+    import and use.
 
 You are Here
 ============
@@ -577,7 +595,6 @@ adder.pxd: pair_add()
 
     Okay, here we have something that looks just like our C header file,
     but without braces or semi-colons.
-
 
 adder.pyx: pair_add()
 =====================
@@ -706,8 +723,6 @@ Using Cython's get_version
     print cy_adder.get_version()
 
 .. class:: handout
-
-
 
 Cython and C Strings
 ====================
