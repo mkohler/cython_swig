@@ -641,6 +641,11 @@ adder.h: get_version()
 
     char * get_version(void);
 
+.. class:: handout
+
+All good libraries need to report their version. So we'll make a function that
+returns it's version as a C string.
+
 adder.c: get_version()
 ======================
 
@@ -653,12 +658,21 @@ adder.c: get_version()
         return version;
     }
 
+.. class:: handout
+
+    Here's the implementation.
+
 adder.i: get_version()
 =============================
 
 .. code-block:: c
 
     char * get_version(void);
+
+.. class:: handout
+
+    We add this line to our SWIG interface file. Again this is a copy and paste
+    of the C header file.
 
 adder.pxd: get_version()
 ========================
@@ -667,12 +681,22 @@ adder.pxd: get_version()
 
     char * get_version()
 
+.. class:: handout
+
+    And over in Cython land, with more modernist sensibilities, we don't need
+    the void or the semi-colon.
+
 Using SWIG's get_version
 ========================
 
-.. code-block:: python
+.. code-block:: text
 
-    print adder.get_version()
+    >>> import cy_adder
+    >>> cy_adder.pair_add(3, 4)
+    7
+    >>>
+
+.. class:: handout
 
 Using Cython's get_version
 ==========================
@@ -681,17 +705,21 @@ Using Cython's get_version
 
     print cy_adder.get_version()
 
+.. class:: handout
+
+
+
 Cython and C Strings
 ====================
 
-"In many use cases, C strings (a.k.a. character pointers) are slow and
-cumbersome. [...] Generally speaking: unless you know what you are doing,
-avoid using C strings where possible and use Python string objects
-instead."
+"...avoid using C strings where possible..."
 
     - Cython documentation, General Notes about C strings
 
 .. class:: handout
+
+    C strings and python strings are not the same thing.
+     What does Cython say about C strings?
 
     C Strings, the source of all good buffer overflows. Let's see what
     the Cython documentation says about C strings.
