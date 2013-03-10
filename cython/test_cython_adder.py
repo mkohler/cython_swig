@@ -55,11 +55,6 @@ def test_greeting_sr():
     eq_(cy_adder.greeting_sr("Python"),
         "Hello, Python")
 
-@raises(MemoryError)
-def test_greeting_sr_long_name():
-    cy_adder.greeting_sr( "Python Programming Language")
-
-
 # Test pair_add
 def test_pair_add():
     eq_(cy_adder.pair_add(3, 4), 7)

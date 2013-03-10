@@ -26,12 +26,13 @@ def greeting(name):
     return c_adder.greeting(name)
 
 def greeting_sr(name):
-    buf_len = len(name) + 16
-    cdef char out_str[buf_len]
-    sr = c_adder.greeting_sr(name, out_str, buf_len)
+    cdef char * c_str
+    py_str = ' ' * (len("Salutations, ") + len(name))
+    c_str = py_str
+    sr = c_adder.greeting_sr(name, c_str, len(py_str))
     if sr == 1:
         raise MemoryError
-    return out_str
+    return c_str
 
 
 def pair_add(x, y):

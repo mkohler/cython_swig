@@ -3,9 +3,9 @@
 #include "adder.h"
 
 #define MAX_STR_LEN 20
-#define ADDER_VERSION "v1.0"
 
-static char version[] = ADDER_VERSION;
+static char version[] = "v1.0";
+static char hello[] = "Hello, ";
 
 int
 add(int x, int y) {
@@ -50,14 +50,13 @@ get_version_sr(char * output, int buflen) {
 }
 
 
-#define GREETING "Hello, "
 int
 greeting_sr(char * name, char * output, int buflen) {
-    if (buflen < (strlen(GREETING) + strlen(name) + 1)) {
+    if (buflen < (strlen(hello) + strlen(name) + 1)) {
         output[0] = 0;
         return 1;
     }
-    strcpy(output, GREETING);
+    strcpy(output, hello);
     strcat(output, name);
     return 0;
 }

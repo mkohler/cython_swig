@@ -5,7 +5,7 @@ typedef struct _PAIR {
 
 int add(int, int);
 char * get_version(void);
-char * greeting(char *name);
+char * greeting(char *);
 
 int add_sr(int x, int y, int *sum);
 int get_version_sr(char * output, int buflen);
