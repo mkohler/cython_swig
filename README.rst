@@ -4,10 +4,11 @@
 Cython vs. SWIG, Fight!
 =======================
 
+Using C libraries in Python
+
+:Url: github.com/mkohler/cython_swig"
 :Author: Mark Kohler
 :Date: 2013-03-16
-
-Using C libraries in Python
 
 .. class:: handout
 
@@ -294,8 +295,8 @@ You are Here
 
 .. class:: handout
 
-    Now, let's talk about our example C library, libadder.
-
+    Now, we will use SWIG, and then Cython, to create Python extension modules
+    that wrap libadder's add function.
 
 adder.i (SWIG interface file)
 =============================
@@ -584,8 +585,8 @@ demo of SWIG's pair_add()
 
     Okay, now let's do it with Cython.
 
-adder.pxd: pair_add()
-=====================
+c_adder.pxd: pair_add()
+=======================
 
 .. code-block:: cython
 
@@ -597,38 +598,45 @@ adder.pxd: pair_add()
 
 .. class:: handout
 
-    To create the Cython interface, or pxd file, we add declarations for
-    our struct and function, but without braces or semi-colons.
+    Again, the Cython interface file seems to contain the same information as
+    the C header file. We just need to replace typedef with ctypedef, and
+    remove the braces and semi-colons.
 
-adder.pyx: pair_add()
-=====================
+cy_adder.pyx: pair_add()
+========================
 
 .. code-block:: cython
 
     def pair_add(x, y):
-        cdef c_adder.PAIR pair
-        pair.x = x
-        pair.y = y
-        return c_adder.pair_add(&pair)
+        cdef c_adder.PAIR my_pair
+        my_pair.x = x
+        my_pair.y = y
+        return c_adder.pair_add(&my_pair)
 
 .. class:: handout
 
-    What is this? This looks like Python but that looks more like C.
+    (5s pause) This is where we start to see the true nature of Cython, where
+    on a line-by-line basis, or even within a line, you can switch between
+    Python and C. I'll explain this function line-by-line.
 
-    We're declaring a type.
+    Line 1 is a normal Python function definition.
 
-    We're assigning these untype things to a typed thing.
+    In Line 2, we define a C variable, my_pair of type PAIR.
 
-    Whoa, there's an ampersand in my Python.
+    In lines 3-4, the Python objects x and y, are unwrapped, and their values
+    are copied to the x and y fields with the my_pair struct.
 
-    Takes a Python object and returns a Python object.
+    Finally, on the last line, now that we have a C struct all ready, we can
+    call pair add, passing it a pointer to a C struct. And yes, the ampersand
+    on the last line, works as the "address-of" operator, just like in C.
 
-    This is where we start to get the real flavor of Cython, where on a
-    line-by-line basis, or even within a line, you can switch between Python and C.
+    When the function returns an int, Cython will wrap it up in a Python
+    object, to be returned to the calling Python function.
 
-    "pair.x = x"
+    Let me let that sink in a bit. The first time I saw something like this it
+    took me a while to believe it.
 
-    If that's not magic I don't know what is.
+    ...Okay, let's see it in action.
 
 demo of Cython's pair_add()
 ===========================
@@ -642,6 +650,12 @@ demo of Cython's pair_add()
 
 .. class:: handout
 
+    And it works. Once it is compiled and linked, the Cython code you just saw
+    can take arguments from the Python interpreter, allocate a struct, fill it
+    in, and pass it to the pair_add function, which has no idea the struct came
+    from a Python program.
+
+    Let's keep going. We need to see some of the complexity behind the magic.
 
 You are Here
 ============
@@ -655,6 +669,18 @@ You are Here
 - fear and magic
 - generalizations
 
+.. class:: handout
+
+    And a good way to dive right into a sea of complexity is to start thinking
+    about Python and C strings.
+
+    Compared to Python strings, C strings are so amazingly primitive, it's hard
+    to believe they could be useful for anything at all. Nevertheless, there
+    are many C libraries that use C strings as part of their interface. And we
+    need to understand how to handle them from Python.
+
+    We'll start with a simple case.
+
 adder.h: get_version()
 ======================
 
@@ -664,8 +690,8 @@ adder.h: get_version()
 
 .. class:: handout
 
-All good libraries need to report their version. So we'll make a function that
-returns it's version as a C string.
+    All good libraries need to report their version. So we'll make a function that
+    returns it's version as a C string.
 
 adder.c: get_version()
 ======================
@@ -681,10 +707,14 @@ adder.c: get_version()
 
 .. class:: handout
 
-    Here's the implementation.
+    Here's the implementation. The important thing to notice is that the string
+    itself is stored as a static variable.
+
+    In this way, the string is stored with the code itself, and we can bypass
+    the memory management of C strings. We'll get to that soon enough.
 
 adder.i: get_version()
-=============================
+======================
 
 .. code-block:: c
 
@@ -695,8 +725,29 @@ adder.i: get_version()
     We add this line to our SWIG interface file. Again this is a copy and paste
     of the C header file.
 
-adder.pxd: get_version()
-========================
+demo of SWIG's get_version()
+============================
+
+.. code-block:: text
+
+    >>> import adder
+    >>> adder.get_version()
+    'v1.0'
+    >>> _.__class__
+    <type 'str'>
+    >>>
+
+.. class:: handout
+
+    And here it is in use.
+
+    Conveniently, SWIG automatically converts the C string to a Python string,
+    a real Python string. 
+
+    So that seems to work pretty well. Let's try it with Cython.
+
+c_adder.pxd: get_version()
+==========================
 
 .. code-block:: c
 
@@ -704,20 +755,21 @@ adder.pxd: get_version()
 
 .. class:: handout
 
-    And over in Cython land, with more modernist sensibilities, we don't need
-    the void or the semi-colon.
+    We start with a Cython interface file. Here in Cython land, with its
+    modernist sensibilities, we don't need the void or the semi-colon.
+    Otherwise, it is just a copy and paste of the C header file.
 
-Using SWIG's get_version
-========================
+cy_adder.pyx: get_version()
+===========================
 
-.. code-block:: text
+.. code-block:: python
 
-    >>> import cy_adder
-    >>> cy_adder.pair_add(3, 4)
-    7
-    >>>
+    def get_version():
+        return c_adder.get_version()
 
 .. class:: handout
+
+    And our addition to the Cython source file is trivial.
 
 Using Cython's get_version
 ==========================
@@ -967,7 +1019,7 @@ Resources
 =========
 
 code and slides
-    https://github.com/mkohler/swig_cython
+    https://github.com/mkohler/cython_swig
 
 restructedText to LibreOffice Impress
     https://github.com/mattharrison/rst2odp.git
