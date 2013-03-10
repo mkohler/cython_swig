@@ -84,10 +84,12 @@ You are Here
 
 - **import statement**
 - libadder library
-- add() function: passing ints
-- pair_add() function: passing structs
-- get_version(): C strings, part 1
-- greeting_sr(): C strings, part 2
+- passing ints
+- passing structs
+- C strings
+- memory management
+- fear and magic
+- generalizations
 
 .. class:: handout
 
@@ -194,14 +196,16 @@ You are Here
 
 - import statement
 - **libadder library**
-- add() function: passing ints
-- pair_add() function: passing structs
-- get_version(): C strings, part 1
-- greeting_sr(): C strings, part 2
+- passing ints
+- passing structs
+- C strings
+- memory management
+- fear and magic
+- generalizations
 
 .. class:: handout
 
-Now, let's talk about our example C library, libadder.
+    Now, let's talk about our example C library, libadder.
 
 See libraries
 =============
@@ -472,13 +476,13 @@ Using your Cython'd extension
 You are Here
 ============
 
-- import statement
 - libadder library
-- add() function: passing ints
-- **pair_add() function: passing structs**
-- get_version(): C strings, part 1
-- greeting_sr(): C strings, part 2
-
+- passing ints
+- **passing structs**
+- C strings
+- memory management
+- fear and magic
+- generalizations
 
 adder.h: pair_add()
 ===================
@@ -571,10 +575,12 @@ You are Here
 
 - import statement
 - libadder library
-- add() function: passing ints
-- pair_add() function: passing structs
-- **get_version(): C strings, part 1**
-- greeting_sr(): C strings, part 2
+- passing ints
+- passing structs
+- **C strings**
+- memory management
+- fear and magic
+- generalizations
 
 adder.h: get_version()
 ======================
@@ -657,12 +663,16 @@ You are Here
 
 - import statement
 - libadder library
-- add() function: passing ints
-- pair_add() function: passing structs
-- get_version(): C strings, part 1
-- **greeting_sr(): C strings, part 2**
+- passing ints
+- passing structs
+- C strings
+- **memory management**
+- fear and magic
+- generalizations
 
-SWIG and C Strings, part 2
+
+
+SWIG and Memory Management
 ==========================
 
 By default, i.e. without typemaps, strings passed from scripting language to
@@ -916,8 +926,8 @@ SWIG is not just for Python. It will create C wrappers for a dozen languages.
 
 Cython has preliminary support for PyPy's C extension API. SWIG does not.
 
-Topics to Considerg Adding
-==========================
+Topics to Consider Adding
+=========================
 
 SWIG typemaps
 
