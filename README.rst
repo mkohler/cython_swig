@@ -575,7 +575,8 @@ adder.pxd: pair_add()
 
 .. class:: handout
 
-    Okay    
+    Okay, here we have something that looks just like our C header file,
+    but without braces or semi-colons.
 
 
 adder.pyx: pair_add()
@@ -591,31 +592,35 @@ adder.pyx: pair_add()
 
 .. class:: handout
 
+    What is this? This looks like Python but that looks more like C.
+
+    We're declaring a type.
+
+    We're assigning these untype things to a typed thing.
+
+    Whoa, there's an ampersand in my Python.
+
     Takes a Python object and returns a Python object.
 
+    This is where we start to get the real flavor of Cython, where on a
+    line-by-line basis, or even within a line, you can switch between Python and C.
 
-test_swig.py: pair_add
-========================
+    "pair.x = x"
 
-.. code-block:: python
-
-    def test_pair():
-        pair = adder.PAIR()
-        pair.x = 3
-        pair.y = 4
-        eq_(adder.pair_add(pair), 7)
-
-.. class:: handout
-
-    eq\_ is an assert from nose unit-testing framework.
+    If that's not magic I don't know what is.
 
 demo of Cython's pair_add()
 ===========================
 
-.. code-block:: cython
+.. code-block:: text
 
-    def test_pair_add():
-        eq_(cy_adder.pair_add(3, 4), 7)
+    >>> import cy_adder
+    >>> cy_adder.pair_add(3, 4)
+    7
+    >>>
+
+.. class:: handout
+
 
 You are Here
 ============
