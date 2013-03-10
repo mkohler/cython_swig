@@ -4,11 +4,10 @@
 Cython vs. SWIG, Fight!
 =======================
 
-Using C libraries in Python
-
-:Url: github.com/mkohler/cython_swig"
 :Author: Mark Kohler
 :Date: 2013-03-16
+
+Wrapping C libraries for Python
 
 .. class:: handout
 
@@ -771,14 +770,20 @@ cy_adder.pyx: get_version()
 
     And our addition to the Cython source file is trivial.
 
-Using Cython's get_version
-==========================
+demo of Cython's get_version()
+==============================
 
-.. code-block:: python
+.. code-block:: text
 
-    print cy_adder.get_version()
+    >>> import cy_adder
+    >>> cy_adder.get_version()
+    'v1.0'
+    >>> _.__class__
+    <type 'str'>
+    >>>
 
 .. class:: handout
+
 
 Cython and C Strings
 ====================
