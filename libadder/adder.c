@@ -51,13 +51,13 @@ get_version_sr(char * output, int buflen) {
 
 
 int
-greeting_sr(char * name, char * output, int buflen) {
+greeting_sr(char * name, char * outp, int buflen) {
     if (buflen < (strlen(hello) + strlen(name) + 1)) {
-        output[0] = 0;
+        outp[0] = 0;
         return 1;
     }
-    strcpy(output, hello);
-    strcat(output, name);
+    strcpy(outp, hello);
+    strcat(outp, name);
     return 0;
 }
 
