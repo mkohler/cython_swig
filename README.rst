@@ -21,32 +21,63 @@ Using C libraries in Python
     luck, because _Cython_ and _SWIG_ are excellent tools for building
     Python extension modules by wrapping C libraries.
 
-"Code first and ask questions later."
-=====================================
+Pre-fight
+=========
 
 - import statement
 - libadder library
-- add() function: passing ints
-- pair_add() function: passing structs
-- get_version(): C strings, part 1
-- greeting_sr(): C strings, part 2
+- passing ints
+- passing structs
+- C strings
+- memory management
+- fear and magic
+- generalizations
 
 .. class:: handout
 
-    To start this talk, I'm going to to quickly discuss
-    the Python import statement and what it hides.
+    To start this talk, I'm going to to quickly discuss the Python
+    import statement and what it hides.
 
-    Then, I'll review the structure of *C* libraries. When I say "C
-    libraries", I mean  libraries written in *C*, designed to be used by
-    programs written in *C*.
+    Then, I'll review the structure of C libraries. When I say "C
+    libraries", I mean libraries written in C, designed to be used by
+    programs written in C.
 
-    From there, I'll show you a very small C library, the _libadder_
-    library, we'll create Python extension modules for it using both
-    SWIG and Cython, and then we'll grow the library, adding new
-    features and Python interfaces for those features.
+    From there, I'll show you a very small C library, the LIBADDER
+    library.
 
+    The main part of this talk will consist of adding functions to this
+    library, and showing how to make those functions accessible from
+    Python. As we do this, you can decide whether you like the SWIG way
+    or the Cython way better, and who should win the fight?
+    
     At the end, I'll talk about fear and magic, make some gross
     generalizations, and take questions.
+    
+Code first and ask questions later
+==================================
+
+#. C code
+#. SWIG code
+#. SWIG demonstration
+#. Cython code
+#. Cython demonstration
+
+.. class:: handout
+
+    I want to show a lot of code in this talk, and in an attempt to keep
+    you, and especially me, from getting lost, I will the source files
+    for each new feature in the same order.
+
+    First, I will show you the C code, then the SWIG code, and then an
+    example of using the SWIG-built extension module. Next, I will show the
+    Cython code and finally, what it looks like to use the Cython-built
+    extension module.
+
+    As we add features, I'll repeat the process: C code, SWIG code,
+    SWIG demonstration, Cython code, Cython demonstration.
+
+    And the name of the file I am showing will always be in the title of
+    the slide.
 
 You are Here
 ============
@@ -60,7 +91,7 @@ You are Here
 
 .. class:: handout
 
-    Let's start with the import statement.
+    Let's get started with the import statement.
 
 import this
 ===========
@@ -304,10 +335,12 @@ SWIG build diagram
 Using your SWIG'd extension module
 ==================================
 
->>> import adder
->>> adder.add(2, 3)
-5
->>> 
+.. code-block:: text
+
+    >>> import adder
+    >>> adder.add(2, 3)
+    5
+    >>> 
 
 .. class:: handout
 
@@ -347,44 +380,19 @@ cy_adder.pyx:  Cython source file
 
 .. class:: handout
 
-    Now, this is new. A PYX file. This file does not have an
-    analog in the SWIG workflow. Let's look at it line-by-line.
-
-    First, "cimport c_adder". That looks like a python 
-
-    The cimport line is referencing the "Cython* interface file.
-
-    We'll talk more about the Cython language in a second, but let's
-    start just by looking at this file, line-by-line.
-
-A Cython source file. 
+    Now, this is new. A PYX file. This file does not have an analog in
+    the SWIG workflow. Let's squint a little, pretend this is Python,
+    and see if we can make any sense of it.
     
+    "cimport". That looks kind of Python's import statement. "c_adder".
+    And later we see "c_adder.add". So that seems to work like a Python
+    import statement.
 
+    We have something that looks like a Python function definition, with
+    "def" and a name, and some argument names without types. And a
+    return statement that looks like Python.
 
-
-Cython, the language
-====================
-
-- almost 100% compatible with Python
-
-- optional static types
-
-- can use C libraries, with the cimport statement
-
-.. class:: handout
-
-    Now, the Cython source file, a PYX file. You need to write some
-    Cython code that will get transformed into C code, which gets
-    compiled, and that is your Python extension, which the Python
-    interpreter can import.
-
-
-    Finally, we have some Cython source code.
-
-    This is the red pill. If you take it, you leave the world where C
-    and Python are separate langauges, and enter a world where C code
-    and Python code can be mixed, within a file, even line-by-line
-    within a function.
+    Well that was easy. Let's build our extension module. 
 
 Cython build diagram
 ====================
@@ -402,6 +410,13 @@ Cython build diagram
    cy_adder.o --> cy_adder.so
 
 .. class:: handout
+
+    We take our header, our interface file, and this third file we just
+    learned about, the PYX file, and we use the Cython tool.
+
+    And all the Cython tool does is generate a C file, cy_adder.c.
+
+    Compile and link that, you get an so. file.
 
     So, Cython, let's review where we are. Again, like SWIG,
     you start with your C header file, and compiled object.
@@ -435,13 +450,24 @@ Cython build diagram
         ints to bints
 
     Create a .pyx file.
-        This is where you are really using the Cython language.
-        It can be repetitive, but you also have tons of flexibility in making a
+        This is where you are really using the Cython language. It can
+        be repetitive, but you also have tons of flexibility in making a
         Pythonic interface.
 
     Build a Python extension from the .pyx file. (Create a .so)
 
     Import the .so from plain python.
+
+Using your Cython'd extension
+=============================
+
+.. code-block:: text
+
+    >>> import cy_adder
+    >>> cy_adder.add(2, 3)
+    5
+    >>>
+
 
 You are Here
 ============
@@ -943,3 +969,27 @@ No source?
     written. Maybe you wrote it, or maybe it's a third-party library,
     and all you have is a header file and a binary, but either way,
     we're going to assume we don't want to change the library's interface.
+
+Cython, the language
+====================
+
+- almost 100% compatible with Python
+
+- optional static types
+
+- can use C libraries, with the cimport statement
+
+.. class:: handout
+
+    Now, the Cython source file, a PYX file. You need to write some
+    Cython code that will get transformed into C code, which gets
+    compiled, and that is your Python extension, which the Python
+    interpreter can import.
+
+
+    Finally, we have some Cython source code.
+
+    This is the red pill. If you take it, you leave the world where C
+    and Python are separate langauges, and enter a world where C code
+    and Python code can be mixed, within a file, even line-by-line
+    within a function.
