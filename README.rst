@@ -515,11 +515,9 @@ adder.h: pair_add()
 
 .. class:: handout
 
-    We have an interface 
+    So we'll a simple struct to our header file.
 
-    That's a very C thing to do.
-
-   How does that translate to Python? 
+    And a function that takes a pointer to a struct.
 
 adder.c: pair_add()
 ===================
@@ -533,7 +531,11 @@ adder.c: pair_add()
 
 .. class:: handout
 
-    So what does we tell SWIG?
+    And we'll return the sum of the integers that are stored as fields
+    in the struct.
+
+    That's pretty straightfoward C code. But how can we use it from
+    Python? What do tell SWIG?
 
 adder.i: pair_add()
 ===================
@@ -545,13 +547,14 @@ adder.i: pair_add()
         int y;
     } PAIR;
 
-    int pair_add(PPAIR);
+    int pair_add(PAIR * ppair);
 
 .. class:: handout
 
-    Again, just like the C header file.
+    Here's our SWIG interface file. And it's just a copy-and-paste of
+    our C header file.
 
-    Now, let's see it in action.
+    Then we build a shared object, and let's see how we use it.
 
 demo of SWIG's pair_add()
 =========================
@@ -568,11 +571,12 @@ demo of SWIG's pair_add()
 
 .. class:: handout
 
-    Well, that's interesting. Where did that adder.PAIR() come from?
+    Well, that's interesting. Where did that adder.PAIR() come from? I
+    don't remember defining that.
 
-    If you put a struct in the SWIG interface file, SWIG creates an
-    associated Python class. The field in the Python object correspond
-    to the fields in the struct.
+    The answer is, SWIG did it. If you put a struct in a SWIG interface
+    file, SWIG creates an associated Python class. The fields in the
+    Python object corresponds to the fields in the struct.
 
     In this example, we are passing a pointer-to-a-struct to a function,
     but this same mechanism can be used with functions that return a
@@ -593,8 +597,8 @@ adder.pxd: pair_add()
 
 .. class:: handout
 
-    Okay, here we have something that looks just like our C header file,
-    but without braces or semi-colons.
+    To create the Cython interface, or pxd file, we add declarations for
+    our struct and function, but without braces or semi-colons.
 
 adder.pyx: pair_add()
 =====================
@@ -851,11 +855,8 @@ SWIG, bad
 not DRY
 learning curve of typemaps
 
-Cython Advantages and Disadvantages
-===================================
-
-Advantages
-----------
+Cython Advantages
+=================
 
 Evolve an interface.
 
@@ -863,10 +864,12 @@ Do performance optimizations "just in time".
 
 Provides a interface layer where you can smoothely slide between C and Python.
 
-Disadvantages
--------------
+Cython Disadvantages
+====================
 
 You have to create and maintain Cython .pxd files for your library.
+
+You have to write .pyx files.
 
 .. class:: handout
 
