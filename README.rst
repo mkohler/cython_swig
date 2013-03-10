@@ -642,6 +642,19 @@ SWIG and C Strings, part 2
 By default, i.e. without typemaps, strings passed from scripting language to
 SWIG must be read-only.
 
+.. class:: handout
+
+    Memory management
+
+    This is where things get real.
+
+adder.h: greeting_sr()
+======================
+
+.. code-block:: c
+
+    int greeting_sr(char * name, char * output, int buflen);
+
 adder.c: greeting_sr()
 ======================
 
@@ -659,8 +672,6 @@ adder.c: greeting_sr()
         return 0;
     }
 
-adder.h: greeting_sr()
-======================
 
 adder.i: greeting_sr()
 ======================
