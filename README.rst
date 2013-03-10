@@ -886,8 +886,15 @@ adder.c: greeting_sr()
     First, it checks the buffer passed to it, to see if it is long enough for
     the output, and returns an error if the buffer is not long enough.
 
+    Then it concatenates the string hello, and its input argument in the outp
+    buffer.
+
     The suffix _sr stands for status return, a reminder that it returns its
     status, and not its output.
+
+    Understand the implementation isn't vital as long as you understand the interface.
+
+    Let's use SWIG to make this function available to Python.
 
 adder.i: greeting_sr()
 ======================
@@ -895,16 +902,68 @@ adder.i: greeting_sr()
 .. code-block:: c
 
     %include "cstring.i"
-    %cstring_output_maxsize(char * out_str,  int buflen);
+    %cstring_output_maxsize(char * outp,  int buflen);
 
-    int greeting_sr(char * name, char * out_str, int buflen);
+    int greeting_sr(char * name, char * outp, int buflen);
+
+.. class:: handout
+
+    By default, i.e. without typemaps, strings passed from scripting language to
+    SWIG must be read-only.
+
+demo of SWIG's greeting_sr()
+============================
+
+.. class:: text
+
+    >>> import adder
+    >>> adder.greeting_sr("Monty", 100)
+    [0, 'Hello, Monty']
+    >>>
+
+.. class:: handout
+
+    I hope the way this function is used has some surprises for you.
+
+    First
 
 
 c_adder.pxd: greeting_sr()
 ===========================
 
+.. code-block:: python
+
+    int greeting_sr(char * name, char * output, int buflen)
+
+.. class:: handout
+
 cy_adder.pyx: greeting_sr()
 ===========================
+
+.. code-block:: python
+
+    def greeting_sr(name):
+        cdef char * c_str
+        py_str = ' ' * (len("Salutations, ") + len(name))
+        c_str = py_str
+        sr = c_adder.greeting_sr(name, c_str, len(py_str))
+        if sr == 1:
+            raise MemoryError
+        return c_str
+
+.. class:: handout
+
+demo of Cython's greeting_sr()
+==============================
+
+.. code-block:: text
+
+    >>> import cy_adder
+    >>> cy_adder.greeting_sr("Monty")
+    'Hello, Monty'
+    >>>
+
+.. class:: handout
 
 
 Gross Generalization, SWIG
@@ -1194,5 +1253,3 @@ C Strings
     nightmare. Really, it's not fair to to even call them strings. They
     are fixed-size, mutable, arrays of bytes.
 
-    By default, i.e. without typemaps, strings passed from scripting language to
-    SWIG must be read-only.
