@@ -673,6 +673,8 @@ You are Here
     And a good way to dive right into a sea of complexity is to start thinking
     about Python and C strings.
 
+    Yes...C Strings, the source of all good buffer overflows.
+
     Compared to Python strings, C strings are so amazingly primitive, it's hard
     to believe they could be useful for anything at all. Nevertheless, there
     are many C libraries that use C strings as part of their interface. And we
@@ -784,21 +786,21 @@ demo of Cython's get_version()
 
 .. class:: handout
 
+    And the Cython version works just like the SWIG version. So that's boring.
 
 Cython and C Strings
 ====================
 
-"...avoid using C strings where possible..."
+"C strings are slow and cumbersome"
 
-    - Cython documentation, General Notes about C strings
+"...avoid using C strings where possible"
+
+"...more likely to introduce bugs"
 
 .. class:: handout
 
-    C strings and python strings are not the same thing.
-     What does Cython say about C strings?
-
-    C Strings, the source of all good buffer overflows. Let's see what
-    the Cython documentation says about C strings.
+    But if converting between C strings and Python strings is so easy, why do I
+    keep finding warnings like this?
 
 SWIG and C Strings
 ==================
@@ -806,13 +808,11 @@ SWIG and C Strings
 "The problems (and perils) of using char * are well-known. However, SWIG
 is not in the business of enforcing morality."
 
-    - SWIG documentation, Section 8.3 C String Handling
+    SWIG documentation, Section 8.3 C String Handling
 
 .. class:: handout
 
-    Speaking as a C programmer *and* a Python programmer, C strings are a
-    nightmare. Really, it's not fair to to even call them strings. They
-    are fixed-size, mutable, arrays of bytes.
+    And this...
 
 You are Here
 ============
@@ -826,17 +826,18 @@ You are Here
 - fear and magic
 - generalizations
 
-SWIG and Memory Management
-==========================
-
-By default, i.e. without typemaps, strings passed from scripting language to
-SWIG must be read-only.
-
 .. class:: handout
 
-    Memory management
+    The problem is...memory management. Python's is automatic. C's is manual.
 
-    This is where things get real.
+    And that may sound academic, until you start thinking about what you like
+    to do with strings: split them, combine them, pass them around to your
+    friends, copy them.
+
+    And while you're having all that fun, who's keeping track of the memory?
+
+    To explore these issues, we'll add a function to libadder that takes a C
+    string as a parameter, and returns a C string,
 
 adder.h: greeting_sr()
 ======================
@@ -844,6 +845,8 @@ adder.h: greeting_sr()
 .. code-block:: c
 
     int greeting_sr(char * name, char * output, int buflen);
+
+.. class:: handout
 
 adder.c: greeting_sr()
 ======================
@@ -1156,3 +1159,15 @@ Cython, the language
         This is where you are really using the Cython language. It can
         be repetitive, but you also have tons of flexibility in making a
         Pythonic interface.
+
+C Strings
+=========
+
+.. class:: handout
+
+    Speaking as a C programmer *and* a Python programmer, C strings are a
+    nightmare. Really, it's not fair to to even call them strings. They
+    are fixed-size, mutable, arrays of bytes.
+
+    By default, i.e. without typemaps, strings passed from scripting language to
+    SWIG must be read-only.
