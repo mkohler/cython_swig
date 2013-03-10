@@ -834,39 +834,71 @@ You are Here
     to do with strings: split them, combine them, pass them around to your
     friends, copy them.
 
-    And while you're having all that fun, who's keeping track of the memory?
+    And while you're having all that fun, who's keeping track of the memory
+    you're using?
 
     To explore these issues, we'll add a function to libadder that takes a C
-    string as a parameter, and returns a C string,
+    string as a parameter, and produces a C string as output.
 
 adder.h: greeting_sr()
 ======================
 
 .. code-block:: c
 
-    int greeting_sr(char * name, char * output, int buflen);
+    int greeting_sr(char * name, char * outp, int buflen);
 
 .. class:: handout
+
+    Here's a declaration for a function that creates a greeting. If you pass it
+    "Monty", it produces "Hello, Monty".
+
+    I didn't say it returns Monty, because this function uses the C pattern of
+    using the function's return value to indicate status, success or failure.
+
+    Instead of "returning" the output string, the output string is placed in a
+    buffer which is passed to the function. The buffer is described by the
+    pointer oup, and the value buflen, which indicates the length of the buffer
+    being passed to the function.
+
 
 adder.c: greeting_sr()
 ======================
 
 .. code-block:: c
 
-    #define GREETING "Hello, "
+    static char hello[] = "Hello, ";
+
     int
-    greeting_sr(char * name, char * out, int len) {
-        if (len < (strlen(GREETING) + strlen(name) + 1)) {
-            out[0] = 0;
+    greeting_sr(char * name, char * outp, int buflen) {
+        if (buflen < (strlen(hello) + strlen(name) + 1)) {
+            outp[0] = 0;
             return 1;
         }
-        strcpy(out, GREETING);
-        strcat(out, name);
+        strcpy(outp, hello);
+        strcat(outp, name);
         return 0;
     }
 
+.. class:: handout
+
+    Here's the implementation of the function.
+
+    First, it checks the buffer passed to it, to see if it is long enough for
+    the output, and returns an error if the buffer is not long enough.
+
+    The suffix _sr stands for status return, a reminder that it returns its
+    status, and not its output.
+
 adder.i: greeting_sr()
 ======================
+
+.. code-block:: c
+
+    %include "cstring.i"
+    %cstring_output_maxsize(char * out_str,  int buflen);
+
+    int greeting_sr(char * name, char * out_str, int buflen);
+
 
 c_adder.pxd: greeting_sr()
 ===========================
@@ -874,8 +906,6 @@ c_adder.pxd: greeting_sr()
 cy_adder.pyx: greeting_sr()
 ===========================
 
-TODO: It looks like in too much of greeting_sr is re-implemented
-in Cython.
 
 Gross Generalization, SWIG
 ==========================
@@ -903,17 +933,17 @@ Gross Generalization, Cython
 
     Sort of like in-line assembly.
 
-SWIG, good stuff
+SWIG Advantages
 ================
 
 If you write C library code, and you want to provide bindings (wrappers)
 for Python, Java, and Ruby, SWIG can do that.
 
-SWIG, bad
-=========
+You have to create and maintain Cython .pxd files for your library.
 
-not DRY
-learning curve of typemaps
+You have to write .pyx files.
+
+.. class:: handout
 
 Cython Advantages
 =================
@@ -924,12 +954,7 @@ Do performance optimizations "just in time".
 
 Provides a interface layer where you can smoothely slide between C and Python.
 
-Cython Disadvantages
-====================
-
-You have to create and maintain Cython .pxd files for your library.
-
-You have to write .pyx files.
+Easier to learn than than typemaps.
 
 .. class:: handout
 
