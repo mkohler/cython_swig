@@ -892,8 +892,7 @@ adder.c: greeting_sr()
     The suffix _sr stands for status return, a reminder that it returns its
     status, and not its output.
 
-    Understand the implementation isn't vital as long as you understand the interface.
-
+    Understanding the implementation isn't vital as long as you understand the interface.
     Let's use SWIG to make this function available to Python.
 
 adder.i: greeting_sr()
@@ -907,6 +906,25 @@ adder.i: greeting_sr()
     int greeting_sr(char * name, char * outp, int buflen);
 
 .. class:: handout
+
+    Now here's a function where copy-and-pasting the C header file isn't sufficient.
+
+    Passing the name isn't a problem. By default, SWIG will automatically convert a Python
+    string to a read-only C string.
+
+    However, 
+    The output buffer is a problem.
+
+
+
+    The %include line pulls in a bunch of SWIG macros for dealing with C
+    strings, including the one we use: cstring_output_maxsize.
+
+    That macro helps us tell SWIG that we need it to transform 
+
+    This is the first function we have looked at
+
+    Here's the first 
 
     By default, i.e. without typemaps, strings passed from scripting language to
     SWIG must be read-only.
@@ -925,7 +943,7 @@ demo of SWIG's greeting_sr()
 
     I hope the way this function is used has some surprises for you.
 
-    First
+    First, 
 
 
 c_adder.pxd: greeting_sr()
