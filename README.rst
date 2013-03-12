@@ -512,7 +512,8 @@ adder.h: pair_add()
 
     Here's a header file with a struct, PAIR, defined,
 
-    And a declaration for a function that takes a pointer to a PAIR.
+    Below the struct is the declaration for pair_add, which takes a
+    single argument, a pointer to a PAIR.
 
 adder.c: pair_add()
 ===================
@@ -520,17 +521,17 @@ adder.c: pair_add()
 .. code-block:: c
 
     int
-    pair_add(PPAIR ppair) {
+    pair_add(PAIR * ppair) {
         return ppair->x + ppair->y;
     }
 
 .. class:: handout
 
-    And we'll return the sum of the integers that are stored as fields
-    in the struct.
+    pair_add returns the sum of the integers in the struct pointed to by
+    ppair.
 
-    That's pretty straightfoward C code. But how can we use it from
-    Python? What do tell SWIG?
+    That's pretty straightfoward C code. But how can we use pair_add from
+    Python? What do we tell SWIG?
 
 adder.i: pair_add()
 ===================
@@ -546,10 +547,11 @@ adder.i: pair_add()
 
 .. class:: handout
 
-    Here's our SWIG interface file. And it's just a copy-and-paste of
-    our C header file.
+    Here's what we add to our SWIG interface file for pair_add. We just
+    copy-and-paste the relevant part of the C header file.
 
-    Then we build a shared object, and let's see how we use it.
+    Remembering the SWIG build diagram, we use this to build the adder
+    extension module. Let's see how we use it.
 
 demo of SWIG's pair_add()
 =========================
