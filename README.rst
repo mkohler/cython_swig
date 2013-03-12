@@ -263,12 +263,10 @@ adder.h: add()
 .. class:: handout
 
     In C, the interface to a function is typically declared in a separate file,
-    a *header* file. Here is the header file for our libadder.
+    a HEADER file. Here is the header file for our libadder.
 
-    It has three parts:
-        the *name* of the function,
-        the *types* of the parameters,
-        and the *type* of the return value.
+    It has three parts, the NAME of the function, the TYPES of the parameters,
+    and the TYPE of the return value.
 
     As you may notice, it consists entirely of information that is
     also in adder.c.
@@ -313,12 +311,9 @@ adder.i (SWIG interface file)
     SWIG interface, or .i file. _This_ is adder.i, the SWIG interface
     file I created for libadder.
 
-    If you look at the last line, you may think, "Hey, I've seen
-    this before" and yes, it's identical to the C header file.
-
-    So we tell SWIG: the name of the extension module we want to build,
-    the name of the C header file, AND we copy-and-paste the contents of
-    the C header file.
+    The first line is the name of the extension module we want to build,
+    the third line is the name of the C header file, AND the last line
+    is the contents of the C header file.
 
     Now, what do we do with this file? Let's look at the SWIG build
     diagram.
@@ -343,10 +338,9 @@ SWIG build diagram
 .. class:: handout
 
     The SWIG tool takes the C header file, and the SWIG interface file,
-    and it generates two files:
-
-       the _wrap.c file and a Python file. These files work together to
-       to convert between Python objects and C interfaces.
+    and it generates two files: the _wrap.c file and a Python file.
+    These files work together to convert between Python objects and C
+    interfaces.
 
     Then we compile the SWIG-generated C file, link it to the shared
     object we started with, and PRESTO, we have our Python extension
@@ -404,16 +398,15 @@ cy_adder.pyx:  Cython source file
     So, SWIG and Cython both require us to create an interface file,
     but in Cython, we also need to create a PYX file.
 
-    I don't want to explain the syntax of this file yet. Let's squint a
-    little, pretend this is Python code, and see if we can make any
+    I'm not going to explain the syntax of this file yet. Let's squint a
+    little, pretend the file is Python code, and see if we can make any
     sense of it.
 
     Yes, except for that cimport line, which looks a lot like a regular
-    Python import, this file could be Python code. The big difference is
-    what we do next. Feed it to Cython, to be translated to C.
+    Python import, this is Python code. The big difference is what we do
+    with it. The next step is to to feed it to Cython, to be translated to C.
 
-    Well that wasn't too bad. And we can build a Python extension module
-    from this? Let's do it.
+    Let's do it!
 
 Cython build diagram
 ====================
@@ -437,7 +430,7 @@ Cython build diagram
     file, cy_adder.c in this case.
 
     Compile and link that, and we get an so. file that we can import
-    at the Python prompt. Let's see it.
+    at the Python prompt. Let's try it out.
 
 demo of Cython's add()
 ======================
@@ -480,8 +473,8 @@ Cython build review
     Like with SWIG, we start with a C header file, and a shared object.
 
     WE write a PXD file, which is CYTHON's interface file format.
-    We also need to write a PYX file, in a kind of C-Python hybrid
-    language.
+    We also need to write a PYX file, which we will soon see is a hybrid
+    of the C and Python languages.
 
     From those files, Cython generates a C file. Compile and link
     Cython's C file, and we have a Python extension module that we can
@@ -517,9 +510,9 @@ adder.h: pair_add()
 
 .. class:: handout
 
-    So we'll add a simple struct to our header file.
+    Here's a header file with a struct, PAIR, defined,
 
-    And a function that takes a pointer to a struct.
+    And a declaration for a function that takes a pointer to a PAIR.
 
 adder.c: pair_add()
 ===================
