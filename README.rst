@@ -929,7 +929,6 @@ adder.i: greeting_rs()
 
     Let's see how we use the wrapped function.
 
-
 demo of SWIG's greeting_rs()
 ============================
 
@@ -950,8 +949,16 @@ demo of SWIG's greeting_rs()
     We talked about the change in input parameters in the previous
     slide. SWIG created a Python function for us that takes an input
     string and a maximum length for the output. Then internally, it
-    uses that maximum length to allocate a buffer, 
+    uses that maximum length to allocate a buffer, and passes that
+    buffer and its length to the original GREETING_RS function.
 
+    The behavior we didn't talk about is that, if you tell SWIG that a 
+    function parameter is actually for OUTPUT, then SWIG will
+    de-reference that pointer, put the contents in a list that the
+    wrapped function returns.
+    
+    So, in our example, 0 is the STATUS value returned by the C version
+    of GREETING_RS, and Hello Monty was grabbed from the OUTP pointer.
 
 
 c_adder.pxd: greeting_rs()
@@ -963,21 +970,26 @@ c_adder.pxd: greeting_rs()
 
 .. class:: handout
 
+    Moving on to Cython, here is the Cython interface for GREETING_RS.
+    As with other examples, it is almost identical to the C header file.
+
 cy_adder.pyx: greeting_rs()
 ===========================
 
 .. code-block:: python
 
     def greeting_rs(name):
-        cdef char * c_str
         py_str = ' ' * (len("Salutations, ") + len(name))
-        c_str = py_str
+        cdef char * c_str = py_str
         sr = c_adder.greeting_rs(name, c_str, len(py_str))
-        if sr == 1:
-            raise MemoryError
         return c_str
 
 .. class:: handout
+
+    The     
+    
+
+    
 
 demo of Cython's greeting_rs()
 ==============================
@@ -991,6 +1003,8 @@ demo of Cython's greeting_rs()
 
 .. class:: handout
 
+    And here we see the benefit of writing all of that code in the
+    Cython PYX file. Our wrapped function 
 
 Gross Generalization, Cython
 ============================
