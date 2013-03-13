@@ -880,7 +880,7 @@ adder.c: greeting_rs()
 
 .. class:: handout
 
-    Here's the implementation of the function.
+    Here's the implementation of GREETING_RS.
 
     First, it checks the buffer passed to it, to see if it is long enough for
     the output, and returns an error if the buffer is not long enough.
@@ -888,13 +888,11 @@ adder.c: greeting_rs()
     Then it concatenates the string hello, and its input argument in the outp
     buffer.
 
-    The suffix _rs stands for status return, a reminder that it returns its
-    status, and not its output.
-
     Understanding the implementation isn't vital as long as you
     understand the interface. And the key thing to understand about the
-    interface is that CALLER of greeting_rs function must allocate the buffer
-    that the 
+    interface is that the CALLER of greeting_rs function must allocate
+    the GREETING_RS's output buffer.
+    
     Let's use SWIG to make this function available to Python.
 
 adder.i: greeting_rs()
@@ -903,33 +901,34 @@ adder.i: greeting_rs()
 .. code-block:: c
 
     %include "cstring.i"
-    %cstring_output_maxsize(char * outp,  int buflen);
+    %cstring_output_maxsize(char * outp, int buflen);
 
     int greeting_rs(char * name, char * outp, int buflen);
 
 .. class:: handout
 
-    Now here's a function where copy-and-pasting the C header file isn't sufficient.
+    Up to this point, we have seen functions that meshed well with
+    SWIG's default behavior. That is why our SWIG interface files have
+    been copies of the C header file.
+    
+    GREETING_SR is different. 
 
-    Passing the name isn't a problem. By default, SWIG will automatically convert a Python
-    string to a read-only C string.
+    The input parameter, NAME, isn't a problem. By default, SWIG will
+    automatically convert a Python string to a read-only C string, which
+    is what we want.
 
-    However, 
-    The output buffer is a problem.
+    The problem is OUTP, the output pointer. We need to tell SWIG to
+    allocate a buffer for GREETING_SR, and pass a pointer to the buffer
+    in OUTP and the length of the buffer in BUFLEN. Fortunately, SWIG
+    CAN do this. That is what the first two lines do.
 
+    The cstring_output_maxsize macro tells SWIG that, the wrapped
+    version of GREETING_RS will pass in a maximum length, and SWIG will
+    be responsible for allocating a buffer of that length, and be
+    responsible for freeing it. Fancy!
 
+    Let's see how we use the wrapped function.
 
-    The %include line pulls in a bunch of SWIG macros for dealing with C
-    strings, including the one we use: cstring_output_maxsize.
-
-    That macro helps us tell SWIG that we need it to transform 
-
-    This is the first function we have looked at
-
-    Here's the first 
-
-    By default, i.e. without typemaps, strings passed from scripting language to
-    SWIG must be read-only.
 
 demo of SWIG's greeting_rs()
 ============================
@@ -943,9 +942,16 @@ demo of SWIG's greeting_rs()
 
 .. class:: handout
 
-    I hope the way this function is used has some surprises for you.
+    I hope this usage is a little surprising. We started with a
+    function, GREETING_RS, that took 3 arguments, and returned its
+    status, but here are we, at the python prompt, using a function that
+    takes 2 arguments and returns a list.
 
-    First, 
+    We talked about the change in input parameters in the previous
+    slide. SWIG created a Python function for us that takes an input
+    string and a maximum length for the output. Then internally, it
+    uses that maximum length to allocate a buffer, 
+
 
 
 c_adder.pxd: greeting_rs()
