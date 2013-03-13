@@ -850,11 +850,12 @@ adder.h: greeting_rs()
     Here is the declaration for GREETING_RS, a function that creates a
     greeting. If you pass it "Monty", it produces "Hello, Monty".
 
-    The suffix RS stands for RETURNS STATUS. That is, GREETING_RS produces a
-    greeting but it does not return it. It returns success or failure.
+    The suffix RS stands for RETURNS STATUS. That is, GREETING_RS
+    produces a greeting but it does not return it. It returns the number
+    of characters in the output string, or a 0 if there was an error.
 
-    So where does greeting_sr put the greeting? The CALLER of greeting_sr
-    passes a buffer to GREETING_SR via the pointer OUTP, and GREETING_SR puts
+    So where does greeting_rs put the greeting? The CALLER of greeting_rs
+    passes a buffer to greeting_rs via the pointer OUTP, and greeting_rs puts
     the greeting in that buffer.
 
     This is a common pattern in C libraries. The caller allocates the
@@ -869,30 +870,36 @@ adder.c: greeting_rs()
 
     int
     greeting_rs(char * name, char * outp, int buflen) {
-        if (buflen < (strlen(hello) + strlen(name) + 1)) {
-            outp[0] = 0;
-            return 1;
+        if (outp && buflen) {
+            if (buflen < (strlen(hello) + strlen(name) + 1)) {
+                outp[0] = 0;
+                return 0;
+            }
+            strcpy(outp, hello);
+            strcat(outp, name);
         }
-        strcpy(outp, hello);
-        strcat(outp, name);
-        return 0;
+        return strlen(hello) + strlen(name);
     }
 
 .. class:: handout
 
     Here's the implementation of GREETING_RS.
 
-    First, it checks the buffer passed to it, to see if it is long enough for
-    the output, and returns an error if the buffer is not long enough.
+    The first conditional allows callers to find out how much space to
+    allocate. The caller passes in a null pointer for the output buffer,
+    and greeting_rs returns the number of bytes in the output string.
 
-    Then it concatenates the string hello, and its input argument in the outp
-    buffer.
+    The second conditional checks if the buffer is long enough for
+    the output, returning zero if the buffer is not long enough.
+
+    Then it concatenates the string hello, and its input argument in the
+    outp buffer.
 
     Understanding the implementation isn't vital as long as you
     understand the interface. And the key thing to understand about the
     interface is that the CALLER of greeting_rs function must allocate
     the GREETING_RS's output buffer.
-    
+
     Let's use SWIG to make this function available to Python.
 
 adder.i: greeting_rs()
@@ -910,15 +917,15 @@ adder.i: greeting_rs()
     Up to this point, we have seen functions that meshed well with
     SWIG's default behavior. That is why our SWIG interface files have
     been copies of the C header file.
-    
-    GREETING_SR is different. 
+
+    greeting_rs is different.
 
     The input parameter, NAME, isn't a problem. By default, SWIG will
     automatically convert a Python string to a read-only C string, which
     is what we want.
 
     The problem is OUTP, the output pointer. We need to tell SWIG to
-    allocate a buffer for GREETING_SR, and pass a pointer to the buffer
+    allocate a buffer for greeting_rs, and pass a pointer to the buffer
     in OUTP and the length of the buffer in BUFLEN. Fortunately, SWIG
     CAN do this. That is what the first two lines do.
 
@@ -936,7 +943,7 @@ demo of SWIG's greeting_rs()
 
     >>> import adder
     >>> adder.greeting_rs("Monty", 100)
-    [0, 'Hello, Monty']
+    [12, 'Hello, Monty']
     >>>
 
 .. class:: handout
@@ -956,7 +963,7 @@ demo of SWIG's greeting_rs()
     function parameter is actually for OUTPUT, then SWIG will
     de-reference that pointer, put the contents in a list that the
     wrapped function returns.
-    
+
     So, in our example, 0 is the STATUS value returned by the C version
     of GREETING_RS, and Hello Monty was grabbed from the OUTP pointer.
 
@@ -976,20 +983,21 @@ c_adder.pxd: greeting_rs()
 cy_adder.pyx: greeting_rs()
 ===========================
 
-.. code-block:: python
+.. code-block:: c
 
-    def greeting_rs(name):
-        py_str = ' ' * (len("Salutations, ") + len(name))
-        cdef char * c_str = py_str
-        sr = c_adder.greeting_rs(name, c_str, len(py_str))
-        return c_str
+        def greeting_rs(name):
+            c_str_len = c_adder.greeting_rs(name, <char * > 0, 0)
+            py_str = ' ' * (c_str_len + 1)
+            cdef char * c_str = py_str
+            c_adder.greeting_rs(name, c_str, len(py_str))
+            return c_str
 
 .. class:: handout
 
-    The     
-    
+    The
 
-    
+
+
 
 demo of Cython's greeting_rs()
 ==============================
