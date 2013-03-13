@@ -847,21 +847,18 @@ adder.h: greeting_rs()
 
 .. class:: handout
 
-    Here's a declaration for a function that creates a greeting. If ou pass it
-    "Monty", it produces "Hello, Monty".
+    Here is the declaration for GREETING_RS, a function that creates a
+    greeting. If you pass it "Monty", it produces "Hello, Monty".
 
-    I use the suffix SR to remind everyone that this function does not
-    return a greeting. It
+    The suffix RS stands for RETURNS STATUS. That is, GREETING_RS produces a
+    greeting but it does not return it. It returns success or failure.
 
-    XXX
+    So where does greeting_sr put the greeting? The CALLER of greeting_sr
+    passes a buffer to GREETING_SR via the pointer OUTP, and GREETING_SR puts
+    the greeting in that buffer.
 
-    I didn't say it returns Monty, because greeting_rs uses the C pattern of
-    using the function's return value to indicate status, success or failure.
-
-    Instead of "returning" the output string, the output string is placed in a
-    buffer which the CALLER passed to the function. The buffer is described by
-    the pointer outp, and the value buflen, which indicates the length of the
-    buffer being passed to the function.
+    This is a common pattern in C libraries. The caller allocates the
+    memory, and passes called functions a buffer and length.
 
 adder.c: greeting_rs()
 ======================
@@ -989,20 +986,6 @@ demo of Cython's greeting_rs()
 .. class:: handout
 
 
-Gross Generalization, SWIG
-==========================
-
-.. class:: handout
-
-    SWIG is...
-
-    Wrapping C libraries for Python and Ruby and Perl and PHP and
-    Scheme and ... ...and noticing that there is a lot in common and
-    maybe that can be wrapped up and automated.
-
-    If I take something like a header file, with a few hints, I could
-    automatically create these wrappers.
-
 Gross Generalization, Cython
 ============================
 
@@ -1018,6 +1001,8 @@ Gross Generalization, Cython
 SWIG Advantages
 ================
 
+- Wraps C libraries for many languages: Java, Ruby, Perl
+
 If you write C library code, and you want to provide bindings (wrappers)
 for Python, Java, and Ruby, SWIG can do that.
 
@@ -1026,6 +1011,15 @@ You have to create and maintain Cython .pxd files for your library.
 You have to write .pyx files.
 
 .. class:: handout
+
+    The essence of SWIG is
+
+    Wrapping C libraries for Python and Ruby and Perl and PHP and
+    Scheme and ... ...and noticing that there is a lot in common and
+    maybe that can be wrapped up and automated.
+
+    If I take something like a header file, with a few hints, I could
+    automatically create these wrappers.
 
 Cython Advantages
 =================
