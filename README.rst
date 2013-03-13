@@ -594,9 +594,9 @@ c_adder.pxd: pair_add()
 
 .. class:: handout
 
-    Again, the Cython interface file seems to contain the same information as
-    the C header file. We just need to replace typedef with ctypedef, and
-    remove the braces and semi-colons.
+    Again, the Cython interface file contains the same information as
+    the C header file. We just need to replace typedef with ctypedef,
+    and remove the braces and semi-colons.
 
 cy_adder.pyx: pair_add()
 ========================
@@ -611,26 +611,27 @@ cy_adder.pyx: pair_add()
 
 .. class:: handout
 
-    (5s pause) This is where we start to see the true nature of Cython, where
-    on a line-by-line basis, or even within a line, you can switch between
-    Python and C. I'll explain this function line-by-line.
+    (5s pause) This is where we start to see the true nature of Cython,
+    where on a line-by-line basis, or even within a line, we can switch
+    between Python and C. I'll explain this function line-by-line.
 
     Line 1 is a normal Python function definition.
 
     In Line 2, we define a C variable, my_pair of type PAIR.
 
-    In lines 3-4, the Python objects x and y, are unwrapped, and their values
-    are copied to the x and y fields with the my_pair struct.
+    In lines 3-4, the Python objects x and y, are unwrapped, and their
+    values are copied to the x and y fields with the my_pair struct.
 
-    Finally, on the last line, now that we have a C struct all ready, we can
-    call pair add, passing it a pointer to a C struct. And yes, the ampersand
-    on the last line, works as the "address-of" operator, just like in C.
+    Finally, on the last line, now that we have a C struct all ready, we
+    can call pair add, passing it a pointer to a C struct. And yes, the
+    ampersand on the last line, works as the "address-of" operator, just
+    like in C.
 
     When the function returns an int, Cython will wrap it up in a Python
     object, to be returned to the calling Python function.
 
-    Let me let that sink in a bit. The first time I saw something like this it
-    took me a while to believe it.
+    Let me let that sink in a bit. The first time I saw something like
+    this it took me a while to believe it. (PAUSE)
 
     ...Okay, let's see it in action.
 
@@ -688,8 +689,8 @@ adder.h: get_version()
 
 .. class:: handout
 
-    All good libraries need to report their version. So we'll make a function that
-    returns it's version as a C string.
+    All good libraries need to report their version. So we'll make a
+    function that returns its version as a C string.
 
 adder.c: get_version()
 ======================
@@ -708,8 +709,8 @@ adder.c: get_version()
     Here's the implementation. The important thing to notice is that the string
     itself is stored as a static variable.
 
-    In this way, the string is stored with the code itself, and we can bypass
-    the memory management of C strings. We'll get to that soon enough.
+    In this way,  we can bypass the memory management of C strings. We'll get
+    to that soon enough.
 
 adder.i: get_version()
 ======================
@@ -737,7 +738,7 @@ demo of SWIG's get_version()
 
 .. class:: handout
 
-    And here it is in use.
+    And here is get_version in use.
 
     Conveniently, SWIG automatically converts the C string to a Python string,
     a real Python string. 
@@ -767,7 +768,7 @@ cy_adder.pyx: get_version()
 
 .. class:: handout
 
-    And our addition to the Cython source file is trivial.
+    And our addition to the Cython source file is a trivial pass-thru function.
 
 demo of Cython's get_version()
 ==============================
@@ -797,7 +798,7 @@ Cython and C Strings
 .. class:: handout
 
     But if converting between C strings and Python strings is so easy, why do I
-    keep finding warnings like this?
+    findwarnings like this in the Cython documentation?
 
 SWIG and C Strings
 ==================
@@ -809,7 +810,7 @@ is not in the business of enforcing morality."
 
 .. class:: handout
 
-    And this...
+    And this in the SWIG documentation.
 
 We are Here
 ===========
@@ -828,8 +829,8 @@ We are Here
     The problem is...memory management. Python's is automatic. C's is manual.
 
     And that may sound academic, until you start thinking about what you like
-    to do with strings: split them, combine them, pass them around to your
-    friends, copy them.
+    to do with strings: split them, combine them, copy them, pass them around
+    to your friends.
 
     And while you're having all that fun, who's keeping track of the memory
     you're using?
@@ -853,10 +854,9 @@ adder.h: greeting_sr()
     using the function's return value to indicate status, success or failure.
 
     Instead of "returning" the output string, the output string is placed in a
-    buffer which is passed to the function. The buffer is described by the
-    pointer oup, and the value buflen, which indicates the length of the buffer
-    being passed to the function.
-
+    buffer which the caller passed to the function. The buffer is described by
+    the pointer outp, and the value buflen, which indicates the length of the
+    buffer being passed to the function.
 
 adder.c: greeting_sr()
 ======================
@@ -1060,6 +1060,9 @@ Which brings me to fear.
 Fear
 ====
 
+- learning curve
+- dead ends
+
 .. class:: handout
 
     If you don't understand a tool, it is easy to be scared of it.
@@ -1102,12 +1105,14 @@ ctypes
 Extra bonus: distutils vs autotools, fight!
 ===========================================
 
-distutils is much easier for compiling SWIG or Cython extensions.
+Use distutils, not autotools, for building SWIG and Cython extensions.
 
 It is possible with autotools, but ...
 (show slide of all the stuff in the Makefile from 90e325):w
 
 .. class:: handout
+
+    In preparing this talk, I tried building 
 
     (pause).
     distutils wins. distutils includes
