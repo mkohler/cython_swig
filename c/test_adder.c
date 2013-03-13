@@ -46,20 +46,25 @@ MU_TEST(test_get_version_rs) {
     mu_check_str_eq(output_s, ADDER_VERSION);
 }
 
+MU_TEST(test_greeting_rs_null_pointer) {
+    mu_check(greeting_rs("Python", 0, 0) == \
+             strlen("Python") + strlen(ADDER_GREETING));
+}
+
 MU_TEST(test_greeting_rs) {
     char output_s[STR_BUF_LEN];
     int rv;
 
     memset(output_s, 'x', STR_BUF_LEN);
     rv = greeting_rs("Python", output_s, 5);
-    mu_check(rv != 0);
-    mu_check_str_eq(output_s, "");
+    mu_check(rv == 0);
 
     memset(output_s, 'x', STR_BUF_LEN);
     rv = greeting_rs("Python", output_s, STR_BUF_LEN);
-    mu_check(rv == 0);
+    mu_check(rv == 13);
     mu_check_str_eq(output_s, "Hello, Python");
 }
+
 
 MU_TEST(test_add_struct) {
     PAIR pair = {3, 4};
@@ -73,6 +78,7 @@ MU_TEST_SUITE(test_suite) {
 
     MU_RUN_TEST(test_add_rs);
     MU_RUN_TEST(test_get_version_rs);
+    MU_RUN_TEST(test_greeting_rs_null_pointer);
     MU_RUN_TEST(test_greeting_rs);
     MU_RUN_TEST(test_add_struct);
 }
@@ -81,5 +87,5 @@ int
 main(void) {
     MU_RUN_SUITE(test_suite);
     MU_REPORT();
-    return 0;
+    return minunit_fail;
 }

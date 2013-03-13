@@ -1,3 +1,6 @@
+/* Private. Kept here for unit-testing only. */
+#define ADDER_GREETING "Hello, "
+
 typedef struct _PAIR {
     int x;
     int y;

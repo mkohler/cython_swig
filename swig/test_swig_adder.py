@@ -55,10 +55,10 @@ def test_greeting():
 
 
 def test_greeting_rs_small_buf():
-    eq_(adder.greeting_rs("Python", 5), [1, ''])
+    eq_(adder.greeting_rs("Python", 5), [0, ''])
 
 def test_greeting_rs():
-    eq_(adder.greeting_rs("Python", 64), [0, "Hello, Python"])
+    eq_(adder.greeting_rs("Python", 64), [13, "Hello, Python"])
 
 
 # Test PAIR struct.

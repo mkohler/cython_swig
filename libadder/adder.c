@@ -4,8 +4,9 @@
 
 #define MAX_STR_LEN 20
 
+
 static char version[] = "v1.0";
-static char hello[] = "Hello, ";
+static char hello[] = ADDER_GREETING;
 
 int
 add(int x, int y) {
@@ -52,13 +53,15 @@ get_version_rs(char * output, int buflen) {
 
 int
 greeting_rs(char * name, char * outp, int buflen) {
-    if (buflen < (strlen(hello) + strlen(name) + 1)) {
-        outp[0] = 0;
-        return 1;
+    if (outp && buflen) {
+        if (buflen < (strlen(hello) + strlen(name) + 1)) {
+            outp[0] = 0;
+            return 0;
+        }
+        strcpy(outp, hello);
+        strcat(outp, name);
     }
-    strcpy(outp, hello);
-    strcat(outp, name);
-    return 0;
+    return strlen(hello) + strlen(name);
 }
 
 int
