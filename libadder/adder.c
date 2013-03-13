@@ -28,7 +28,7 @@ greeting(char *name) {
 
 
 int
-add_sr(int x, int y, int *sum) {
+add_rs(int x, int y, int *sum) {
     if ((x < 0) || (y < 0)) {
         *sum = 0;
         return 1;
@@ -39,7 +39,7 @@ add_sr(int x, int y, int *sum) {
 
 
 int
-get_version_sr(char * output, int buflen) {
+get_version_rs(char * output, int buflen) {
     if (buflen <= strlen(version) + 1) {
         output[0] = 0;
         return 1;
@@ -51,7 +51,7 @@ get_version_sr(char * output, int buflen) {
 
 
 int
-greeting_sr(char * name, char * outp, int buflen) {
+greeting_rs(char * name, char * outp, int buflen) {
     if (buflen < (strlen(hello) + strlen(name) + 1)) {
         outp[0] = 0;
         return 1;

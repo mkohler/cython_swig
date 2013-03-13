@@ -14,12 +14,12 @@ char * greeting(char *name);
 
 %include "typemaps.i"
 /* Calling the parameter OUTPUT makes it so. */
-int add_sr(int x, int y, int *OUTPUT);
+int add_rs(int x, int y, int *OUTPUT);
 
 %include "cstring.i"
 %cstring_output_maxsize(char * outp,  int buflen);
-int get_version_sr(char * outp, int buflen);
+int get_version_rs(char * outp, int buflen);
 
-int greeting_sr(char * name, char * outp, int buflen);
+int greeting_rs(char * name, char * outp, int buflen);
 
 int pair_add(PAIR *);

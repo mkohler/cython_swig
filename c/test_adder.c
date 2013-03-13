@@ -19,44 +19,44 @@ MU_TEST(test_greeting) {
     mu_check_str_eq(greeting("C program"), "Hello, C program");
 }
 
-MU_TEST(test_add_sr) {
+MU_TEST(test_add_rs) {
     int sum;
     int rv;
 
-    rv = add_sr(2, 3, &sum);
+    rv = add_rs(2, 3, &sum);
     mu_check(rv == 0);
     mu_check(sum == 5);
 
-    rv = add_sr(2, -3, &sum);
+    rv = add_rs(2, -3, &sum);
     mu_check(rv != 0);
 }
 
-MU_TEST(test_get_version_sr) {
+MU_TEST(test_get_version_rs) {
     char output_s[STR_BUF_LEN];
     int rv;
 
     memset(output_s, 'x', STR_BUF_LEN);
-    rv = get_version_sr(output_s, 2);
+    rv = get_version_rs(output_s, 2);
     mu_check(rv != 0);
     mu_check_str_eq(output_s, "");
 
     memset(output_s, 'x', STR_BUF_LEN);
-    rv = get_version_sr(output_s, STR_BUF_LEN);
+    rv = get_version_rs(output_s, STR_BUF_LEN);
     mu_check(rv == 0);
     mu_check_str_eq(output_s, ADDER_VERSION);
 }
 
-MU_TEST(test_greeting_sr) {
+MU_TEST(test_greeting_rs) {
     char output_s[STR_BUF_LEN];
     int rv;
 
     memset(output_s, 'x', STR_BUF_LEN);
-    rv = greeting_sr("Python", output_s, 5);
+    rv = greeting_rs("Python", output_s, 5);
     mu_check(rv != 0);
     mu_check_str_eq(output_s, "");
 
     memset(output_s, 'x', STR_BUF_LEN);
-    rv = greeting_sr("Python", output_s, STR_BUF_LEN);
+    rv = greeting_rs("Python", output_s, STR_BUF_LEN);
     mu_check(rv == 0);
     mu_check_str_eq(output_s, "Hello, Python");
 }
@@ -71,9 +71,9 @@ MU_TEST_SUITE(test_suite) {
     MU_RUN_TEST(test_get_version);
     MU_RUN_TEST(test_greeting);
 
-    MU_RUN_TEST(test_add_sr);
-    MU_RUN_TEST(test_get_version_sr);
-    MU_RUN_TEST(test_greeting_sr);
+    MU_RUN_TEST(test_add_rs);
+    MU_RUN_TEST(test_get_version_rs);
+    MU_RUN_TEST(test_greeting_rs);
     MU_RUN_TEST(test_add_struct);
 }
 

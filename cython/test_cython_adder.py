@@ -18,14 +18,14 @@ def test_add_str():
     cy_adder.add('1', 1)
 
 
-# Test add_sr
+# Test add_rs
 
-def test_add_sr():
-    eq_(cy_adder.add_sr(2, 3), 5)
+def test_add_rs():
+    eq_(cy_adder.add_rs(2, 3), 5)
 
 @raises(ArithmeticError)
 def test_add_negative_number():
-    cy_adder.add_sr(2, -2)
+    cy_adder.add_rs(2, -2)
 
 
 # Test get_version
@@ -37,9 +37,9 @@ def test_get_version():
 def test_get_version_extra_arg():
     cy_adder.get_version(1)
 
-# Test get_version_sr
+# Test get_version_rs
 
-def test_get_version_sr():
+def test_get_version_rs():
     eq_(cy_adder.get_version(), ADDER_VERSION)
 
 
@@ -49,10 +49,10 @@ def test_greeting():
         "Hello, Python")
 
 
-# Test greeting_sr
+# Test greeting_rs
 
-def test_greeting_sr():
-    eq_(cy_adder.greeting_sr("Python"),
+def test_greeting_rs():
+    eq_(cy_adder.greeting_rs("Python"),
         "Hello, Python")
 
 # Test pair_add

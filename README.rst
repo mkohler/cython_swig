@@ -838,27 +838,32 @@ We are Here
     To explore these issues, we'll add a function to libadder that takes a C
     string as a parameter, and produces a C string as output.
 
-adder.h: greeting_sr()
+adder.h: greeting_rs()
 ======================
 
 .. code-block:: c
 
-    int greeting_sr(char * name, char * outp, int buflen);
+    int greeting_rs(char * name, char * outp, int buflen);
 
 .. class:: handout
 
-    Here's a declaration for a function that creates a greeting. If you pass it
+    Here's a declaration for a function that creates a greeting. If ou pass it
     "Monty", it produces "Hello, Monty".
 
-    I didn't say it returns Monty, because this function uses the C pattern of
+    I use the suffix SR to remind everyone that this function does not
+    return a greeting. It
+
+    XXX
+
+    I didn't say it returns Monty, because greeting_rs uses the C pattern of
     using the function's return value to indicate status, success or failure.
 
     Instead of "returning" the output string, the output string is placed in a
-    buffer which the caller passed to the function. The buffer is described by
+    buffer which the CALLER passed to the function. The buffer is described by
     the pointer outp, and the value buflen, which indicates the length of the
     buffer being passed to the function.
 
-adder.c: greeting_sr()
+adder.c: greeting_rs()
 ======================
 
 .. code-block:: c
@@ -866,7 +871,7 @@ adder.c: greeting_sr()
     static char hello[] = "Hello, ";
 
     int
-    greeting_sr(char * name, char * outp, int buflen) {
+    greeting_rs(char * name, char * outp, int buflen) {
         if (buflen < (strlen(hello) + strlen(name) + 1)) {
             outp[0] = 0;
             return 1;
@@ -886,13 +891,16 @@ adder.c: greeting_sr()
     Then it concatenates the string hello, and its input argument in the outp
     buffer.
 
-    The suffix _sr stands for status return, a reminder that it returns its
+    The suffix _rs stands for status return, a reminder that it returns its
     status, and not its output.
 
-    Understanding the implementation isn't vital as long as you understand the interface.
+    Understanding the implementation isn't vital as long as you
+    understand the interface. And the key thing to understand about the
+    interface is that CALLER of greeting_rs function must allocate the buffer
+    that the 
     Let's use SWIG to make this function available to Python.
 
-adder.i: greeting_sr()
+adder.i: greeting_rs()
 ======================
 
 .. code-block:: c
@@ -900,7 +908,7 @@ adder.i: greeting_sr()
     %include "cstring.i"
     %cstring_output_maxsize(char * outp,  int buflen);
 
-    int greeting_sr(char * name, char * outp, int buflen);
+    int greeting_rs(char * name, char * outp, int buflen);
 
 .. class:: handout
 
@@ -926,13 +934,13 @@ adder.i: greeting_sr()
     By default, i.e. without typemaps, strings passed from scripting language to
     SWIG must be read-only.
 
-demo of SWIG's greeting_sr()
+demo of SWIG's greeting_rs()
 ============================
 
 .. class:: text
 
     >>> import adder
-    >>> adder.greeting_sr("Monty", 100)
+    >>> adder.greeting_rs("Monty", 100)
     [0, 'Hello, Monty']
     >>>
 
@@ -943,38 +951,38 @@ demo of SWIG's greeting_sr()
     First, 
 
 
-c_adder.pxd: greeting_sr()
+c_adder.pxd: greeting_rs()
 ===========================
 
 .. code-block:: python
 
-    int greeting_sr(char * name, char * output, int buflen)
+    int greeting_rs(char * name, char * output, int buflen)
 
 .. class:: handout
 
-cy_adder.pyx: greeting_sr()
+cy_adder.pyx: greeting_rs()
 ===========================
 
 .. code-block:: python
 
-    def greeting_sr(name):
+    def greeting_rs(name):
         cdef char * c_str
         py_str = ' ' * (len("Salutations, ") + len(name))
         c_str = py_str
-        sr = c_adder.greeting_sr(name, c_str, len(py_str))
+        sr = c_adder.greeting_rs(name, c_str, len(py_str))
         if sr == 1:
             raise MemoryError
         return c_str
 
 .. class:: handout
 
-demo of Cython's greeting_sr()
+demo of Cython's greeting_rs()
 ==============================
 
 .. code-block:: text
 
     >>> import cy_adder
-    >>> cy_adder.greeting_sr("Monty")
+    >>> cy_adder.greeting_rs("Monty")
     'Hello, Monty'
     >>>
 
@@ -1064,6 +1072,8 @@ Fear
 - dead ends
 
 .. class:: handout
+
+    Will it 
 
     If you don't understand a tool, it is easy to be scared of it.
 
