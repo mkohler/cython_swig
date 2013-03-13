@@ -959,14 +959,13 @@ demo of SWIG's greeting_rs()
     uses that maximum length to allocate a buffer, and passes that
     buffer and its length to the original GREETING_RS function.
 
-    The behavior we didn't talk about is that, if you tell SWIG that a 
+    The behavior we didn't talk about is that, if you tell SWIG that a
     function parameter is actually for OUTPUT, then SWIG will
     de-reference that pointer, put the contents in a list that the
     wrapped function returns.
 
     So, in our example, 0 is the STATUS value returned by the C version
     of GREETING_RS, and Hello Monty was grabbed from the OUTP pointer.
-
 
 c_adder.pxd: greeting_rs()
 ===========================
@@ -977,27 +976,42 @@ c_adder.pxd: greeting_rs()
 
 .. class:: handout
 
-    Moving on to Cython, here is the Cython interface for GREETING_RS.
-    As with other examples, it is almost identical to the C header file.
+    Moving on to Cython, here is the Cython interface file for
+    GREETING_RS. As with other examples, it is almost identical to the C
+    header file.
 
 cy_adder.pyx: greeting_rs()
 ===========================
 
 .. code-block:: c
 
-        def greeting_rs(name):
-            c_str_len = c_adder.greeting_rs(name, <char * > 0, 0)
-            py_str = ' ' * (c_str_len + 1)
-            cdef char * c_str = py_str
-            c_adder.greeting_rs(name, c_str, len(py_str))
-            return c_str
+    def greeting_rs(name):
+        c_str_len = c_adder.greeting_rs(name, <char * > 0, 0)
+        py_str = ' ' * (c_str_len + 1)
+        cdef char * c_str = py_str
+        c_adder.greeting_rs(name, c_str, len(py_str))
+        return c_str
 
 .. class:: handout
 
-    The
+    And here's the Cython code. The first thing to notice is how long it
+    is. The reason for that is that we are doing memory allocation for
+    the C function we're going to call.
 
+    Going line-by-line, we call GREETING_RS with the bona fide name, but
+    a null pointer. This lets us find out how long the greeting WILL be,
+    and thus how much memory we need to allocate.
 
+    In the next two lines, we create a Python string that is long enough
+    to hold the greeting, and then create a C pointer from it. When you
+    assign a Python string to a C string, the C pointer points to the
+    buffer of the Python string itself. In this way, we can piggy-back
+    on Python's memory management, in that we have a C buffer that will
+    be freed when the variable PY_STR is freed.
 
+    Now that the hard part is done, we can call our C function, and get
+    our greeting placed in C_STR. Finally, the last line is in implicit
+    conversion from c_str to a Python string.
 
 demo of Cython's greeting_rs()
 ==============================
