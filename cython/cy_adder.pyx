@@ -26,12 +26,10 @@ def greeting(name):
     return c_adder.greeting(name)
 
 def greeting_rs(name):
-    cdef char * c_str
-    py_str = ' ' * (len("Salutations, ") + len(name))
-    c_str = py_str
-    sr = c_adder.greeting_rs(name, c_str, len(py_str))
-    if sr == 1:
-        raise MemoryError
+    c_str_len = c_adder.greeting_rs(name, <char *>0, 0)
+    py_str = ' ' * (c_str_len + 1)
+    cdef char * c_str = py_str
+    c_adder.greeting_rs(name, c_str, len(py_str))
     return c_str
 
 
