@@ -30,7 +30,6 @@ Pre-fight
 - passing structs
 - C strings
 - memory management
-- fear and magic
 - generalizations
 
 .. class:: handout
@@ -48,8 +47,8 @@ Pre-fight
     Python. As we do this, you can decide whether you like the SWIG way
     or the Cython way better, and who should win the fight?
 
-    At the end, I'll talk about fear and magic, make some gross
-    generalizations, and take questions.
+    At the end, I'll make some gross generalizations, and take
+    questions.
 
 Code first and ask questions later
 ==================================
@@ -86,7 +85,6 @@ We are Here
 - C strings
 - memory management
 - generalizations
-- fear and magic
 
 .. class:: handout
 
@@ -116,7 +114,6 @@ import this
 
 import socket
 =============
-
 
 .. code-block:: python
 
@@ -201,7 +198,6 @@ We are Here
 - C strings
 - memory management
 - generalizations
-- fear and magic
 
 .. class:: handout
 
@@ -284,7 +280,6 @@ We are Here
 - C strings
 - memory management
 - generalizations
-- fear and magic
 
 .. class:: handout
 
@@ -487,7 +482,6 @@ We are Here
 - C strings
 - memory management
 - generalizations
-- fear and magic
 
 .. class:: handout
 
@@ -662,7 +656,6 @@ We are Here
 - **C strings**
 - memory management
 - generalizations
-- fear and magic
 
 .. class:: handout
 
@@ -821,7 +814,6 @@ We are Here
 - C strings
 - **memory management**
 - generalizations
-- fear and magic
 
 .. class:: handout
 
@@ -1048,7 +1040,6 @@ We are Here
 - C strings
 - memory management
 - **generalizations**
-- fear and magic
 
 .. class:: handout
 
