@@ -25,11 +25,11 @@ def get_version_rs():
 def greeting(name):
     return c_adder.greeting(name)
 
-def greeting_rs(name):
-    c_str_len = c_adder.greeting_rs(name, <char *>0, 0)
+def sgreeting(name):
+    c_str_len = c_adder.sgreeting(name, <char *>0, 0)
     py_str = ' ' * (c_str_len + 1)
     cdef char * c_str = py_str
-    c_adder.greeting_rs(name, c_str, len(py_str))
+    c_adder.sgreeting(name, c_str, len(py_str))
     return c_str
 
 

@@ -52,7 +52,7 @@ get_version_rs(char * output, int buflen) {
 
 
 int
-greeting_rs(char * name, char * outp, int buflen) {
+sgreeting(char * name, char * outp, int buflen) {
     if (outp && buflen) {
         if (buflen < (strlen(hello) + strlen(name) + 1)) {
             outp[0] = 0;

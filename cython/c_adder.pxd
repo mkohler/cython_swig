@@ -10,6 +10,6 @@ cdef extern from "adder.h":
 
     int add_rs(int x, int y, int *sum)
     int get_version_rs(char * output, int buflen)
-    int greeting_rs(char * name, char * output, int buflen)
+    int sgreeting(char * name, char * output, int buflen)
 
     int pair_add(PAIR * ppair)

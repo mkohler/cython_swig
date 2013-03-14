@@ -49,10 +49,10 @@ def test_greeting():
         "Hello, Python")
 
 
-# Test greeting_rs
+# Test sgreeting
 
-def test_greeting_rs():
-    eq_(cy_adder.greeting_rs("Python"),
+def test_sgreeting():
+    eq_(cy_adder.sgreeting("Python"),
         "Hello, Python")
 
 # Test pair_add

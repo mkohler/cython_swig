@@ -12,6 +12,6 @@ char * greeting(char *);
 
 int add_rs(int x, int y, int *sum);
 int get_version_rs(char * output, int buflen);
-int greeting_rs(char * name, char * outp, int buflen);
+int sgreeting(char * name, char * outp, int buflen);
 
 int pair_add(PAIR * ppair);

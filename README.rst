@@ -837,30 +837,30 @@ We are Here
     To explore these issues, we'll add a function to libadder that takes a C
     string as a parameter, and produces a C string as output.
 
-adder.h: greeting_rs()
+adder.h: sgreeting()
 ======================
 
 .. code-block:: c
 
-    int greeting_rs(char * name, char * outp, int buflen);
+    int sgreeting(char * name, char * outp, int buflen);
 
 .. class:: handout
 
-    Here is the declaration for GREETING_RS, a function that creates a
+    Here is the declaration for sgreeting, a function that creates a
     greeting. If you pass it "Monty", it produces "Hello, Monty".
 
-    The suffix RS stands for RETURNS STATUS. That is, GREETING_RS
-    produces a greeting but it does not return it. It returns the number
-    of characters in the output string, or a 0 if there was an error.
+    sgreeting works a bit like sprintf. That is, sgreeting produces a
+    greeting but it does not return it. It returns the number of
+    characters in the output string, or a 0 if there was an error.
 
-    So where does greeting_rs put the greeting? The CALLER of greeting_rs
-    passes a buffer to greeting_rs via the pointer OUTP, and greeting_rs puts
+    So where does sgreeting put the greeting? The CALLER of sgreeting
+    passes a buffer to sgreeting via the pointer OUTP, and sgreeting puts
     the greeting in that buffer.
 
     This is a common pattern in C libraries. The caller allocates the
     memory, and passes called functions a buffer and length.
 
-adder.c: greeting_rs()
+adder.c: sgreeting()
 ======================
 
 .. class:: small
@@ -870,7 +870,7 @@ adder.c: greeting_rs()
         static char hello[] = "Hello, ";
 
         int
-        greeting_rs(char * name, char * outp, int buflen) {
+        sgreeting(char * name, char * outp, int buflen) {
             if (outp && buflen) {
                 if (buflen < (strlen(hello) +
                               strlen(name) + 1)) {
@@ -885,11 +885,11 @@ adder.c: greeting_rs()
 
 .. class:: handout
 
-    Here's the implementation of GREETING_RS.
+    Here's the implementation of sgreeting.
 
     The first conditional allows callers to find out how much space to
     allocate. The caller passes in a null pointer for the output buffer,
-    and greeting_rs returns the number of bytes in the output string.
+    and sgreeting returns the number of bytes in the output string.
 
     The second conditional checks if the buffer is long enough for
     the output, returning zero if the buffer is not long enough.
@@ -899,12 +899,12 @@ adder.c: greeting_rs()
 
     Understanding the implementation isn't vital as long as you
     understand the interface. And the key thing to understand about the
-    interface is that the CALLER of greeting_rs function must allocate
-    the GREETING_RS's output buffer.
+    interface is that the CALLER of sgreeting function must allocate
+    the sgreeting's output buffer.
 
     Let's use SWIG to make this function available to Python.
 
-adder.i: greeting_rs()
+adder.i: sgreeting()
 ======================
 
 .. code-block:: c
@@ -912,7 +912,7 @@ adder.i: greeting_rs()
     %include "cstring.i"
     %cstring_output_maxsize(char * outp, int buflen);
 
-    int greeting_rs(char * name, char * outp, int buflen);
+    int sgreeting(char * name, char * outp, int buflen);
 
 .. class:: handout
 
@@ -920,38 +920,38 @@ adder.i: greeting_rs()
     SWIG's default behavior. That is why our SWIG interface files have
     been copies of the C header file.
 
-    greeting_rs is different.
+    sgreeting is different.
 
     The input parameter, NAME, isn't a problem. By default, SWIG will
     automatically convert a Python string to a read-only C string, which
     is what we want.
 
     The problem is OUTP, the output pointer. We need to tell SWIG to
-    allocate a buffer for greeting_rs, and pass a pointer to the buffer
+    allocate a buffer for sgreeting, and pass a pointer to the buffer
     in OUTP and the length of the buffer in BUFLEN. Fortunately, SWIG
     CAN do this. That is what the first two lines do.
 
     The cstring_output_maxsize macro tells SWIG that, the wrapped
-    version of GREETING_RS will pass in a maximum length, and SWIG will
+    version of sgreeting will pass in a maximum length, and SWIG will
     be responsible for allocating a buffer of that length, and be
     responsible for freeing it. Fancy!
 
     Let's see how we use the wrapped function.
 
-demo of SWIG's greeting_rs()
+demo of SWIG's sgreeting()
 ============================
 
 .. class:: text
 
     >>> import adder
-    >>> adder.greeting_rs("Monty", 100)
+    >>> adder.sgreeting("Monty", 100)
     [12, 'Hello, Monty']
     >>>
 
 .. class:: handout
 
     I hope this usage is a little surprising. We started with a
-    function, GREETING_RS, that took 3 arguments, and returned its
+    function, sgreeting, that took 3 arguments, and returned its
     status, but here are we, at the python prompt, using a function that
     takes 2 arguments and returns a list.
 
@@ -959,7 +959,7 @@ demo of SWIG's greeting_rs()
     slide. SWIG created a Python function for us that takes an input
     string and a maximum length for the output. Then internally, it
     uses that maximum length to allocate a buffer, and passes that
-    buffer and its length to the original GREETING_RS function.
+    buffer and its length to the original sgreeting function.
 
     The behavior we didn't talk about is that, if you tell SWIG that a
     function parameter is actually for OUTPUT, then SWIG will
@@ -967,35 +967,35 @@ demo of SWIG's greeting_rs()
     wrapped function returns.
 
     So, in our example, 0 is the STATUS value returned by the C version
-    of GREETING_RS, and Hello Monty was grabbed from the OUTP pointer.
+    of sgreeting, and Hello Monty was grabbed from the OUTP pointer.
 
-c_adder.pxd: greeting_rs()
+c_adder.pxd: sgreeting()
 ===========================
 
 .. code-block:: python
 
-    int greeting_rs(char * name, char * output, int buflen)
+    int sgreeting(char * name, char * output, int buflen)
 
 .. class:: handout
 
     Moving on to Cython, here is the Cython interface file for
-    GREETING_RS. As with other examples, it is almost identical to the C
+    sgreeting. As with other examples, it is almost identical to the C
     header file.
 
-cy_adder.pyx: greeting_rs()
+cy_adder.pyx: sgreeting()
 ===========================
 
 .. class:: small
 
     .. code-block:: c
 
-        def greeting_rs(name):
-            c_str_len = c_adder.greeting_rs(name,
+        def sgreeting(name):
+            c_str_len = c_adder.sgreeting(name,
                                             <char * > 0,
                                             0)
             py_str = ' ' * (c_str_len + 1)
             cdef char * c_str = py_str
-            c_adder.greeting_rs(name,
+            c_adder.sgreeting(name,
                                 c_str,
                                 len(py_str))
             return c_str
@@ -1006,7 +1006,7 @@ cy_adder.pyx: greeting_rs()
     is. The reason for that is that we are doing memory allocation for
     the C function we're going to call.
 
-    Going line-by-line, we call GREETING_RS with the bona fide name, but
+    Going line-by-line, we call sgreeting with the bona fide name, but
     a null pointer. This lets us find out how long the greeting WILL be,
     and thus how much memory we need to allocate.
 
@@ -1021,13 +1021,13 @@ cy_adder.pyx: greeting_rs()
     our greeting placed in C_STR. Finally, the last line is in implicit
     conversion from c_str to a Python string.
 
-demo of Cython's greeting_rs()
+demo of Cython's sgreeting()
 ==============================
 
 .. code-block:: text
 
     >>> import cy_adder
-    >>> cy_adder.greeting_rs("Monty")
+    >>> cy_adder.sgreeting("Monty")
     'Hello, Monty'
     >>>
 
