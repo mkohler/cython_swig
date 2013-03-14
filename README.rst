@@ -38,9 +38,7 @@ Pre-fight
     To start this talk, I'm going to quickly discuss the Python import
     statement and what it hides.
 
-    Then, I'll review the structure of C libraries. When I say "C
-    libraries", I mean libraries written in C, designed to be used by
-    programs written in C.
+    Then, I'll review the structure of C libraries.
 
     From there, I'll show you a very small C library, the LIBADDER
     library.
@@ -250,7 +248,7 @@ adder.c: add()
 
 .. class:: handout
 
-    This is a C function which adds to two integers, and returns their
+    This is a C function which adds two integers, and returns their
     sum. Unremarkable...but we'd like to use it from Python.
 
 adder.h: add()
@@ -673,10 +671,11 @@ We are Here
 
     Yes...C Strings, the source of all good buffer overflows.
 
-    Compared to Python strings, C strings are so amazingly primitive, it's hard
-    to believe they could be useful for anything at all. Nevertheless, there
-    are many C libraries that use C strings as part of their interface. And we
-    need to understand how to handle them from Python.
+    Compared to Python strings, C strings are so amazingly primitive,
+    it's hard to evan call them strings. They are fixed-size, mutable,
+    arrays of bytes. Nevertheless, there are many C libraries that use C
+    strings as part of their interface. And we need to understand how to
+    handle them from Python.
 
     We'll start with a simple case.
 
@@ -1125,95 +1124,44 @@ Alternatives to Cython and SWIG
     two choices, and they are both, in a sense, extreme choices compared
     to SWIG and Cython.
 
-    You can write a C extension in C, using the Python C API, just like
-    many standard library extension modules.
+    You can use the Python C API, just like many standard library extension
+    modules.
 
     Or you can use ctypes, which is part of the Standard Library, and
-    lets you access C libraries with a lot less CEREMONY, and a lot less
-    SAFETY, than SWIG and Cython. If you want to access a C library NOW,
-    without building anything, without source code, and without even a
-    header file, take a look at ctypes.
+    lets you access C libraries with a lot less CEREMONY, but also a lot
+    less SAFETY, than SWIG and Cython. If you want to access a C library
+    NOW, without building anything, without source code, and without
+    even a header file, take a look at ctypes.
 
-Magic
-=====
+Getting Started
+===============
 
-.. class:: handout
+.. class:: incremental
 
-    I want to end with a discussion of magic and fear.
-
-    I was a C programmer before I was a Python programmer, but I
-    remember the exact point in time when I became a Python programmer.
-    I was at the interactive prompt, playing with the sockets library.
-    And slowly, I discovered, I could write networking programs, running
-    each line immediately after I wrote it. I could write a network
-    server in one window and a client in another.
-
-    And I didn't have to compile any of it. It was magic.
-
-    It was magic because it was unbelievably fantastic to write code
-    that way.
-
-    And it was magic because I couldn't begin to understand what was
-    going on inside Python that let me do all of this without running a
-    compiler, or editing my include path, or putting my link options in
-    the right order.
-
-    It was a magic because it was great, but it was also magic because I
-    understand it. couldn't 
-
-    Which brings me to fear.
-
-Fear
-====
-
-- learning curve
-- dead ends
+    - Start small.
+    - Use distutils.
 
 .. class:: handout
 
-    If you don't understand a tool, it is easy to be scared of it.
+    Adoping a powerful tool like SWIG or Cython, can be scary. There is
+    a lot to learn, and at the beginning it can be hard to see whether
+    it will do what you need.
 
-    In SWIG, if you get to a C function that doesn't "fit", that SWIG can't
-    wrap, you can go a few ways:
+    (click) Start small.
 
-        1. If you're lucky, there is always a typemap macro to help you.
-        2. If not, you use typemaps to massage things. And finally, if that
-           doesn't work
-        3. Write another C library, to wrap the first, and use SWIG to wrap
-           that.
+    Like with any other code, work incrementally. Neither SWIG nor
+    Cython require you to wrap an entire library. Wrap one function at a
+    time. 
 
-    Choosing a tool like SWIG or Cython can be scary.
+    (click) And use DISTUTILS to build your Python extension. Even if
+    you don't use it for anything else. It already has all of the magic
+    compiler flags needed for building extensions that 
 
-    Will it 
-
-
-    My concern is that I would choose a tool, and get 90% of the way there, and
-      then find a routine that I couldn't properly wrap, and I would be stuck.
-
-    I would have trouble incorporating it into the build.
-
-    Once incorporated, the tool would be too hard to understand or debug.
-
-    The tool would take too long to get started.
-
-    There are a lot of details in doing this kind of work.
-
-    Can you paint yourself into a corner?
-
-    Fear: At the beginning of a project, when you're deciding what tools
-    you're going to invest your time in, there's a concern that you will
-    pick a tool that gets you 90% of the way there.
-
-    Neither of these tools will do that, I think?
-
-    With SWIG, if you can't make an interface work, write a C
-    program that uses the interface, and wrap that.
-
-    My point is you don't have to be an
-
-    When you look under the covers, it is STILL magic.
-
-    It's not like I could re-create SWIG or Cython.
+    Did anyone knows that distutils includes code to parse Makefiles?
+    It's in sysconfig.py, and it actually parses the Makefile that builds the
+    Python interpreter to find the flags that were used to build the
+    interpreter. Someone went to the trouble of writing that code. Use
+    it.
 
 Code and Slides
 ===============
@@ -1224,126 +1172,7 @@ mark.kohler@gmail.com
 
 .. class:: handout
 
-    That's all. I hope you found it useful.
+    Thank you. I hope you found it useful.
     The code and slides are available on github.
     I am Mark Kohler.
     And I am ready to take questions.
-
-End
-===
-
-This slide is intentionally almost blank.
-
-
-Other Bits I Did Not Mention
-============================
-
-SWIG stands for Simplified Wrapper and Interface Generator
-
-Neither Cython nor SWIG require source code. A binary libary and a
-header file are sufficient.
-
-SWIG and Cython support Python 3.
-
-Cython has preliminary support for PyPy's C extension API. SWIG does not.
-
-Performance comparison
-
-Unicode
-
-SWIG typemaps
-
-Show what happens when you send the wrong kind of parameters into a
-wrapped function.
-
-Limits of SWIG
-==============
-
-.. class:: handout
-
-    This gets to the crux of one of the limits of SWIG. What can it do and more
-    importantly, what CAN'T it do.
-
-    And what it can't do is de-reference a pointer.
-
-    It can pass pointers around. And that's pretty powerful. You can have your
-    Python object essentially holding a C pointer, but you can't de-reference
-    it.
-
-    Anything you get out of SWIG needs to be in the form that it can convert
-    from a C object to a python object.
-
-    It can convert numbers, ints and floats, at least, automatically.
-
-    It can convert strings, with your help. (As long as strings means ASCII.)
-
-No source?
-==========
-
-.. class:: handout
-
-    For this discussion, we're going to assume the library is already
-    written. Maybe you wrote it, or maybe it's a third-party library,
-    and all you have is a header file and a binary, but either way,
-    we're going to assume we don't want to change the library's interface.
-
-Cython, the language
-====================
-
-- almost 100% compatible with Python
-
-- optional static types
-
-- can use C libraries, with the cimport statement
-
-.. class:: handout
-
-    Now, the Cython source file, a PYX file. You need to write some
-    Cython code that will get transformed into C code, which gets
-    compiled, and that is your Python extension, which the Python
-    interpreter can import.
-
-    This is the red pill. If you take it, you leave the world where C
-    and Python are separate langauges, and enter a world where C code
-    and Python code can be mixed, within a file, even line-by-line
-    within a function.
-
-    Take your C header file and (manually) create a .pxd file::
-        Copy the file
-        Remove semi-colons.
-        Convert #defines to variables.
-        ints to bints
-
-    Create a .pyx file.
-        This is where you are really using the Cython language. It can
-        be repetitive, but you also have tons of flexibility in making a
-        Pythonic interface.
-
-C Strings
-=========
-
-.. class:: handout
-
-    Speaking as a C programmer AND a Python programmer, C strings are a
-    nightmare. Really, it's not fair to to even call them strings. They
-    are fixed-size, mutable, arrays of bytes.
-
-Extra bonus: distutils vs autotools, fight!
-===========================================
-
-Use distutils, not autotools, for building SWIG and Cython extensions.
-
-.. class:: handout
-
-    It is possible with autotools, but with autotools, it's up to you to
-    find the right flags for compiling your extension.
-
-    Did anyone knows that distutils includes code to parse Makefiles?
-    It's in sysconfig.py, and it actually parses the Makefile that builds the
-    Python interpreter. There's nothing like that in the autotools.
-
-    For the code in this presentation, I started out with autotools, but
-    switched to distutils because I thought it was just too ugly to watch
-    what distutils did, and copy that.
-    CFLAGS from a
-
