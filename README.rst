@@ -87,8 +87,8 @@ We are Here
 - passing structs
 - C strings
 - memory management
-- fear and magic
 - generalizations
+- fear and magic
 
 .. class:: handout
 
@@ -202,8 +202,8 @@ We are Here
 - passing structs
 - C strings
 - memory management
-- fear and magic
 - generalizations
+- fear and magic
 
 .. class:: handout
 
@@ -285,8 +285,8 @@ We are Here
 - passing structs
 - C strings
 - memory management
-- fear and magic
 - generalizations
+- fear and magic
 
 .. class:: handout
 
@@ -488,8 +488,8 @@ We are Here
 - **passing structs**
 - C strings
 - memory management
-- fear and magic
 - generalizations
+- fear and magic
 
 .. class:: handout
 
@@ -663,8 +663,8 @@ We are Here
 - passing structs
 - **C strings**
 - memory management
-- fear and magic
 - generalizations
+- fear and magic
 
 .. class:: handout
 
@@ -821,8 +821,8 @@ We are Here
 - passing structs
 - C strings
 - **memory management**
-- fear and magic
 - generalizations
+- fear and magic
 
 .. class:: handout
 
@@ -1026,39 +1026,47 @@ demo of Cython's greeting_rs()
 .. class:: handout
 
     And here we see the benefit of writing all of that code in the
-    Cython PYX file. Our wrapped function 
+    Cython PYX file. Our wrapped function has a perfectly Pythonic
+    interface, with no indication of all the manual memory-management
+    machinations that we were just mulling.
 
-Gross Generalization, Cython
-============================
+We are Here
+===========
 
-.. class:: handout
-
-    Cython is...
-
-    If I take something like a header, I can, line-by-line, reference
-    objects as C or Python objects, and convert between them.
-
-    Sort of like in-line assembly.
-
-SWIG Advantages
-================
-
-- Wraps C libraries for many languages: Java, Ruby, Perl
-
-If you write C library code, and you want to provide bindings (wrappers)
-for Python, Java, and Ruby, SWIG can do that.
-
-You have to create and maintain Cython .pxd files for your library.
-
-You have to write .pyx files.
+- import statement
+- libadder library
+- passing ints
+- passing structs
+- C strings
+- memory management
+- **generalizations**
+- fear and magic
 
 .. class:: handout
 
-    The essence of SWIG is
+    Whew. We've looked at the details of how you use SWIG and Cython,
+    and you've probably formed an opinion about which one you would
+    prefer to work with.
 
-    Wrapping C libraries for Python and Ruby and Perl and PHP and
-    Scheme and ... ...and noticing that there is a lot in common and
-    maybe that can be wrapped up and automated.
+    Now let's take a step back from the nitty gritty, and look at some
+    of their high-level differences.
+
+SWIG Features
+=============
+
+.. class:: incremental
+
+    - Multi-language support
+    - More DRY
+
+.. class:: handout
+
+    SWIG will wrap C libraries for many languages besides Python. So if
+    you are the author of a C library, and you want to provide bindings
+    for Python AND Java AND Ruby, SWIG can do that. (Next bullet)
+
+    You have to create and maintain Cython .pxd files for your library.
+    You have to write .pyx files.
 
     If I take something like a header file, with a few hints, I could
     automatically create these wrappers.
@@ -1073,6 +1081,22 @@ Do performance optimizations "just in time".
 Provides a interface layer where you can smoothely slide between C and Python.
 
 Easier to learn than than typemaps.
+
+    Cython is...
+
+    If I take something like a header, I can, line-by-line, reference
+    objects as C or Python objects, and convert between them.
+
+    Sort of like in-line assembly.
+
+Alternatives to Cython and SWIG
+===============================
+
+writing extensions with the Python C/API
+
+    http://docs.python.org/2/extending/
+
+ctypes
 
 .. class:: handout
 
@@ -1093,13 +1117,13 @@ Magic
 
     Then later, when I saw
 
-Show generated code from SWIG and Cython.
+    Show generated code from SWIG and Cython.
 
-When you look under the covers, it is *still* magic.
+    When you look under the covers, it is STILL magic.
 
-It's not like I could re-create SWIG or Cython.
+    It's not like I could re-create SWIG or Cython.
 
-Which brings me to fear.
+    Which brings me to fear.
 
 Fear
 ====
@@ -1108,6 +1132,17 @@ Fear
 - dead ends
 
 .. class:: handout
+
+    In SWIG, if you get to a C function that doesn't "fit", that SWIG can't
+    wrap, you can go a few ways:
+
+        1. If you're lucky, there is always a typemap macro to help you.
+        2. If not, you use typemaps to massage things. And finally, if that
+           doesn't work
+        3. Write another C library, to wrap the first, and use SWIG to wrap
+           that.
+
+    Choosing a tool like SWIG or Cython can be scary.
 
     Will it 
 
@@ -1137,78 +1172,24 @@ Fear
 
     My point is you don't have to be an
 
-Alternatives to Cython and SWIG
-===============================
-
-writing extensions with the Python C/API
-
-    http://docs.python.org/2/extending/
-
-ctypes
-
-.. class:: handout
-
-Extra bonus: distutils vs autotools, fight!
-===========================================
-
-Use distutils, not autotools, for building SWIG and Cython extensions.
-
-It is possible with autotools, but ...
-(show slide of all the stuff in the Makefile from 90e325):w
-
-.. class:: handout
-
-    In preparing this talk, I tried building 
-
-    (pause).
-    distutils wins. distutils includes
-
-    Did anyone knows that distutils includes code to parse Makefiles?
-    It's in sysconfig.py, and it actually parses the Makefile that builds the
-    Python interpreter. There's nothing like that in the autotools.
-
-    For the code in this presentation, I started out with autotools, but
-    switched to distutils because I thought it was just too ugly to watch
-    what distutils did, and copy that.
-    CFLAGS from a
 
 
 Resources
 =========
 
-code and slides
-    https://github.com/mkohler/cython_swig
+https://github.com/mkohler/cython_swig
 
-restructedText to LibreOffice Impress
-    https://github.com/mattharrison/rst2odp.git
+mark.kohler@gmail.com
 
-Writing Shared Libraries by Ulrich Drepper
 
 .. class:: handout
 
     The code and slides are available on github.
-
-    Let me thank Matt Harrison for his
-    restructed-text-to-libreoffice-impress tool. I am loving
-    restructuredText, and his tool let me create this presentation with
-    restructuredText and the comfort of my favorite editor.
+    And I'm ready to take questions.
 
 End
 ===
 
-SWIG: Can You Get Stuck?
-========================
-
-.. class:: handout
-
-    In SWIG, if you get to a C function that doesn't "fit", that SWIG can't
-    wrap, you can go a few ways:
-
-        1. If you're lucky, there is always a typemap macro to help you.
-        2. If not, you use typemaps to massage things. And finally, if that
-           doesn't work
-        3. Write another C library, to wrap the first, and use SWIG to wrap
-           that.
 
 Other Bits I Did Not Mention
 ============================
@@ -1220,31 +1201,16 @@ header file are sufficient.
 
 SWIG and Cython support Python 3.
 
-SWIG is not just for Python. It will create C wrappers for a dozen languages.
-
 Cython has preliminary support for PyPy's C extension API. SWIG does not.
-
-Topics to Consider Adding
-=========================
-
-SWIG typemaps
-
-DRY and maintainability. How much of the header do you have copy?
 
 Performance comparison
 
-Safety comparison
+Unicode
 
-UTF strings
-    To a first approximation, ANSI C doesn't do Unicode...so
+SWIG typemaps
 
-Show what happens when you do the wrong thing.
-    i.e. send the wrong kind of parameters into a C function
-
-Is SWIG a language?
-
-    Not really. The SWIG interface file is a way of marking up a C
-    header file to do some common conversions.
+Show what happens when you send the wrong kind of parameters into a
+wrapped function.
 
 Limits of SWIG
 ==============
@@ -1252,7 +1218,7 @@ Limits of SWIG
 .. class:: handout
 
     This gets to the crux of one of the limits of SWIG. What can it do and more
-    importantly, what *can't* it do.
+    importantly, what CAN'T it do.
 
     And what it can't do is de-reference a pointer.
 
@@ -1266,7 +1232,6 @@ Limits of SWIG
     It can convert numbers, ints and floats, at least, automatically.
 
     It can convert strings, with your help. (As long as strings means ASCII.)
-
 
 No source?
 ==========
@@ -1315,7 +1280,26 @@ C Strings
 
 .. class:: handout
 
-    Speaking as a C programmer *and* a Python programmer, C strings are a
+    Speaking as a C programmer AND a Python programmer, C strings are a
     nightmare. Really, it's not fair to to even call them strings. They
     are fixed-size, mutable, arrays of bytes.
+
+Extra bonus: distutils vs autotools, fight!
+===========================================
+
+Use distutils, not autotools, for building SWIG and Cython extensions.
+
+.. class:: handout
+
+    It is possible with autotools, but with autotools, it's up to you to
+    find the right flags for compiling your extension.
+
+    Did anyone knows that distutils includes code to parse Makefiles?
+    It's in sysconfig.py, and it actually parses the Makefile that builds the
+    Python interpreter. There's nothing like that in the autotools.
+
+    For the code in this presentation, I started out with autotools, but
+    switched to distutils because I thought it was just too ugly to watch
+    what distutils did, and copy that.
+    CFLAGS from a
 
