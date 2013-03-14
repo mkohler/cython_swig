@@ -1088,9 +1088,9 @@ SWIG Features
 Cython Advantages
 =================
 
-- It's Python, mostly
+- It's Python **and** it's C
 
-- performance experimentation
+- explore performance trade-offs between C and Python
 
 .. class:: handout
 
@@ -1120,17 +1120,18 @@ Alternatives to Cython and SWIG
 
 .. class:: handout
 
-    After all this, if you want to run screaming away from
-    SWIG and Cython, but you still want C libraries, you have two
-    choices, and they are both, in a sense, the extreme choices compared
+    After all this, if you want to run screaming away from SWIG and
+    Cython, but you still need to use C libraries from Python, you have
+    two choices, and they are both, in a sense, extreme choices compared
     to SWIG and Cython.
 
     You can write a C extension in C, using the Python C API, just like
+    many standard library extension modules.
 
     Or you can use ctypes, which is part of the Standard Library, and
     lets you access C libraries with a lot less CEREMONY, and a lot less
     SAFETY, than SWIG and Cython. If you want to access a C library NOW,
-    without a building anything, without source code, without even a
+    without building anything, without source code, and without even a
     header file, take a look at ctypes.
 
 Magic
@@ -1138,26 +1139,27 @@ Magic
 
 .. class:: handout
 
-    I want to end with a discussion of magic and fear, as they relate to
-    programming tools.
+    I want to end with a discussion of magic and fear.
 
-    I've been a C programmer for a long time, and when I first saw how easy it
-    was to play with the sockets library, to play with, interactively, from the
-    Python prompt, I was amazed.
+    I was a C programmer before I was a Python programmer, but I
+    remember the exact point in time when I became a Python programmer.
+    I was at the interactive prompt, playing with the sockets library.
+    And slowly, I discovered, I could write networking programs, running
+    each line immediately after I wrote it. I could write a network
+    server in one window and a client in another.
 
-    It was so different from the world I lived in, and compiling, and linking
-    and just plain (pause) waiting for the build to finish.
+    And I didn't have to compile any of it. It was magic.
 
-    These tools give me the same feeling.
-    The python way seemed like magic to me.
+    It was magic because it was unbelievably fantastic to write code
+    that way.
 
-    Then later, when I saw
+    And it was magic because I couldn't begin to understand what was
+    going on inside Python that let me do all of this without running a
+    compiler, or editing my include path, or putting my link options in
+    the right order.
 
-    Show generated code from SWIG and Cython.
-
-    When you look under the covers, it is STILL magic.
-
-    It's not like I could re-create SWIG or Cython.
+    It was a magic because it was great, but it was also magic because I
+    understand it. couldn't 
 
     Which brings me to fear.
 
@@ -1168,6 +1170,8 @@ Fear
 - dead ends
 
 .. class:: handout
+
+    If you don't understand a tool, it is easy to be scared of it.
 
     In SWIG, if you get to a C function that doesn't "fit", that SWIG can't
     wrap, you can go a few ways:
@@ -1182,7 +1186,6 @@ Fear
 
     Will it 
 
-    If you don't understand a tool, it is easy to be scared of it.
 
     My concern is that I would choose a tool, and get 90% of the way there, and
       then find a routine that I couldn't properly wrap, and I would be stuck.
@@ -1208,19 +1211,23 @@ Fear
 
     My point is you don't have to be an
 
+    When you look under the covers, it is STILL magic.
 
-Resources
-=========
+    It's not like I could re-create SWIG or Cython.
+
+Code and Slides
+===============
 
 https://github.com/mkohler/cython_swig
 
 mark.kohler@gmail.com
 
-
 .. class:: handout
 
+    That's all. I hope you found it useful.
     The code and slides are available on github.
-    And I'm ready to take questions.
+    I am Mark Kohler.
+    And I am ready to take questions.
 
 End
 ===
