@@ -1057,53 +1057,90 @@ SWIG Features
 .. class:: incremental
 
     - Multi-language support
-    - More DRY
+    - More DRY than Cython
 
 .. class:: handout
 
     SWIG will wrap C libraries for many languages besides Python. So if
     you are the author of a C library, and you want to provide bindings
-    for Python AND Java AND Ruby, SWIG can do that. (Next bullet)
+    for Python AND Java AND Ruby, SWIG is THE tool. (Next bullet)
 
-    You have to create and maintain Cython .pxd files for your library.
-    You have to write .pyx files.
+    DRY means Don't Repeat Yourself, and both SWIG and Cython have a
+    common weakness in that they require the programmer to maintain
+    interface files that are near copies of C header files. In
+    addition, as we saw, Cython requires you to create your own wrapper
+    functions in a PXD files. That is, (pause), not ideal.
 
-    If I take something like a header file, with a few hints, I could
-    automatically create these wrappers.
+    Nevertheless, SWIG has the best story here. If your C library has a
+    SWIG-friendly interface, it is POSSIBLE to use the C header files
+    AS the SWIG interface file. Even if you can only do this for 95% of
+    your library, it can be a huge code maintenance win.
 
 Cython Advantages
 =================
 
-Evolve an interface.
+- It's Python, mostly
 
-Do performance optimizations "just in time".
+- performance experimentation
 
-Provides a interface layer where you can smoothely slide between C and Python.
+.. class:: handout
 
-Easier to learn than than typemaps.
+    Cython's primary use is not wrapping C libraries. It is improving
+    the performance of Python code. And the pitch is awesome. Cython IS
+    Python, with optional, static, types.
 
-    Cython is...
+    Unlike SWIG, which has its own pattern matching language for glueing
+    together C and Python, Cython seems to just be C AND Python, in one
+    file. You just need to get used to the idea, (pause) and change your
+    build process.
+
+    Allowing one to switch between C and Python, line-by-line, is a
+    killer feature.
+    as it lets smoothely slide between C and
+    Python, as external interfaces or performance considerations
+    dictate.
+
+    Evolve an interface.
+
+    Do performance optimizations "just in time".
+
+
+    Easier to learn than than typemaps.
 
     If I take something like a header, I can, line-by-line, reference
     objects as C or Python objects, and convert between them.
 
-    Sort of like in-line assembly.
-
 Alternatives to Cython and SWIG
 ===============================
 
-writing extensions with the Python C/API
+- Python C/API
 
     http://docs.python.org/2/extending/
 
-ctypes
+- ctypes
 
 .. class:: handout
+
+    After all this, if you want to run screaming away from SWIG and
+    Cython, but you still want C libraries, you have two choices, and
+    they are both, in a sense, the extreme choices compared to SWIG and
+    Cython.
+
+    You can write a C extension in C, using the Python C API, just like
+
+    Or you can use ctypes, which is part of the Standard Library, and
+    lets you access C libraries with a lot less CEREMONY, and a lot less
+    SAFETY, than SWIG and Cython. If you want to access a C library NOW,
+    without a building anything, without source code, without even a
+    header file, take a look at ctypes.
 
 Magic
 =====
 
 .. class:: handout
+
+    I want to end with a discussion of magic and fear, as they relate to
+    programming tools.
 
     I've been a C programmer for a long time, and when I first saw how easy it
     was to play with the sockets library, to play with, interactively, from the
@@ -1173,7 +1210,6 @@ Fear
     My point is you don't have to be an
 
 
-
 Resources
 =========
 
@@ -1189,6 +1225,8 @@ mark.kohler@gmail.com
 
 End
 ===
+
+This slide is intentionally almost blank.
 
 
 Other Bits I Did Not Mention
