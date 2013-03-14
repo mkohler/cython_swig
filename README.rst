@@ -864,22 +864,25 @@ adder.h: greeting_rs()
 adder.c: greeting_rs()
 ======================
 
-.. code-block:: c
+.. class:: small
 
-    static char hello[] = "Hello, ";
+    .. code-block:: c
 
-    int
-    greeting_rs(char * name, char * outp, int buflen) {
-        if (outp && buflen) {
-            if (buflen < (strlen(hello) + strlen(name) + 1)) {
-                outp[0] = 0;
-                return 0;
+        static char hello[] = "Hello, ";
+
+        int
+        greeting_rs(char * name, char * outp, int buflen) {
+            if (outp && buflen) {
+                if (buflen < (strlen(hello) +
+                              strlen(name) + 1)) {
+                    outp[0] = 0;
+                    return 0;
+                }
+                strcpy(outp, hello);
+                strcat(outp, name);
             }
-            strcpy(outp, hello);
-            strcat(outp, name);
+            return strlen(hello) + strlen(name);
         }
-        return strlen(hello) + strlen(name);
-    }
 
 .. class:: handout
 
@@ -983,14 +986,20 @@ c_adder.pxd: greeting_rs()
 cy_adder.pyx: greeting_rs()
 ===========================
 
-.. code-block:: c
+.. class:: small
 
-    def greeting_rs(name):
-        c_str_len = c_adder.greeting_rs(name, <char * > 0, 0)
-        py_str = ' ' * (c_str_len + 1)
-        cdef char * c_str = py_str
-        c_adder.greeting_rs(name, c_str, len(py_str))
-        return c_str
+    .. code-block:: c
+
+        def greeting_rs(name):
+            c_str_len = c_adder.greeting_rs(name,
+                                            <char * > 0,
+                                            0)
+            py_str = ' ' * (c_str_len + 1)
+            cdef char * c_str = py_str
+            c_adder.greeting_rs(name,
+                                c_str,
+                                len(py_str))
+            return c_str
 
 .. class:: handout
 
@@ -1087,31 +1096,21 @@ Cython Advantages
 
     Cython's primary use is not wrapping C libraries. It is improving
     the performance of Python code. And the pitch is awesome. Cython IS
-    Python, with optional, static, types.
+    Python, with optional, static, types. The more types you add, the
+    faster it goes.
 
     Unlike SWIG, which has its own pattern matching language for glueing
-    together C and Python, Cython seems to just be C AND Python, in one
-    file. You just need to get used to the idea, (pause) and change your
-    build process.
+    together C and Python, Cython is C AND Python, in one file. You just
+    need to get used to the idea, (pause) and change your build process.
 
     Allowing one to switch between C and Python, line-by-line, is a
-    killer feature.
-    as it lets smoothely slide between C and
-    Python, as external interfaces or performance considerations
-    dictate.
-
-    Evolve an interface.
-
-    Do performance optimizations "just in time".
-
-
-    Easier to learn than than typemaps.
-
-    If I take something like a header, I can, line-by-line, reference
-    objects as C or Python objects, and convert between them.
+    killer feature, as it lets one smoothely slide between C and Python,
+    as external interfaces or performance considerations dictate.
 
 Alternatives to Cython and SWIG
 ===============================
+
+.. class:: incremental
 
 - Python C/API
 
@@ -1121,10 +1120,10 @@ Alternatives to Cython and SWIG
 
 .. class:: handout
 
-    After all this, if you want to run screaming away from SWIG and
-    Cython, but you still want C libraries, you have two choices, and
-    they are both, in a sense, the extreme choices compared to SWIG and
-    Cython.
+    After all this, if you want to run screaming away from
+    SWIG and Cython, but you still want C libraries, you have two
+    choices, and they are both, in a sense, the extreme choices compared
+    to SWIG and Cython.
 
     You can write a C extension in C, using the Python C API, just like
 
