@@ -352,10 +352,9 @@ c_adder.pxd: Cython interface file
     Like with SWIG, we start by creating an interface file. In
     Cython-land, the interface file is a dot-PXD file.
 
-    And...it sure looks a lot like the SWIG interface file. The
-    boilerplate is different, but it references a C header file, and
-    it is ALMOST identical to the C header file. (We have to
-    remove the semi-colon.)
+    And...it sure looks a lot like the SWIG interface file. Like
+    the SWIG interface file, it both references the C header file, and
+    contains a copy of the C header file, except for the semi-colon.
 
 cy_adder.pyx:  Cython source file
 =================================
@@ -504,7 +503,7 @@ adder.c: pair_add()
     pair_add returns the sum of the integers in the struct pointed to by
     ppair.
 
-    That's pretty straightfoward C code. But how can we use pair_add from
+    That's pretty straightforward C code. But how can we use pair_add from
     Python? What do we tell SWIG?
 
 adder.i: pair_add()
@@ -547,7 +546,7 @@ demo of SWIG's pair_add()
 
     The answer is, SWIG did it. If you put a struct in a SWIG interface
     file, SWIG creates an associated Python class. The fields in the
-    Python object corresponds to the fields in the struct.
+    Python object correspond to the fields in the struct.
 
     In this example, we are passing a pointer-to-a-struct to a function,
     but this same mechanism can be used with functions that return a
@@ -587,8 +586,7 @@ cy_adder.pyx: pair_add()
 
     And this is where we start to see, Cython the LANGUAGE, where on a
     line-by-line basis, or even within a line, we can switch between
-    Python and C. (PAUSE) Yeah, the first time I saw code like this, I
-    didn't believe it either.
+    Python and C. (PAUSE)
 
     Line 1 starts like a Python function. But in Line 2, the CDEF
     keyword says we are defining a variable the C way, with a type and a
@@ -638,7 +636,7 @@ We are Here
     Yes...C Strings, the source of all good buffer overflows.
 
     Compared to Python strings, C strings are so amazingly primitive,
-    it's hard to evan call them strings. They are fixed-size, mutable,
+    it's hard to even call them strings. They are fixed-size, mutable,
     arrays of bytes. Nevertheless, there are many C libraries that use C
     strings as part of their interface. And we need to understand how to
     handle them from Python.
@@ -697,7 +695,7 @@ demo of SWIG's get_version()
     >>> import adder
     >>> adder.get_version()
     'v1.0'
-    >>> _.__class__
+    >>> adder.get_version().__class__
     <type 'str'>
     >>>
 
@@ -706,7 +704,7 @@ demo of SWIG's get_version()
     And here is get_version in use.
 
     Conveniently, SWIG automatically converts the C string to a Python string,
-    a real Python string. 
+    a real Python string.
 
     So that seems to work pretty well. Let's try it with Cython.
 
@@ -743,7 +741,7 @@ demo of Cython's get_version()
     >>> import cy_adder
     >>> cy_adder.get_version()
     'v1.0'
-    >>> _.__class__
+    >>> cy_adder.get_version().__class__
     <type 'str'>
     >>>
 
@@ -763,7 +761,7 @@ Cython and C Strings
 .. class:: handout
 
     But if converting between C strings and Python strings is so easy, why do I
-    findwarnings like this in the Cython documentation?
+    find warnings like this in the Cython documentation?
 
 SWIG and C Strings
 ==================
@@ -992,10 +990,7 @@ We are Here
 
 .. class:: handout
 
-    Whew. We've looked at the details of how you use SWIG and Cython,
-    and you've probably formed an opinion about which one you would
-    prefer to work with.
-
+    Whew. We've looked at the details of how you use SWIG and Cython.
     Now let's take a step back from the nitty gritty, and look at some
     of their high-level differences.
 
@@ -1017,11 +1012,11 @@ SWIG Advantages
     common weakness in that they require the programmer to maintain
     interface files that are near copies of C header files. In
     addition, as we saw, Cython requires you to create your own wrapper
-    functions in a PXD files. That is, (pause), not ideal.
+    functions in a PYX file. That is, (pause), not ideal.
 
     Nevertheless, SWIG has the best story here. If your C library has a
-    SWIG-friendly interface, it is POSSIBLE to use the C header files
-    AS the SWIG interface file. Even if you can only do this for 95% of
+    SWIG-friendly interface, it is POSSIBLE to use the C header files AS
+    the SWIG interface file. Even if you can only do this for most of
     your library, it can be a huge code maintenance win.
 
 Cython Advantages
@@ -1033,17 +1028,19 @@ Cython Advantages
 
 .. class:: handout
 
-    Cython's primary use is not wrapping C libraries. It is improving
-    the performance of Python code. And the pitch is awesome. Cython IS
-    Python, with optional, static, types. The more types you add, the
-    faster it goes.
+    Cython is great at wrapping C libraries, but its primary use is
+    improving the performance of PYTHON code. The ability to wrap C
+    libraries almost comes along for free. The Cython pitch is great.
+    Cython IS Python, with optional, static, types. The more types you
+    add, the faster it goes.
 
-    Unlike SWIG, which has its own pattern matching language for glueing
+    Unlike SWIG, which has its own pattern matching language for gluing
     together C and Python, Cython is C AND Python, in one file. You just
-    need to get used to the idea, (pause) and change your build process.
+    need to wrap your head around the idea, (pause) and change your
+    build process.
 
     Allowing one to switch between C and Python, line-by-line, is a
-    killer feature, as it lets one smoothely slide between C and Python,
+    killer feature, as it lets one smoothly slide between C and Python,
     as external interfaces or performance considerations dictate.
 
 Alternatives to Cython and SWIG
@@ -1083,7 +1080,7 @@ Getting Started
 
 .. class:: handout
 
-    Adoping a powerful tool like SWIG or Cython, can be scary. At the
+    Adopting a powerful tool like SWIG or Cython, can be scary. At the
     beginning it can be hard to see whether it will do what you need.
 
     (CLICK) Start small. Like with any code, work incrementally. Neither
@@ -1091,7 +1088,7 @@ Getting Started
     function at a time.
 
     (CLICK) And use DISTUTILS to build your Python extension. Even if
-    you don't use it for anything else. distuils actually SCRAPES the
+    you don't use it for anything else. distutils actually SCRAPES the
     Python Makefile to ensure that it uses the right flags to compile
     extension modules. Someone wrote that code. Use it.
 
