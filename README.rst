@@ -604,8 +604,6 @@ cy_adder.pyx: pair_add()
     On the last line, we call our original C function, using
     C's address-of operator, to get a pointer to the struct.
 
-    ...Okay, let's see it in action.
-
 demo of Cython's pair_add()
 ===========================
 
@@ -618,10 +616,10 @@ demo of Cython's pair_add()
 
 .. class:: handout
 
-    And it works. Once it is compiled and linked, the Cython code you just saw
-    can take arguments from the Python interpreter, allocate a struct, fill it
-    in, and pass it to the pair_add function, which has no idea the struct came
-    from a Python program.
+    And here it is in action. The Cython code you just saw can take arguments
+    from the Python interpreter, allocate a struct, fill it in, and pass it to
+    the pair_add function, which has no idea the struct came from a Python
+    program.
 
     Let's keep going. We need to see some of the complexity behind the magic.
 
@@ -921,8 +919,6 @@ demo of SWIG's sgreeting()
     So, in our example, the C version of sgreeting returned 12, and
     "Hello, Monty" was grabbed from the OUTP pointer.
 
-    Let's see how to handle sgreeting's interface with Cython.
-
 c_adder.pxd: sgreeting()
 ===========================
 
@@ -932,7 +928,9 @@ c_adder.pxd: sgreeting()
 
 .. class:: handout
 
-    Here is the Cython interface file for sgreeting. As with other
+    Now, let's see how to handle sgreeting's interface with Cython.
+
+    Here is what we add to the Cython interface file. As with other
     examples, it is almost identical to the C header file.
 
 cy_adder.pyx: sgreeting()
@@ -1092,17 +1090,14 @@ Getting Started
     Adoping a powerful tool like SWIG or Cython, can be scary. At the
     beginning it can be hard to see whether it will do what you need.
 
-    (CLICK) Start small.
-
-    Like with any code, work incrementally. Neither SWIG nor Cython
-    require you to wrap an entire library. Wrap one function at a time.
+    (CLICK) Start small. Like with any code, work incrementally. Neither
+    SWIG nor Cython require you to wrap an entire library. Wrap one
+    function at a time.
 
     (CLICK) And use DISTUTILS to build your Python extension. Even if
-    you don't use it for anything else.
-
-    distuils actually SCRAPES the Python Makefile to ensure that it uses
-    the right flags to compile extension modules. Someone wrote that
-    code. Use it.
+    you don't use it for anything else. distuils actually SCRAPES the
+    Python Makefile to ensure that it uses the right flags to compile
+    extension modules. Someone wrote that code. Use it.
 
     And someone's been writing a lot of C libraries. Use them. From
     Python.
