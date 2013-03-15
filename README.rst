@@ -591,22 +591,18 @@ cy_adder.pyx: pair_add()
 
     And this is where we start to see, Cython the LANGUAGE, where on a
     line-by-line basis, or even within a line, we can switch between
-    Python and C. I'll let that sink in a bit. The first time I saw code
-    like this, I didn't believe it either. (PAUSE)
+    Python and C. (PAUSE) Yeah, the first time I saw code like this, I
+    didn't believe it either.
 
-    Line 1 starts like a Python function.
+    Line 1 starts like a Python function. But in Line 2, the CDEF
+    keyword says we are defining a variable the C way, with a type and a
+    name. (PAUSE)
 
-    But in Line 2, the CDEF keyword says we are defining a variable the
-    C way, with a type and a name. (PAUSE)
+    In lines 3 and 4, the Python objects x and y, are unwrapped into the
+    C struct.
 
-    In lines 3 and 4, the Python objects x and y, are unwrapped, and
-    their values are copied to the x and y fields in the my_pair
-    struct.
-
-    On the last line, we call our original C function, pair_add, using
-    C's address-of operator, passing a pointer to the struct we just
-    created. Remember, pair_add returns a C int, and Cython will automaticaly
-    convert that to a Python int, to be returned.
+    On the last line, we call our original C function, using
+    C's address-of operator, to get a pointer to the struct.
 
     ...Okay, let's see it in action.
 
