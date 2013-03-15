@@ -916,7 +916,7 @@ demo of SWIG's sgreeting()
 .. class:: handout
 
     Hmmm...We started with a function, sgreeting, that took 3 arguments,
-    and returned an integer, but here are we, at the python prompt,
+    and returned an integer, but here we are, at the python prompt,
     using a function that takes 2 arguments and returns a list.
 
     SWIG did that.
@@ -925,9 +925,9 @@ demo of SWIG's sgreeting()
     size argument from the wrapped function, allocate a buffer of that
     size, and then pass the buffer to the C function.
 
-    You can also tell SWIG that a C parameter, is an output buffer, and
-    it will remove the parameter from the function's signature, and return it
-    as a list, along with the C function's return value.
+    But you can also tell SWIG that a C parameter, is an output buffer,
+    and it will remove that parameter from the function's signature, and
+    return it in a list, along with the actual return value.
 
     So, in our example, the C version of sgreeting returned 12, and
     "Hello, Monty" was grabbed from the OUTP pointer.
@@ -943,9 +943,8 @@ c_adder.pxd: sgreeting()
 
 .. class:: handout
 
-    Moving on to Cython, here is the Cython interface file for
-    sgreeting. As with other examples, it is almost identical to the C
-    header file.
+    Here is the Cython interface file for sgreeting. As with other
+    examples, it is almost identical to the C header file.
 
 cy_adder.pyx: sgreeting()
 ===========================
@@ -955,36 +954,30 @@ cy_adder.pyx: sgreeting()
     .. code-block:: c
 
         def sgreeting(name):
-            c_str_len = c_adder.sgreeting(name,
-                                          <char * > 0,
-                                          0)
-            py_str = 'x' * (c_str_len + 1)
+            c_len = c_adder.sgreeting(name, <char * > 0, 0)
+            py_str = 'x' * (c_len + 1)
             cdef char * c_str = py_str
-            c_adder.sgreeting(name,
-                              c_str,
-                              len(py_str))
+            c_adder.sgreeting(name, c_str, len(py_str))
             return c_str
 
 .. class:: handout
 
-    And here's the Cython code. The first thing to notice is how long it
-    is. The reason for that is that we are doing memory allocation for
-    the C function we're going to call.
+    And here's the Cython code. Notice is how long it is? We spend 3
+    lines doing memory allocation before we can call our C function.
 
-    Going line-by-line, we call sgreeting with the bona fide name, but
-    a null pointer. This lets us find out how long the greeting WILL be,
-    and thus how much memory we need to allocate.
+    First, we call sgreeting with the bona fide name, but a null
+    pointer. This lets us find out how long the greeting WILL be, and
+    thus how much memory we need to allocate.
 
-    In the next two lines, we create a Python string that is long enough
-    to hold the greeting, and then create a C pointer from it. When you
-    assign a Python string to a C string, the C pointer points to the
-    buffer of the Python string itself. In this way, we can piggy-back
-    on Python's memory management, in that we have a C buffer that will
-    be freed when the variable PY_STR is freed.
+    In the next two lines, we create a Python string and convert it to a
+    C string. After the conversion, the C string points to the buffer
+    inside the Python string object. In this way, we can piggy-back on
+    Python's memory management. Another approach would be to call malloc
+    and free directly.
 
-    Now that the hard part is done, we can call our C function, and get
-    our greeting placed in C_STR. Finally, the last line is in implicit
-    conversion from c_str to a Python string.
+    Once we have our memory, we can call our C function, and get our
+    greeting placed in C_STR. Finally, the return statement implicitly
+    converts C_STR into a Python string.
 
 demo of Cython's sgreeting()
 ==============================
@@ -1103,7 +1096,7 @@ Getting Started
 .. class:: incremental
 
     - Start small.
-    - Use distutils.
+    - Use distutils
 
 .. class:: handout
 
@@ -1115,11 +1108,11 @@ Getting Started
 
     Like with any other code, work incrementally. Neither SWIG nor
     Cython require you to wrap an entire library. Wrap one function at a
-    time. 
+    time.
 
     (CLICK) And use DISTUTILS to build your Python extension. Even if
     you don't use it for anything else. It already has all of the magic
-    compiler flags needed for building extensions that 
+    compiler flags needed for building extensions that
 
     Did anyone knows that distutils includes code to parse Makefiles?
     It's in sysconfig.py, and it actually parses the Makefile that builds the
