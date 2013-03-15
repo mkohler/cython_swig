@@ -222,12 +222,12 @@ adder.h: add()
 
 .. code-block:: c
 
-    int add(int, int);
+    int add(int x, int y);
 
 .. class:: handout
 
     For C libraries, the interface to a function is declared in a
-    separate file, a HEADER file.
+    a HEADER file. Here is the header file for ADD.
 
     As you may notice, it consists entirely of information that is
     also in adder.c.
@@ -589,27 +589,24 @@ cy_adder.pyx: pair_add()
 
 .. class:: handout
 
-    (5s pause) This is where we start to see the true nature of Cython,
-    where on a line-by-line basis, or even within a line, we can switch
-    between Python and C. I'll explain this function line-by-line.
+    And this is where we start to see, Cython the LANGUAGE, where on a
+    line-by-line basis, or even within a line, we can switch between
+    Python and C. I'll let that sink in a bit. The first time I saw code
+    like this, I didn't believe it either. (PAUSE)
 
-    Line 1 is a normal Python function definition.
+    Line 1 starts like a Python function.
 
-    In Line 2, we define a C variable, my_pair of type PAIR.
+    But in Line 2, the CDEF keyword says we are defining a variable the
+    C way, with a type and a name. (PAUSE)
 
-    In lines 3-4, the Python objects x and y, are unwrapped, and their
-    values are copied to the x and y fields with the my_pair struct.
+    In lines 3 and 4, the Python objects x and y, are unwrapped, and
+    their values are copied to the x and y fields in the my_pair
+    struct.
 
-    Finally, on the last line, now that we have a C struct all ready, we
-    can call pair add, passing it a pointer to a C struct. And yes, the
-    ampersand on the last line, works as the "address-of" operator, just
-    like in C.
-
-    When the function returns an int, Cython will wrap it up in a Python
-    object, to be returned to the calling Python function.
-
-    Let me let that sink in a bit. The first time I saw something like
-    this it took me a while to believe it. (PAUSE)
+    On the last line, we call our original C function, pair_add, using
+    C's address-of operator, passing a pointer to the struct we just
+    created. Remember, pair_add returns a C int, and Cython will automaticaly
+    convert that to a Python int, to be returned.
 
     ...Okay, let's see it in action.
 
@@ -829,14 +826,15 @@ adder.h: sgreeting()
 
     sgreeting works a bit like sprintf. That is, sgreeting produces a
     greeting but it does not return it. It returns the number of
-    characters in the output string, or a 0 if there was an error.
+    characters in the output string, or a 0 if the passed-in buffer is
+    too small for the output string.
 
     So where does sgreeting put the greeting? The CALLER of sgreeting
     passes a buffer to sgreeting via the pointer OUTP, and sgreeting puts
     the greeting in that buffer.
 
-    This is a common pattern in C libraries. The caller allocates the
-    memory, and passes called functions a buffer and length.
+    This is a common pattern in C libraries. The CALLER allocates the
+    memory.
 
 adder.c: sgreeting()
 ======================
@@ -865,20 +863,18 @@ adder.c: sgreeting()
 
     Here's the implementation of sgreeting.
 
-    The first conditional allows callers to find out how much space to
-    allocate. The caller passes in a null pointer for the output buffer,
-    and sgreeting returns the number of bytes in the output string.
+    The first conditional allows callers to bypass the body of the
+    function, and just find out how big the output string will be.
+
+    The pattern is, the caller calls sgreeting with a null pointer,
+    finds out how much space to allocate, allocates the space, and then
+    calls sgreeting again passing in a memory buffer.
 
     The second conditional checks if the buffer is long enough for
-    the output, returning zero if the buffer is not long enough.
+    the output, bailing out if it isn't.
 
-    Then it concatenates the string hello, and its input argument in the
-    outp buffer.
-
-    Understanding the implementation isn't vital as long as you
-    understand the interface. And the key thing to understand about the
-    interface is that the CALLER of sgreeting function must allocate
-    the sgreeting's output buffer.
+    The key thing to understand about sgreeting's interface is that the
+    CALLER of sgreeting must allocate sgreeting's output buffer.
 
     Let's use SWIG to make this function available to Python.
 
@@ -900,9 +896,9 @@ adder.i: sgreeting()
 
     sgreeting is different.
 
-    The input parameter, NAME, isn't a problem. By default, SWIG will
-    automatically convert a Python string to a read-only C string, which
-    is what we want.
+    The input parameter, NAME, isn't a problem. By default, SWIG 
+    converts Python strings to a read-only C strings, which
+    is what we want for NAME.
 
     The problem is OUTP, the output pointer. We need to tell SWIG to
     allocate a buffer for sgreeting, and pass a pointer to the buffer
