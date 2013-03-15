@@ -15,9 +15,9 @@ Wrapping C libraries for Python
 
     This talk is about what happens when you realize that not
     _everything_ is in the standard library. In fact, there may be
-    things you want that you can't even get from the _cheese_ shop.
+    things YOU want that you can't even get from the CHEESE shop.
 
-    If what you want is to use a C library from Python, then you're in
+    If what you want, is to use a C library from Python, then you're in
     luck, because _Cython_ and _SWIG_ are excellent tools for building
     Python extension modules by wrapping C libraries.
 
@@ -34,18 +34,18 @@ Pre-fight
 
 .. class:: handout
 
+    XXX Why are they fighting?
+
     To start this talk, I'm going to quickly discuss the Python import
     statement and what it hides.
 
-    Then, I'll review the structure of C libraries.
-
-    From there, I'll show you a very small C library, the LIBADDER
+    From there, I'll show you a VERY small C library, the LIBADDER
     library.
 
     The main part of this talk will consist of adding functions to this
     library, and showing how to make those functions accessible from
     Python. As we do this, you can decide whether you like the SWIG way
-    or the Cython way better, and who should win the fight?
+    or the Cython way better, and WHO should win the fight.
 
     At the end, I'll make some gross generalizations, and take
     questions.
@@ -62,14 +62,14 @@ Code first and ask questions later
 .. class:: handout
 
     I want to show a lot of code in this talk, and in an attempt to keep
-    you, and especially me, from getting lost, I will show the source
-    files for each new feature in the same order, and the name of the
-    file I am showing will always be in the title of the slide.
+    you, and especially me, from getting lost, I will always show the
+    source files in the same order, and the NAME of the file will always
+    be in the title of the slide.
 
-    First, I will show you the C code, then the SWIG code, and then an
-    example of using the SWIG-built extension module. Next, I will show the
-    Cython code and finally, what it looks like to use the Cython-built
-    extension module.
+    First, I will show you the C code, then the SWIG interface file, and
+    then a transcript of USING the SWIG-built extension module. Next, I
+    will show the Cython code and finally, a transcript of using the
+    Cython-built extension module.
 
     As we add features, I'll repeat the process: C code, SWIG code,
     SWIG demonstration, Cython code, Cython demonstration.
@@ -107,7 +107,7 @@ import this
 
     Each of the import statements on the slide imports a module. But
     what exactly is being imported? Or to put it another way, after the
-    import, what does the module object's dunder file object contain?
+    import, what does the module object's dunder file object point to?
 
     This is a bit of a trick question, because the answer depends on the
     platform, but I'll give you a hint, there are 3 possibilities.
@@ -123,10 +123,10 @@ import socket
 
 .. class:: handout
 
-    The first case is the most straight-forward. The import statement
-    caused the Python interpreter to load a .pyc file into memory. I'm
-    sure you've seen PYC files before. They contain architecture-neutral
-    python byte-codes. This is _pure_ python code.
+    The first possibility is the most straight-forward. The import
+    statement caused the Python interpreter to load a .pyc file into
+    memory. I'm sure you've seen PYC files before. They contain
+    python byte-code.
 
 import datetime
 ===============
@@ -143,16 +143,15 @@ import datetime
 
 .. class:: handout
 
-    And this is the case we care about. The import statement caused a
-    Python extension module to be loaded into memory. The ".so" stands
-    for Shared Object, and it is architecture-specific machine code. In
-    this example, the shared object uses the x86-64 instruction set.
+    The second possibility is the one we care about today. The import
+    statement caused a Python extension module to be loaded into memory.
+    The ".so" stands for Shared Object, and it is machine code.
     Nevertheless, when we import it, it looks and feels like Python
     code.
 
     This is a killer feature! Applications can import modules containing
-    either interpreted Python code, or compiled machine code, and the
-    interface is exactly the same.
+    either Python code, or compiled machine code, and the interface is
+    exactly the same.
 
     And that's why we're here. That's what we'll be doing with SWIG and
     Cython, taking compiled code, that doesn't know anything about
@@ -172,21 +171,20 @@ import time
 
 .. class:: handout
 
-    There's one more case, and it isn't relevant to SWIG or Cython, but
-    I think I should mention it anyway, as it confused the hell out of
-    me the first time I went to look for a Python module on disk, and I
+    There's one more possibility, and it isn't relevant to SWIG or
+    Cython, but I think I should mention it anyway, as it confused me
+    the first time I went to look for a Python module on disk, and I
     couldn't find a corresponding .py or .pyc or .so file.
 
-    So, where DID this module come from?
+    So, where DID this module get imported from?
 
     The answer to this riddle is that some Python extension modules are
-    linked with the Python interpreter when it is built. If a module is
-    linked to the interpreter binary, then it won't have a dunder file
-    attribute when it is imported.
+    linked with the Python interpreter when IT is built. If a module is
+    linked to the interpreter binary, then it WON'T have a dunder file
+    attribute.
 
-    You'll have to find or re-create the build environment for the
-    Python interpreter if you want to find the source for a module like
-    this.
+    You'll have to create a build environment for the Python interpreter
+    to find the source for a module like this.
 
 We are Here
 ============
@@ -203,6 +201,42 @@ We are Here
 
     Now, let's talk about our example C library, libadder.
 
+adder.c: add()
+==============
+
+.. code-block:: c
+
+    int
+    add(int x, int y) {
+        return x + y;
+    }
+
+.. class:: handout
+
+    ADD is a C function which adds two integers, and returns their
+    sum. Unremarkable...but we'd like to use it from Python.
+
+adder.h: add()
+==============
+
+.. code-block:: c
+
+    int add(int, int);
+
+.. class:: handout
+
+    For C libraries, the interface to a function is declared in a
+    separate file, a HEADER file.
+
+    As you may notice, it consists entirely of information that is
+    also in adder.c.
+
+    This kind of repetition is something to watch out for, because
+    keeping the same information in two places makes for troublesome
+    code maintenance...and we're going to see a lot more of that kind of
+    repetition in the SWIG and Cython workflows.
+
+
 See libraries
 =============
 
@@ -216,59 +250,13 @@ See libraries
 
 .. class:: handout
 
-    The library is named adder, because it adds two numbers, and because
-    all PyCon talks are obliged to make unnecessary references to
-    snakes. Thus, ADDER.
+    This slide shows the build process for libadder. The names in bold
+    are the human-generated files. (pause)
 
-    The slide shows the build process for libadder. The names in bold
-    are human-generated files. The others are machine-generated. (pause)
-
-    adder.c is the source code. We will look at it next.
-
-    adder.h describes the interface to ADDER.c
-
-    and libadder.so is the final shared object, ready to be linked with
+    LIBADDER.SO is the final shared object, ready to be linked with
     C programs and other shared libraries.
 
     Now let's look at some code.
-
-adder.c: add()
-==============
-
-.. code-block:: c
-
-    int
-    add(int x, int y) {
-        return x + y;
-    }
-
-.. class:: handout
-
-    This is a C function which adds two integers, and returns their
-    sum. Unremarkable...but we'd like to use it from Python.
-
-adder.h: add()
-==============
-
-.. code-block:: c
-
-    int add(int, int);
-
-.. class:: handout
-
-    In C, the interface to a function is typically declared in a separate file,
-    a HEADER file. Here is the header file for our libadder.
-
-    It has three parts, the NAME of the function, the TYPES of the parameters,
-    and the TYPE of the return value.
-
-    As you may notice, it consists entirely of information that is
-    also in adder.c.
-
-    This kind of repetition is something to watch out for, because
-    keeping the same information in two places makes for troublesome
-    code maintenance...and we're going to see a lot more of that kind of
-    repetition in the SWIG and Cython workflows.
 
 We are Here
 ============
@@ -958,8 +946,8 @@ demo of SWIG's sgreeting()
     de-reference that pointer, put the contents in a list that the
     wrapped function returns.
 
-    So, in our example, 0 is the STATUS value returned by the C version
-    of sgreeting, and Hello Monty was grabbed from the OUTP pointer.
+    So, in our example, the C version of sgreeting returned 12, and
+    "Hello, Monty" was grabbed from the OUTP pointer.
 
 c_adder.pxd: sgreeting()
 ===========================
@@ -1060,11 +1048,11 @@ SWIG Features
 
 .. class:: handout
 
-    SWIG will wrap C libraries for many languages besides Python. So if
-    you are the author of a C library, and you want to provide bindings
-    for Python AND Java AND Ruby, SWIG is THE tool. (Next bullet)
+    CLICK. SWIG will wrap C libraries for many languages besides
+    Python. So if you are the author of a C library, and you want to
+    provide bindings for Python AND Java AND Ruby, SWIG is THE tool.
 
-    DRY means Don't Repeat Yourself, and both SWIG and Cython have a
+    CLICK. DRY means Don't Repeat Yourself, and both SWIG and Cython have a
     common weakness in that they require the programmer to maintain
     interface files that are near copies of C header files. In
     addition, as we saw, Cython requires you to create your own wrapper
@@ -1115,10 +1103,10 @@ Alternatives to Cython and SWIG
     two choices, and they are both, in a sense, extreme choices compared
     to SWIG and Cython.
 
-    You can use the Python C API, just like many standard library extension
-    modules.
+    (CLICK) You can use the Python C API, just like many standard library
+    extension modules.
 
-    Or you can use ctypes, which is part of the Standard Library, and
+    (CLICK) Or you can use ctypes, which is part of the Standard Library, and
     lets you access C libraries with a lot less CEREMONY, but also a lot
     less SAFETY, than SWIG and Cython. If you want to access a C library
     NOW, without building anything, without source code, and without
@@ -1138,13 +1126,13 @@ Getting Started
     a lot to learn, and at the beginning it can be hard to see whether
     it will do what you need.
 
-    (click) Start small.
+    (CLICK) Start small.
 
     Like with any other code, work incrementally. Neither SWIG nor
     Cython require you to wrap an entire library. Wrap one function at a
     time. 
 
-    (click) And use DISTUTILS to build your Python extension. Even if
+    (CLICK) And use DISTUTILS to build your Python extension. Even if
     you don't use it for anything else. It already has all of the magic
     compiler flags needed for building extensions that 
 
