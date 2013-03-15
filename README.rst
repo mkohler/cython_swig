@@ -14,11 +14,11 @@ Wrapping C libraries for Python
     Hello, welcome to Cython vs SWIG, Fight!.
 
     This talk is about what happens when you realize that not
-    _everything_ is in the standard library. In fact, there may be
+    EVERYTHING is in the standard library. In fact, there may be
     things YOU want that you can't even get from the CHEESE shop.
 
     If what you want, is to use a C library from Python, then you're in
-    luck, because _Cython_ and _SWIG_ are excellent tools for building
+    luck, because CYTHON and SWIG are excellent tools for building
     Python extension modules by wrapping C libraries.
 
     But if they're BOTH excellent, which one should YOU use? To answer
@@ -41,16 +41,14 @@ Pre-fight
     To start this talk, I'm going to quickly discuss the Python import
     statement and what it hides.
 
-    From there, I'll show you a VERY small C library, the LIBADDER
-    library.
+    Then we'll create a very simple library and wrap it for Python
+    using, first SWIG, and then Cython. We will continue to add
+    functions to this library, and make those functions accessible from
+    Python. As we do this, consider whether you like the SWIG way or the
+    Cython way better.
 
-    The main part of this talk will consist of adding functions to this
-    library, and showing how to make those functions accessible from
-    Python. As we do this, you can decide whether you like the SWIG way
-    or the Cython way better, and WHO should win the fight.
-
-    At the end, I'll make some gross generalizations, and take
-    questions.
+    At the end, I'll make some gross generalizations, and then we'll
+    settle the fight with a vote.
 
 Code first and ask questions later
 ==================================
@@ -286,13 +284,12 @@ adder.i (SWIG interface file)
 
 .. class:: handout
 
-    To use SWIG, you, the programmer, have to create _one_ file, the
-    SWIG interface, or .i file. _This_ is adder.i, the SWIG interface
+    To use SWIG, you, the programmer, have to create ONE file, the
+    SWIG interface, or .i file. THIS is adder.i, the SWIG interface
     file I created for libadder.
 
-    The first line is the name of the extension module we want to build,
-    the third line is the name of the C header file, AND the last line
-    is the contents of the C header file.
+    It contains the name of the extension module we want to build, the
+    name of the C header file, AND the contents of the C header file.
 
     Now, what do we do with this file? Let's look at the SWIG build
     diagram.
@@ -319,11 +316,10 @@ SWIG build diagram
     The SWIG tool takes the C header file, and the SWIG interface file,
     and it generates two files: the _wrap.c file and a Python file.
     These files work together to convert between Python objects and C
-    interfaces.
+    functions.
 
-    Then we compile the SWIG-generated C file, link it to the shared
-    object we started with, and PRESTO, we have our Python extension
-    module.
+    We compile the SWIG-generated C file, link it to the shared object
+    we started with, and PRESTO, we have a Python extension module.
 
 demo of SWIG's add()
 ====================
@@ -337,9 +333,9 @@ demo of SWIG's add()
 
 .. class:: handout
 
-    And here's how it looks when we use it. We import the python file
-    that SWIG generated, and THAT imports the _adder.so object, and we
-    now have access to we C library. Magic!
+    And here's how it looks in use. We import the python file that SWIG
+    generated, and THAT imports the _adder.so object, and we now have
+    access to the C library. Magic!
 
     Now let's do the same thing, but with Cython.
 
@@ -358,7 +354,7 @@ c_adder.pxd: Cython interface file
 
     And...it sure looks a lot like the SWIG interface file. The
     boilerplate is different, but it references a C header file, and
-    it is ALMOST a copy-and-paste of the C header file. (We have to
+    it is ALMOST identical to the C header file. (We have to
     remove the semi-colon.)
 
 cy_adder.pyx:  Cython source file
@@ -690,8 +686,8 @@ adder.i: get_version()
 
 .. class:: handout
 
-    We add this line to our SWIG interface file. Again this is a copy and paste
-    of the C header file.
+    We add this line to our SWIG interface file. Again this is identical
+    to the C header file.
 
 demo of SWIG's get_version()
 ============================
@@ -725,7 +721,7 @@ c_adder.pxd: get_version()
 
     We start with a Cython interface file. Here in Cython land, with its
     modernist sensibilities, we don't need the void or the semi-colon.
-    Otherwise, it is just a copy and paste of the C header file.
+    Otherwise, it is identical to the C header file.
 
 cy_adder.pyx: get_version()
 ===========================
@@ -1003,8 +999,8 @@ We are Here
     Now let's take a step back from the nitty gritty, and look at some
     of their high-level differences.
 
-SWIG Features
-=============
+SWIG Advantages
+===============
 
 .. class:: incremental
 
@@ -1101,6 +1097,20 @@ Getting Started
 
     And someone's been writing a lot of C libraries. Use them. From
     Python.
+
+=======================
+
+.. class:: center huge
+
+    Cython vs. SWIG, Vote
+
+.. class:: handout
+
+    Okay, now we'll vote on Cython vs SWIG.
+
+    First, raise your hand if you like the SWIG way better.
+
+    Okay, now raise your hand if you like the Cython way better.
 
 Code and Slides
 ===============
