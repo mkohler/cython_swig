@@ -21,4 +21,7 @@ test_adder_LDADD = libadder.la -lrt
 TESTS = test_adder test_extensions.sh
 
 slides:
-	rst2odp --mono-font="Ubuntu Mono" --pygments-style=bw README.rst cython_swig.odp
+	rst2odp --font="Droid Sans" \
+			--mono-font="Droid Sana Mono" \
+			--pygments-style=bw README.rst \
+			cython_swig.odp
