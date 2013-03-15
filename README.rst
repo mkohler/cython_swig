@@ -182,8 +182,8 @@ import time
     linked to the interpreter binary, then it WON'T have a dunder file
     attribute.
 
-    You'll have to create a build environment for the Python interpreter
-    to find the source for a module like this.
+    To find the source for a module like this, look in the build
+    environment for your Python interpreter.
 
 We are Here
 ============
@@ -198,7 +198,7 @@ We are Here
 
 .. class:: handout
 
-    Now, let's talk about our example C library, libadder.
+    Now, let's create a C library.
 
 adder.c: add()
 ==============
@@ -225,7 +225,7 @@ adder.h: add()
 .. class:: handout
 
     For C libraries, the interface to a function is declared in a
-    a HEADER file. Here is the header file for ADD.
+    HEADER file. Here is the header file for ADD.
 
     As you may notice, it consists entirely of information that is
     also in adder.c.
