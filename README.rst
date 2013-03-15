@@ -23,7 +23,7 @@ Wrapping C libraries for Python
 
     But if they're BOTH excellent, which one should YOU use? To answer
     this question, we will wrap the same library with Cython AND SWIG,
-    compare the process and the results, and THEN you can decide.
+    compare the process and the results, and then YOU can decide.
 
 Pre-fight
 =========
@@ -183,7 +183,7 @@ import time
     attribute.
 
     To find the source for a module like this, look in the build
-    environment for your Python interpreter.
+    environment of your Python interpreter.
 
 We are Here
 ============
@@ -334,7 +334,7 @@ demo of SWIG's add()
 .. class:: handout
 
     And here's how it looks in use. We import the python file that SWIG
-    generated, and THAT imports the _adder.so object, and we now have
+    generated, and IT imports the _adder.so object, and we now have
     access to the C library. Magic!
 
     Now let's do the same thing, but with Cython.
@@ -402,8 +402,8 @@ Cython build diagram
     file we just learned about, the PYX file, and generates a single C
     file, cy_adder.c in this case.
 
-    Compile and link that, and we get an so. file that we can import
-    at the Python prompt. Let's try it out.
+    Compile and link that, and we get an extension module that we can
+    import at the Python prompt. Let's try it out.
 
 demo of Cython's add()
 ======================
@@ -548,9 +548,9 @@ demo of SWIG's pair_add()
     file, SWIG creates an associated Python class. The fields in the
     Python object correspond to the fields in the struct.
 
-    In this example, we are passing a pointer-to-a-struct to a function,
-    but this same mechanism can be used with functions that return a
-    pointer to a structure.
+    In this example, we are PASSING a pointer-to-a-struct,
+    but this same mechanism can be used with functions that RETURN a
+    pointer-to-a-struct.
 
     Okay, now let's do it with Cython.
 
@@ -574,13 +574,15 @@ c_adder.pxd: pair_add()
 cy_adder.pyx: pair_add()
 ========================
 
-.. code-block:: cython
+.. class:: small
 
-    def pair_add(x, y):
-        cdef c_adder.PAIR my_pair
-        my_pair.x = x
-        my_pair.y = y
-        return c_adder.pair_add(&my_pair)
+    .. code-block:: cython
+
+        def pair_add(x, y):
+            cdef c_adder.PAIR my_pair
+            my_pair.x = x
+            my_pair.y = y
+            return c_adder.pair_add(&my_pair)
 
 .. class:: handout
 
@@ -589,8 +591,8 @@ cy_adder.pyx: pair_add()
     Python and C. (PAUSE)
 
     Line 1 starts like a Python function. But in Line 2, the CDEF
-    keyword says we are defining a variable the C way, with a type and a
-    name. (PAUSE)
+    keyword says that we are defining a variable the C way, with a type
+    and a name. (PAUSE)
 
     In lines 3 and 4, the Python objects x and y, are unwrapped into the
     C struct.
@@ -631,7 +633,7 @@ We are Here
 .. class:: handout
 
     And a good way to dive right into a sea of complexity is to start thinking
-    about Python and C strings.
+    about C strings and Python.
 
     Yes...C Strings, the source of all good buffer overflows.
 
@@ -672,8 +674,8 @@ adder.c: get_version()
     Here's the implementation. The important thing to notice is that the string
     itself is stored as a static variable.
 
-    In this way,  we can bypass the memory management of C strings. We'll get
-    to that soon enough.
+    In this way,  we can bypass the memory management of temporary C
+    strings. We'll get to that soon enough.
 
 adder.i: get_version()
 ======================
@@ -684,8 +686,8 @@ adder.i: get_version()
 
 .. class:: handout
 
-    We add this line to our SWIG interface file. Again this is identical
-    to the C header file.
+    For SWIG, we just add this line, right from the C header file, to
+    our SWIG interface file. Compile and link and...
 
 demo of SWIG's get_version()
 ============================
@@ -719,7 +721,7 @@ c_adder.pxd: get_version()
 
     We start with a Cython interface file. Here in Cython land, with its
     modernist sensibilities, we don't need the void or the semi-colon.
-    Otherwise, it is identical to the C header file.
+    Otherwise, it is also identical to the C header file.
 
 cy_adder.pyx: get_version()
 ===========================
@@ -747,7 +749,7 @@ demo of Cython's get_version()
 
 .. class:: handout
 
-    And the Cython version works just like the SWIG version. So that's boring.
+    The Cython version works just like the SWIG version. So that's boring.
 
 Cython and C Strings
 ====================
@@ -797,7 +799,7 @@ We are Here
     And while you're having all that fun, who's keeping track of the memory
     you're using?
 
-    To explore these issues, we'll add a function to libadder that takes a C
+    To explore this, we'll add a function to libadder that takes a C
     string as a parameter, and produces a C string as output.
 
 adder.h: sgreeting()
@@ -805,7 +807,9 @@ adder.h: sgreeting()
 
 .. code-block:: c
 
-    int sgreeting(char * name, char * outp, int buflen);
+    int sgreeting(char * name,
+                  char * outp,
+                  int buflen);
 
 .. class:: handout
 
@@ -851,11 +855,11 @@ adder.c: sgreeting()
     The first conditional allows callers to bypass the body of the
     function, and just find out how big the output string will be.
 
-    The pattern is, the caller calls sgreeting with a null pointer,
+    The pattern is, the caller calls sgreeting with a NULL pointer,
     finds out how much space to allocate, allocates the space, and then
-    calls sgreeting again passing in a memory buffer.
+    calls sgreeting again passing in a pointer to the allocated space.
 
-    The second conditional checks if the buffer is long enough for
+    The second conditional checks if the buffer is big enough for
     the output, bailing out if it isn't.
 
     Let's use SWIG to make this function available to Python.
@@ -866,9 +870,12 @@ adder.i: sgreeting()
 .. code-block:: c
 
     %include "cstring.i"
-    %cstring_output_maxsize(char * outp, int buflen);
+    %cstring_output_maxsize(char * outp,
+                            int buflen);
 
-    int sgreeting(char * name, char * outp, int buflen);
+    int sgreeting(char * name,
+                  char * outp,
+                  int buflen);
 
 .. class:: handout
 
@@ -879,9 +886,9 @@ adder.i: sgreeting()
     For example, by default, SWIG converts Python strings to read-only
     C strings. That's exactly what we want for the NAME parameter.
 
-    But SWIG CAN do other things. The second line of our interface
-    file, is a macro, that tells SWIG that IT needs to allocate memory,
-    AND that the caller will tell it, how much.
+    But SWIG CAN do other things. The second line of our interface file,
+    is a macro, that tells SWIG that IT needs to allocate the memory,
+    AND that the caller will tell it how much.
 
     Let's see what that looks like.
 
@@ -910,7 +917,7 @@ demo of SWIG's sgreeting()
     and it will remove that parameter from the function's signature, and
     return it in a list, along with the actual return value.
 
-    So, in our example, the C version of sgreeting returned 12, and
+    So, in our example, the C version of sgreeting returned 12, but
     "Hello, Monty" was grabbed from the OUTP pointer.
 
 c_adder.pxd: sgreeting()
@@ -918,13 +925,15 @@ c_adder.pxd: sgreeting()
 
 .. code-block:: python
 
-    int sgreeting(char * name, char * output, int buflen)
+    int sgreeting(char * name,
+                  char * output,
+                  int buflen)
 
 .. class:: handout
 
     Now, let's see how to handle sgreeting's interface with Cython.
 
-    Here is what we add to the Cython interface file. As with other
+    Here is what we add to the Cython interface file. As with our other
     examples, it is almost identical to the C header file.
 
 cy_adder.pyx: sgreeting()
@@ -1061,8 +1070,8 @@ Alternatives to Cython and SWIG
     two choices, and they are both, in a sense, extreme choices compared
     to SWIG and Cython.
 
-    (CLICK) You can use the Python C API, just like many standard library
-    extension modules.
+    (CLICK) You can use write an extension module, manually, using the
+    Python C API, just like much of the standard library.
 
     (CLICK) Or you can use ctypes, which is part of the Standard Library, and
     lets you access C libraries with a lot less CEREMONY, but also a lot
@@ -1105,9 +1114,9 @@ Getting Started
 
     Okay, now we'll vote on Cython vs SWIG.
 
-    First, raise your hand if you like the SWIG way better.
+    First, raise your hand if you like the Cython way better.
 
-    Okay, now raise your hand if you like the Cython way better.
+    Okay, now raise your hand if you like the SWIG approach better.
 
 Code and Slides
 ===============
