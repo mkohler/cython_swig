@@ -21,11 +21,15 @@ Wrapping C libraries for Python
     luck, because _Cython_ and _SWIG_ are excellent tools for building
     Python extension modules by wrapping C libraries.
 
+    But if they're BOTH excellent, which one should YOU use? To answer
+    this question, we will wrap the same library with Cython AND SWIG,
+    compare the process and the results, and THEN you can decide.
+
 Pre-fight
 =========
 
 - import statement
-- libadder library
+- libadder
 - passing ints
 - passing structs
 - C strings
@@ -33,8 +37,6 @@ Pre-fight
 - generalizations
 
 .. class:: handout
-
-    XXX Why are they fighting?
 
     To start this talk, I'm going to quickly discuss the Python import
     statement and what it hides.
@@ -74,12 +76,11 @@ Code first and ask questions later
     As we add features, I'll repeat the process: C code, SWIG code,
     SWIG demonstration, Cython code, Cython demonstration.
 
-
 We are Here
 ============
 
 - **import statement**
-- libadder library
+- libadder
 - passing ints
 - passing structs
 - C strings
@@ -190,7 +191,7 @@ We are Here
 ============
 
 - import statement
-- **libadder library**
+- **libadder**
 - passing ints
 - passing structs
 - C strings
@@ -236,9 +237,8 @@ adder.h: add()
     code maintenance...and we're going to see a lot more of that kind of
     repetition in the SWIG and Cython workflows.
 
-
-See libraries
-=============
+Building libadder.so
+====================
 
 1. Compile
 
@@ -256,13 +256,11 @@ See libraries
     LIBADDER.SO is the final shared object, ready to be linked with
     C programs and other shared libraries.
 
-    Now let's look at some code.
-
 We are Here
 ============
 
 - import statement
-- libadder library
+- libadder
 - **passing ints**
 - passing structs
 - C strings
@@ -362,7 +360,6 @@ c_adder.pxd: Cython interface file
     boilerplate is different, but it references a C header file, and
     it is ALMOST a copy-and-paste of the C header file. (We have to
     remove the semi-colon.)
-
 
 cy_adder.pyx:  Cython source file
 =================================
@@ -464,7 +461,8 @@ Cython build review
 We are Here
 ============
 
-- libadder library
+- import statement
+- libadder
 - passing ints
 - **passing structs**
 - C strings
@@ -638,7 +636,7 @@ We are Here
 ============
 
 - import statement
-- libadder library
+- libadder
 - passing ints
 - passing structs
 - **C strings**
@@ -796,7 +794,7 @@ We are Here
 ===========
 
 - import statement
-- libadder library
+- libadder
 - passing ints
 - passing structs
 - C strings
@@ -1022,7 +1020,7 @@ We are Here
 ===========
 
 - import statement
-- libadder library
+- libadder
 - passing ints
 - passing structs
 - C strings
