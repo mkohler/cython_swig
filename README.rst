@@ -1093,25 +1093,23 @@ Getting Started
 
 .. class:: handout
 
-    Adoping a powerful tool like SWIG or Cython, can be scary. There is
-    a lot to learn, and at the beginning it can be hard to see whether
-    it will do what you need.
+    Adoping a powerful tool like SWIG or Cython, can be scary. At the
+    beginning it can be hard to see whether it will do what you need.
 
     (CLICK) Start small.
 
-    Like with any other code, work incrementally. Neither SWIG nor
-    Cython require you to wrap an entire library. Wrap one function at a
-    time.
+    Like with any code, work incrementally. Neither SWIG nor Cython
+    require you to wrap an entire library. Wrap one function at a time.
 
     (CLICK) And use DISTUTILS to build your Python extension. Even if
-    you don't use it for anything else. It already has all of the magic
-    compiler flags needed for building extensions that
+    you don't use it for anything else.
 
-    Did anyone knows that distutils includes code to parse Makefiles?
-    It's in sysconfig.py, and it actually parses the Makefile that builds the
-    Python interpreter to find the flags that were used to build the
-    interpreter. Someone went to the trouble of writing that code. Use
-    it.
+    distuils actually SCRAPES the Python Makefile to ensure that it uses
+    the right flags to compile extension modules. Someone wrote that
+    code. Use it.
+
+    And someone's been writing a lot of C libraries. Use them. From
+    Python.
 
 Code and Slides
 ===============
