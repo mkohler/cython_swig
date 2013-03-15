@@ -785,7 +785,7 @@ is not in the business of enforcing morality."
 
 .. class:: handout
 
-    And this in the SWIG documentation.
+    And THIS in the SWIG documentation.
 
 We are Here
 ===========
@@ -824,14 +824,11 @@ adder.h: sgreeting()
     Here is the declaration for sgreeting, a function that creates a
     greeting. If you pass it "Monty", it produces "Hello, Monty".
 
-    sgreeting works a bit like sprintf. That is, sgreeting produces a
-    greeting but it does not return it. It returns the number of
-    characters in the output string, or a 0 if the passed-in buffer is
-    too small for the output string.
+    sgreeting works like sprintf. That is, sgreeting produces a greeting
+    but it RETURNS the number of characters in the output string.
 
-    So where does sgreeting put the greeting? The CALLER of sgreeting
-    passes a buffer to sgreeting via the pointer OUTP, and sgreeting puts
-    the greeting in that buffer.
+    So where does sgreeting put the greeting? in a buffer passed to it
+    by the CALLER of sgreeting.
 
     This is a common pattern in C libraries. The CALLER allocates the
     memory.
@@ -872,9 +869,6 @@ adder.c: sgreeting()
 
     The second conditional checks if the buffer is long enough for
     the output, bailing out if it isn't.
-
-    The key thing to understand about sgreeting's interface is that the
-    CALLER of sgreeting must allocate sgreeting's output buffer.
 
     Let's use SWIG to make this function available to Python.
 
@@ -917,9 +911,8 @@ demo of SWIG's sgreeting()
 
     Hmmm...We started with a function, sgreeting, that took 3 arguments,
     and returned an integer, but here we are, at the python prompt,
-    using a function that takes 2 arguments and returns a list.
-
-    SWIG did that.
+    using a function that takes 2 arguments and returns a list. SWIG did
+    that.
 
     In the previous slide, we talked about how SWIG is able to take a
     size argument from the wrapped function, allocate a buffer of that
@@ -1129,7 +1122,6 @@ mark.kohler@gmail.com
 
 .. class:: handout
 
-    Thank you. I hope you found it useful.
-    The code and slides are available on github.
-    I am Mark Kohler.
-    And I am ready to take questions.
+    Thank you. The code and slides are available on github.
+
+    Are there any questions?
