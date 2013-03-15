@@ -890,27 +890,18 @@ adder.i: sgreeting()
 
 .. class:: handout
 
-    Up to this point, we have seen functions that meshed well with
+    Up to this point, we have seen functions that meshed PERFECTLY with
     SWIG's default behavior. That is why our SWIG interface files have
-    been copies of the C header file.
+    been...just COPIES of the C header file.
 
-    sgreeting is different.
+    For example, by default, SWIG converts Python strings to read-only
+    C strings. That's exactly what we want for the NAME parameter.
 
-    The input parameter, NAME, isn't a problem. By default, SWIG 
-    converts Python strings to a read-only C strings, which
-    is what we want for NAME.
+    But SWIG CAN do other things. The second line of our interface
+    file, is a macro, that tells SWIG that IT needs to allocate memory,
+    AND that the caller will tell it, how much.
 
-    The problem is OUTP, the output pointer. We need to tell SWIG to
-    allocate a buffer for sgreeting, and pass a pointer to the buffer
-    in OUTP and the length of the buffer in BUFLEN. Fortunately, SWIG
-    CAN do this. That is what the first two lines do.
-
-    The cstring_output_maxsize macro tells SWIG that, the wrapped
-    version of sgreeting will pass in a maximum length, and SWIG will
-    be responsible for allocating a buffer of that length, and be
-    responsible for freeing it. Fancy!
-
-    Let's see how we use the wrapped function.
+    Let's see what that looks like.
 
 demo of SWIG's sgreeting()
 ============================
@@ -924,24 +915,24 @@ demo of SWIG's sgreeting()
 
 .. class:: handout
 
-    I hope this usage is a little surprising. We started with a
-    function, sgreeting, that took 3 arguments, and returned its
-    status, but here are we, at the python prompt, using a function that
-    takes 2 arguments and returns a list.
+    Hmmm...We started with a function, sgreeting, that took 3 arguments,
+    and returned an integer, but here are we, at the python prompt,
+    using a function that takes 2 arguments and returns a list.
 
-    We talked about the change in input parameters in the previous
-    slide. SWIG created a Python function for us that takes an input
-    string and a maximum length for the output. Then internally, it
-    uses that maximum length to allocate a buffer, and passes that
-    buffer and its length to the original sgreeting function.
+    SWIG did that.
 
-    The behavior we didn't talk about is that, if you tell SWIG that a
-    function parameter is actually for OUTPUT, then SWIG will
-    de-reference that pointer, put the contents in a list that the
-    wrapped function returns.
+    In the previous slide, we talked about how SWIG is able to take a
+    size argument from the wrapped function, allocate a buffer of that
+    size, and then pass the buffer to the C function.
+
+    You can also tell SWIG that a C parameter, is an output buffer, and
+    it will remove the parameter from the function's signature, and return it
+    as a list, along with the C function's return value.
 
     So, in our example, the C version of sgreeting returned 12, and
     "Hello, Monty" was grabbed from the OUTP pointer.
+
+    Let's see how to handle sgreeting's interface with Cython.
 
 c_adder.pxd: sgreeting()
 ===========================
@@ -965,13 +956,13 @@ cy_adder.pyx: sgreeting()
 
         def sgreeting(name):
             c_str_len = c_adder.sgreeting(name,
-                                            <char * > 0,
-                                            0)
-            py_str = ' ' * (c_str_len + 1)
+                                          <char * > 0,
+                                          0)
+            py_str = 'x' * (c_str_len + 1)
             cdef char * c_str = py_str
             c_adder.sgreeting(name,
-                                c_str,
-                                len(py_str))
+                              c_str,
+                              len(py_str))
             return c_str
 
 .. class:: handout
