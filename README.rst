@@ -286,7 +286,7 @@ adder.i (SWIG interface file)
 
     To use SWIG, you, the programmer, have to create ONE file, the
     SWIG interface, or .i file. THIS is adder.i, the SWIG interface
-    file I created for libadder.
+    file we created for libadder.
 
     It contains the name of the extension module we want to build, the
     name of the C header file, AND the contents of the C header file.
@@ -445,9 +445,9 @@ Cython build review
 
     Like with SWIG, we start with a C header file, and a shared object.
 
-    WE write a PXD file, which is CYTHON's interface file format.
-    We also need to write a PYX file, which we will soon see is a hybrid
-    of the C and Python languages.
+    WE write a PXD file, which is CYTHON's interface file format. We also need
+    to write wrapper functions in the Cython language, which we will soon see,
+    is a hybrid of C and Python.
 
     From those files, Cython generates a C file. Compile and link
     Cython's C file, and we have a Python extension module that we can
@@ -483,7 +483,7 @@ adder.h: pair_add()
 
 .. class:: handout
 
-    Here's a header file with a struct, PAIR, defined,
+    Here's a header file with a struct, PAIR, defined.
 
     Below the struct is the declaration for pair_add, which takes a
     single argument, a pointer to a PAIR.
@@ -504,7 +504,7 @@ adder.c: pair_add()
     ppair.
 
     That's pretty straightforward C code. But how can we use pair_add from
-    Python? What do we tell SWIG?
+    Python? How do we build a struct in Python? What do we tell SWIG?
 
 adder.i: pair_add()
 ===================
@@ -533,6 +533,8 @@ demo of SWIG's pair_add()
 
     >>> import adder
     >>> my_pair = adder.PAIR()
+    >>> type(my_pair)
+    <class 'adder.PAIR'>
     >>> my_pair.x = 3
     >>> my_pair.y = 4
     >>> adder.pair_add(my_pair)
@@ -541,8 +543,7 @@ demo of SWIG's pair_add()
 
 .. class:: handout
 
-    Well, that's interesting. Where did that adder.PAIR() come from? I
-    don't remember defining that.
+    Well, that's interesting. Where did that adder.PAIR() come from?
 
     The answer is, SWIG did it. If you put a struct in a SWIG interface
     file, SWIG creates an associated Python class. The fields in the
