@@ -575,15 +575,13 @@ c_adder.pxd: pair_add()
 cy_adder.pyx: pair_add()
 ========================
 
-.. class:: small
+.. code-block:: cython
 
-    .. code-block:: cython
-
-        def pair_add(x, y):
-            cdef c_adder.PAIR my_pair
-            my_pair.x = x
-            my_pair.y = y
-            return c_adder.pair_add(&my_pair)
+    def pair_add(x, y):
+      cdef c_adder.PAIR my_pair
+      my_pair.x = x
+      my_pair.y = y
+      return c_adder.pair_add(&my_pair)
 
 .. class:: handout
 
