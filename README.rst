@@ -1084,7 +1084,7 @@ Getting Started
 
 .. class:: incremental
 
-    - Start small.
+    - Start small
     - Use distutils
 
 .. class:: handout
