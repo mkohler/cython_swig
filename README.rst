@@ -720,7 +720,7 @@ c_adder.pxd: get_version()
 
     We start with a Cython interface file. Here in Cython land, with its
     modernist sensibilities, we don't need the void or the semi-colon.
-    Otherwise, it is also identical to the C header file.
+    Otherwise, it is identical to the C header file.
 
 cy_adder.pyx: get_version()
 ===========================
@@ -913,7 +913,7 @@ demo of SWIG's sgreeting()
     size, and then pass the buffer to the C function.
 
     But you can also tell SWIG that a C parameter, is an output buffer,
-    and it will remove that parameter from the function's signature, and
+    and SWIG will remove that parameter from the function's signature, and
     return it in a list, along with the actual return value.
 
     So, in our example, the C version of sgreeting returned 12, but
@@ -951,7 +951,7 @@ cy_adder.pyx: sgreeting()
 
 .. class:: handout
 
-    And here's the Cython code. Notice is how long it is? We spend 3
+    And here's the Cython code. Notice how long it is? We spend 3
     lines doing memory allocation before we can call our C function.
 
     First, we call sgreeting with the bona fide name, but a null
@@ -1069,7 +1069,7 @@ Alternatives to Cython and SWIG
     two choices, and they are both, in a sense, extreme choices compared
     to SWIG and Cython.
 
-    (CLICK) You can use write an extension module, manually, using the
+    (CLICK) You can write an extension module, manually, using the
     Python C API, just like much of the standard library.
 
     (CLICK) Or you can use ctypes, which is part of the Standard Library, and
